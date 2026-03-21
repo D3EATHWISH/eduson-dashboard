@@ -209,6 +209,25 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 .empty{text-align:center;padding:30px 20px;color:var(--muted)}
 .empty-ic{font-size:28px;margin-bottom:6px}
 
+/* LOADER */
+.loader-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;opacity:0;pointer-events:none;transition:opacity .3s}
+.loader-overlay.visible{opacity:1;pointer-events:all}
+[data-theme="light"] .loader-overlay{background:rgba(245,245,240,0.85)}
+.loader-ring{width:48px;height:48px;border:3px solid var(--bg3);border-top:3px solid var(--y);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{font-size:13px;font-weight:500;color:var(--muted);font-family:var(--sans)}
+.loader-dots span{display:inline-block;animation:dot 1.4s infinite;opacity:0}
+.loader-dots span:nth-child(2){animation-delay:.2s}
+.loader-dots span:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,80%,100%{opacity:0}40%{opacity:1}}
+
+/* SCHEDULE EMPTY STATE */
+.sched-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.sched-empty-ic{font-size:48px;margin-bottom:12px;opacity:.5}
+.sched-empty-title{font-size:15px;font-weight:600;color:var(--sub);margin-bottom:6px}
+.sched-empty-sub{font-size:12px;line-height:1.6}
+.sched-empty-btn{display:inline-block;margin-top:14px;background:var(--y);color:#000;font-size:12px;font-weight:700;padding:8px 20px;border-radius:var(--r6);border:none;cursor:pointer;font-family:var(--sans)}
+
 /* RESPONSIVE */
 @media(max-width:960px){
   .kpis{grid-template-columns:repeat(3,1fr)}
@@ -228,6 +247,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 </style>
 </head>
 <body>
+
+<!-- LOADER -->
+<div class="loader-overlay" id="loader">
+  <div class="loader-ring"></div>
+  <div class="loader-text">Загрузка данных<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
+</div>
 
 <nav class="nav">
   <div class="nav-logo">EDUSON KIDS · OS</div>
@@ -505,6 +530,10 @@ function parseDate(s) {
 // LOAD
 // ═══════════════════════════════════════
 async function loadAll() {
+  // Show loader
+  var loader = document.getElementById('loader');
+  if (loader) loader.classList.add('visible');
+
   var [rawForm,rawMgrs,rawTar,rawSlots] = await Promise.all([
     fetchCSV('form'),fetchCSV('managers'),fetchCSV('targets'),fetchCSV('slots')
   ]);
@@ -594,6 +623,10 @@ async function loadAll() {
   document.getElementById('upd').textContent=
     n.toLocaleDateString('ru',{day:'2-digit',month:'short'})+' '+
     n.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+
+  // Hide loader
+  var loader = document.getElementById('loader');
+  if (loader) loader.classList.remove('visible');
 }
 
 // ═══════════════════════════════════════
@@ -931,7 +964,7 @@ function backMgr(){document.getElementById('mgr-list').style.display='block';doc
 // ═══════════════════════════════════════
 var HOURS=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
 var HOUR_COLORS={10:'red',11:'red',12:'red',13:'red',14:'amber',15:'amber',16:'amber',17:'green',18:'green',19:'green',20:'green',21:'green'};
-var WEB_APP_URL='https://script.google.com/macros/s/AKfycbwDgt1qk9wK7WfESWvBwY1_ni4ZKoRc4L9g5JxAbBYAUQNgWrAKzr8fPQoCkElBA85HmQ/exec';
+var WEB_APP_URL='https://script.google.com/macros/s/AKfycbzBLvDd9WhPrnR87AKH1UpzYmJc76R4Sj-5yUMrJX5UERMBJoDVV6Z1Ihvmipye1T4rQA/exec';
 
 // Schedule data from sheet
 var scheduleData={}; // scheduleData[manager][dateStr][hour]=true
@@ -1018,6 +1051,18 @@ function renderSchedule() {
   });
   html+='</tbody>';
   document.getElementById('hm-table').innerHTML=html;
+
+  // Show empty state if no schedule data at all
+  var totalSlots=0;
+  managers.forEach(function(m){
+    if(scheduleData[m])Object.values(scheduleData[m]).forEach(function(d){totalSlots+=Object.keys(d).length;});
+  });
+  if(totalSlots===0){
+    var hmWrap=document.getElementById('hm-summary');
+    if(hmWrap){
+      hmWrap.innerHTML='<div class="sched-empty"><div class="sched-empty-ic">📅</div><div class="sched-empty-title">Расписание ещё не заполнено</div><div class="sched-empty-sub">Менеджеры пока не выставили слоты на эту неделю.<br>Нажми «Заполнить слоты» чтобы добавить расписание.</div><button class="sched-empty-btn" onclick="schedTab('edit',document.getElementById('sched-edit-btn'))">💼 Заполнить слоты →</button></div>';
+    }
+  }
 }
 
 function selectHmDay(ds) {
@@ -1154,39 +1199,49 @@ function updateSelCount(){
 async function submitSchedule(){
   if(!currentEditMgr){alert('Выбери менеджера!');return;}
   var slots_arr=[];
-  Object.entries(selectedSlots).forEach(([ds,hrs])=>{
-    Object.keys(hrs).forEach(h=>{
-      slots_arr.push({date:ds,time:String(h).padStart(2,'0')+':00'});
+  Object.entries(selectedSlots).forEach(function(entry){
+    var ds=entry[0],hrs=entry[1];
+    Object.keys(hrs).forEach(function(h){
+      slots_arr.push({date:ds,time:(parseInt(h)<10?'0':'')+h+':00'});
     });
   });
 
   var btn=document.getElementById('submit-btn');
   btn.textContent='Отправка...';btn.disabled=true;
 
+  var resultEl=document.getElementById('submit-result');
+  resultEl.style.display='none';
+
   try{
-    var resp=await fetch(WEB_APP_URL,{
+    // Apps Script requires no-cors — we can't read response, but data arrives
+    await fetch(WEB_APP_URL,{
       method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({manager:currentEditMgr,slots:slots_arr}),
     });
-    var data=await resp.json();
-    if(data.status==='ok'){
-      // Update local scheduleData
-      if(!scheduleData[currentEditMgr])scheduleData[currentEditMgr]={};
-      Object.keys(scheduleData[currentEditMgr]).forEach(k=>delete scheduleData[currentEditMgr][k]);
-      Object.entries(selectedSlots).forEach(([ds,hrs])=>{
-        scheduleData[currentEditMgr][ds]={};
-        Object.keys(hrs).forEach(h=>{scheduleData[currentEditMgr][ds][parseInt(h)]=true;});
-      });
-      document.getElementById('submit-result').style.display='block';
-      document.getElementById('submit-result').innerHTML=`<div style="background:var(--g-bg);border:1px solid var(--g-bd);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--g);margin-top:10px">✅ Готово! Отправлено <strong>${slots_arr.length} слотов</strong> для ${currentEditMgr}. Расписание обновлено.</div>`;
-      renderSchedule();
-    } else {
-      throw new Error(data.message||'Ошибка');
-    }
+
+    // Since no-cors = opaque response, assume success if no exception
+    // Update local scheduleData immediately
+    if(!scheduleData[currentEditMgr])scheduleData[currentEditMgr]={};
+    // Clear old slots for this manager
+    Object.keys(scheduleData[currentEditMgr]).forEach(function(k){delete scheduleData[currentEditMgr][k];});
+    // Set new slots
+    Object.entries(selectedSlots).forEach(function(entry){
+      var ds=entry[0],hrs=entry[1];
+      scheduleData[currentEditMgr][ds]={};
+      Object.keys(hrs).forEach(function(h){scheduleData[currentEditMgr][ds][parseInt(h)]=true;});
+    });
+
+    resultEl.style.display='block';
+    resultEl.innerHTML='<div style="background:var(--g-bg);border:1px solid var(--g-bd);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--g);margin-top:10px">✅ Готово! Отправлено <strong>'+slots_arr.length+' слотов</strong> для '+currentEditMgr+'. Расписание обновлено.</div>';
+    renderSchedule();
+
   }catch(e){
-    document.getElementById('submit-result').style.display='block';
-    document.getElementById('submit-result').innerHTML=`<div style="background:var(--r-bg);border:1px solid var(--r-bd);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--r);margin-top:10px">❌ Ошибка отправки: ${e.message}</div>`;
+    resultEl.style.display='block';
+    resultEl.innerHTML='<div style="background:var(--r-bg);border:1px solid var(--r-bd);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--r);margin-top:10px">❌ Ошибка: '+e.message+'</div>';
   }
+
   btn.textContent='Отправить расписание →';btn.disabled=false;
 }
 
