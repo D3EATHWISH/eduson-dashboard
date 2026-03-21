@@ -192,20 +192,8 @@ let activeSheetNames = null;
 // Получаем список листов из HTML страницы таблицы
 async function fetchActiveSheets() {
   if(FORCE_ACTIVE){ activeSheetNames = FORCE_ACTIVE; return; }
-  try {
-    const sheetId = '18upiA_LE2MExPtVRBTe8ggSjfHDy6qaGal09ciudONY';
-    const url = 'https://docs.google.com/spreadsheets/d/'+sheetId+'/';
-    const proxy = 'https://api.allorigins.win/get?url='+encodeURIComponent(url);
-    const r = await fetch(proxy);
-    if(!r.ok){ activeSheetNames = null; return; }
-    const rj = await r.json();
-    const html = rj.contents || '';
-    // Парсим названия вкладок из HTML
-    const matches = [...html.matchAll(/"label":"([^"]+)"/g)];
-    if(matches.length){
-      activeSheetNames = matches.map(m=>m[1]);
-    }
-  }catch(e){ activeSheetNames = null; }
+  // Показываем всех — фильтрация по листам отключена (не требует прокси)
+  activeSheetNames = null;
 }
 
 function isActiveManager(name) {
@@ -363,14 +351,12 @@ function renderCharts(data) {
 }
 
 async function loadFromSheets() {
-  if(!SHEETS_CSV_URL)return false;
+  const SHEET_ID='18upiA_LE2MExPtVRBTe8ggSjfHDy6qaGal09ciudONY';
+  const GVZ_URL='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&gid=1613979270';
   try {
-    const proxyUrl='https://api.allorigins.win/get?url='+encodeURIComponent(SHEETS_CSV_URL);
-    const res=await fetch(proxyUrl);
+    const res=await fetch(GVZ_URL);
     if(!res.ok)return false;
-    const json=await res.json();
-    const txt=json.contents;
-    if(!txt)return false;
+    const txt=await res.text();
     const lines=txt.trim().split('\n').map(l=>l.split(','));
     const STOP=['Групповой','TARGET','Таргет','Осталось'];
     const SKIP=['МИМК','Менеджер',''];
@@ -386,20 +372,18 @@ async function loadFromSheets() {
       parsed.push({name,mk,paid,rev,rpm});
     }
     if(parsed.length){teamData=parsed;return true;}
-  }catch(e){console.log(e);}
+  }catch(e){console.log('Sheets error:',e);}
   return false;
 }
 
 async function loadSlots() {
   todaySlots = [];
-  if (!SLOTS_CSV_URL) return;
+  const SHEET_ID='18upiA_LE2MExPtVRBTe8ggSjfHDy6qaGal09ciudONY';
+  const GVZ_SLOTS='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet=Слоты';
   try {
-    var proxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SLOTS_CSV_URL);
-    var res = await fetch(proxy);
+    var res = await fetch(GVZ_SLOTS);
     if (!res.ok) return;
-    var rj = await res.json();
-    var txt = rj.contents || '';
-    if (!txt) return;
+    var txt = await res.text();
     var lines = txt.trim().split('\n').map(function(l){ return l.split(','); });
     for (var i = 1; i < lines.length; i++) {
       var row = lines[i];
