@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eduson Kids · Операционный центр</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@400;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Eduson Kids · Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@400;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -12,1065 +12,1172 @@
 :root{
   --bg:#0a0a0a;
   --bg2:#111111;
-  --bg3:#181818;
+  --bg3:#1a1a1a;
   --bg4:#222222;
   --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
+  --border-s:rgba(255,255,255,0.12);
   --text:#f0f0f0;
-  --sub:#888;
-  --muted:#555;
-  --accent:#f5c518;
-  --accent2:#e8b800;
-  --green:#22c55e;
-  --green-bg:rgba(34,197,94,0.1);
-  --amber:#f59e0b;
-  --amber-bg:rgba(245,158,11,0.1);
-  --red:#ef4444;
-  --red-bg:rgba(239,68,68,0.1);
-  --blue:#3b82f6;
-  --blue-bg:rgba(59,130,246,0.1);
-  --font-head:'Unbounded',sans-serif;
-  --font-body:'Manrope',sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
+  --sub:#a0a0a0;
+  --muted:#606060;
+  --dim:#404040;
+  --yellow:#f5c842;
+  --yellow-bg:rgba(245,200,66,0.08);
+  --yellow-bd:rgba(245,200,66,0.2);
+  --green:#3ecf8e;
+  --green-bg:rgba(62,207,142,0.08);
+  --red:#f05252;
+  --red-bg:rgba(240,82,82,0.08);
+  --blue:#60a5fa;
+  --blue-bg:rgba(96,165,250,0.08);
+  --shadow:0 1px 3px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05);
+  --r:10px;--r-sm:6px;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Manrope',sans-serif;
+  --display:'Unbounded',sans-serif;
 }
 
-[data-theme="light"]{
-  --bg:#f5f5f0;
-  --bg2:#ffffff;
-  --bg3:#f0ede8;
-  --bg4:#e8e5e0;
-  --border:rgba(0,0,0,0.07);
-  --border2:rgba(0,0,0,0.12);
-  --text:#111111;
-  --sub:#666;
-  --muted:#999;
-  --green:#16a34a;
-  --green-bg:rgba(22,163,74,0.08);
-  --amber:#d97706;
-  --amber-bg:rgba(217,119,6,0.08);
-  --red:#dc2626;
-  --red-bg:rgba(220,38,38,0.08);
-  --blue:#2563eb;
-  --blue-bg:rgba(37,99,235,0.08);
-}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.5;min-height:100vh;overflow-x:hidden}
 
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--font-body);
-  font-size:13px;
-  line-height:1.5;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-
-/* ── NAV ── */
-.nav{
-  position:sticky;top:0;z-index:100;
-  background:var(--bg);
-  border-bottom:1px solid var(--border);
-  padding:0 24px;
-  display:flex;align-items:center;justify-content:space-between;
-  height:52px;
-  backdrop-filter:blur(12px);
-}
-.nav-brand{
-  font-family:var(--font-head);
-  font-size:13px;font-weight:700;
-  letter-spacing:.05em;
-  color:var(--accent);
-  display:flex;align-items:center;gap:8px;
-}
-.nav-brand-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--accent);
-  animation:pulse 2s infinite;
-}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
-.nav-tabs{display:flex;gap:2px}
-.nav-tab{
-  padding:6px 16px;border-radius:6px;
-  font-size:12px;font-weight:600;font-family:var(--font-body);
-  color:var(--sub);cursor:pointer;border:none;background:transparent;
-  transition:all .15s;letter-spacing:.02em;
-}
-.nav-tab:hover{color:var(--text);background:var(--bg3)}
-.nav-tab.active{color:var(--accent);background:var(--bg3)}
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{font-family:var(--display);font-size:13px;font-weight:700;color:var(--yellow);letter-spacing:-.02em}
+.nav-logo span{color:var(--text);font-weight:400;font-size:11px;margin-left:4px;opacity:.6}
+.nav-tabs{display:flex;gap:2px;background:var(--bg3);padding:3px;border-radius:var(--r-sm)}
+.tab-btn{font-family:var(--sans);font-size:11px;font-weight:600;padding:5px 14px;border-radius:4px;border:none;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s}
+.tab-btn.active{background:var(--yellow);color:#000}
+.tab-btn:hover:not(.active){color:var(--text)}
 .nav-right{display:flex;align-items:center;gap:8px}
-.nav-upd{font-size:11px;color:var(--muted);font-family:var(--font-mono)}
-.nav-btn{
-  background:var(--bg3);border:1px solid var(--border2);
-  color:var(--sub);font-size:11px;font-weight:600;
-  padding:5px 12px;border-radius:6px;cursor:pointer;
-  font-family:var(--font-body);transition:all .15s;
-}
-.nav-btn:hover{color:var(--text);border-color:var(--accent)}
-.theme-btn{
-  width:32px;height:32px;border-radius:6px;
-  background:var(--bg3);border:1px solid var(--border2);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:14px;transition:all .15s;
-}
-.theme-btn:hover{border-color:var(--accent)}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--green);background:var(--green-bg);border:1px solid rgba(62,207,142,0.2);padding:3px 10px;border-radius:99px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.upd{font-size:10px;color:var(--muted);font-family:var(--mono)}
+.nav-btn{background:var(--bg3);border:1px solid var(--border-s);color:var(--sub);font-size:11px;font-weight:500;padding:5px 12px;border-radius:var(--r-sm);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.nav-btn:hover{color:var(--text);border-color:var(--yellow)}
 
-/* ── PAGES ── */
-.page{display:none;padding:20px 24px 40px}
+/* PAGES */
+.page{display:none;padding:20px 24px;animation:fadein .2s}
 .page.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-/* ── ALERT ── */
-.alert{
-  background:var(--amber-bg);
-  border:1px solid rgba(245,158,11,.25);
-  border-radius:10px;padding:10px 16px;margin-bottom:16px;
-  display:flex;align-items:center;gap:10px;
-  font-size:12px;color:var(--amber);line-height:1.5;
-}
-.alert strong{font-weight:700}
+/* ALERT */
+.alert{display:flex;align-items:flex-start;gap:10px;background:var(--yellow-bg);border:1px solid var(--yellow-bd);border-radius:var(--r);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--yellow);line-height:1.5}
+.alert strong{font-weight:600}
 
-/* ── COUNTDOWN ── */
-.countdown-row{
-  display:grid;
-  grid-template-columns:200px 1fr;
-  gap:12px;margin-bottom:16px;
-}
-.countdown-circle{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:12px;padding:16px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  position:relative;
-}
-.circle-svg{transform:rotate(-90deg)}
-.circle-bg{fill:none;stroke:var(--bg4);stroke-width:6}
-.circle-fill{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .8s}
-.circle-label{
-  position:absolute;text-align:center;
-}
-.circle-days{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--accent);line-height:1}
-.circle-sub{font-size:10px;color:var(--muted);margin-top:4px;font-weight:500;letter-spacing:.05em}
-.countdown-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
-}
-.cstat{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:10px;padding:14px 16px;
-}
-.cstat-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-.cstat-val{font-size:20px;font-weight:700;font-family:var(--font-mono);color:var(--text)}
-.cstat-sub{font-size:10px;color:var(--muted);margin-top:3px}
+/* COUNTDOWN ROW */
+.countdown-row{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:12px;margin-bottom:16px;align-items:center}
+.day-ring{width:80px;height:80px;flex-shrink:0}
+.day-ring svg{width:80px;height:80px}
+.ring-bg{fill:none;stroke:var(--bg3);stroke-width:8}
+.ring-fg{fill:none;stroke:var(--yellow);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .8s;transform-origin:center;transform:rotate(-90deg)}
+.ring-text{font-family:var(--display);font-size:18px;font-weight:700;fill:var(--yellow)}
+.ring-sub{font-size:9px;fill:var(--muted)}
+.countdown-card{background:var(--bg2);border-radius:var(--r);padding:14px 16px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.cc-label{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.cc-val{font-size:20px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.cc-sub{font-size:10px;color:var(--muted);margin-top:2px}
 
-/* ── KPIS ── */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
-.kpi{
-  background:var(--bg2);border-radius:10px;
-  padding:14px 16px;border:1px solid var(--border);
-  border-top:2px solid transparent;position:relative;
-  transition:border-color .2s;
-}
+/* KPI GRID */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--bg2);border-radius:var(--r);padding:12px 14px;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;border-top:2px solid transparent;transition:border-top-color .3s}
 .kpi.ok{border-top-color:var(--green)}
-.kpi.warn{border-top-color:var(--amber)}
+.kpi.warn{border-top-color:var(--yellow)}
 .kpi.bad{border-top-color:var(--red)}
 .kpi.info{border-top-color:var(--blue)}
-.kl{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
-.kv{font-size:20px;font-weight:700;font-family:var(--font-mono);line-height:1}
-.ks{font-size:10px;margin-top:4px}
-.ktag{
-  position:absolute;top:10px;right:10px;
-  font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;
-  font-family:var(--font-mono);
-}
+.kl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.kv{font-size:20px;font-weight:600;line-height:1;font-family:var(--mono)}
+.ks{font-size:10px;color:var(--muted);margin-top:3px}
+.ktag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:600;padding:2px 7px;border-radius:99px;font-family:var(--mono)}
 .ktag.ok{background:var(--green-bg);color:var(--green)}
-.ktag.warn{background:var(--amber-bg);color:var(--amber)}
+.ktag.warn{background:var(--yellow-bg);color:var(--yellow)}
 .ktag.bad{background:var(--red-bg);color:var(--red)}
 .ktag.info{background:var(--blue-bg);color:var(--blue)}
-.g{color:var(--green)}.a{color:var(--amber)}.r{color:var(--red)}.b{color:var(--blue)}.m{color:var(--muted)}
+.g{color:var(--green)}.a{color:var(--yellow)}.r{color:var(--red)}.b{color:var(--blue)}.m{color:var(--muted)}
 
-/* ── MAIN GRID ── */
-.main-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:12px;margin-bottom:12px}
-.panel{
-  background:var(--bg2);border-radius:12px;
-  padding:16px;border:1px solid var(--border);
-}
-.panel-title{
-  font-size:10px;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:14px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.panel-title input{
-  background:var(--bg3);border:1px solid var(--border2);
-  color:var(--text);font-size:11px;font-family:var(--font-body);
-  padding:4px 10px;border-radius:6px;outline:none;width:160px;
-}
-.panel-title input::placeholder{color:var(--muted)}
-.panel-title input:focus{border-color:var(--accent)}
+/* PANELS */
+.main-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-bottom:12px}
+.panel{background:var(--bg2);border-radius:var(--r);padding:14px 16px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.pt{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.pt-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--yellow-bg);color:var(--yellow)}
 
-/* ── TEAM TABLE ── */
-.tt{width:100%;border-collapse:collapse}
-.tt th{font-size:9px;color:var(--muted);font-weight:700;text-align:left;padding:0 4px 8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.05em}
-.tt th:not(:first-child){text-align:right}
-.tt td{font-size:12px;color:var(--sub);padding:6px 4px;border-bottom:1px solid var(--border);transition:background .1s}
-.tt td:not(:first-child){text-align:right;font-family:var(--font-mono)}
-.tt tr:last-child td{border-bottom:none}
-.tt tr.total-row td{font-weight:700;color:var(--text);background:var(--bg3);border-radius:6px}
-.tt tr.member-row{cursor:pointer}
-.tt tr.member-row:hover td{background:var(--bg3)}
-.tname{font-weight:600;color:var(--text)}
-.eb{font-size:15px}
+/* SEARCH */
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border-s);border-radius:var(--r-sm);padding:4px 10px;margin-bottom:10px}
+.search-wrap input{background:none;border:none;outline:none;font-size:12px;color:var(--text);font-family:var(--sans);width:160px}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-icon{font-size:12px;color:var(--muted)}
 
-/* ── SLOTS ── */
-.slot-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.slot-manager{margin-bottom:10px}
-.slot-name{
-  font-size:10px;font-weight:700;letter-spacing:.05em;
-  padding-bottom:5px;margin-bottom:5px;border-bottom:1px solid var(--border);
-}
-.slot-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)}
+/* TEAM TABLE */
+.team-table{width:100%;border-collapse:collapse}
+.team-table th{font-size:10px;color:var(--muted);font-weight:500;text-align:left;padding:0 4px 8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.05em}
+.team-table th:not(:first-child){text-align:right}
+.team-table td{font-size:12px;color:var(--sub);padding:6px 4px;border-bottom:1px solid var(--bg3);cursor:pointer;transition:background .1s}
+.team-table td:not(:first-child){text-align:right;font-family:var(--mono);font-size:11px}
+.team-table tr:hover td{background:var(--bg3)}
+.team-table tr:last-child td{border-bottom:none;font-weight:600;color:var(--text);background:rgba(245,200,66,0.04)}
+.tname{font-weight:500;color:var(--text)}
+.eb{font-size:15px;line-height:1}
+
+/* SLOTS */
+.slots-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.slot-group-title{font-size:11px;font-weight:600;padding-bottom:5px;margin-bottom:4px;border-bottom:1px solid var(--border)}
+.slot-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--bg3)}
 .slot-row:last-child{border-bottom:none}
-.slot-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.slot-time{font-size:11px;color:var(--muted);width:38px;flex-shrink:0;font-family:var(--font-mono)}
-.slot-status{font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.stime{font-size:11px;color:var(--muted);width:38px;flex-shrink:0;font-family:var(--mono)}
+.sstatus{font-size:9px;font-weight:600;padding:2px 6px;border-radius:99px}
 .s-wait{background:var(--blue-bg);color:var(--blue)}
 .s-live{background:var(--green-bg);color:var(--green);animation:blink .9s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-.s-done{background:var(--bg4);color:var(--muted)}
-.slot-pot{font-size:10px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:space-between}
-.slot-pot strong{color:var(--accent);font-weight:700}
-.slot-empty{font-size:12px;color:var(--muted);text-align:center;padding:20px 0}
+.s-done{background:var(--bg3);color:var(--dim)}
+.slot-pot{font-size:10px;color:var(--muted);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);display:flex;justify-content:space-between}
+.slot-pot strong{color:var(--yellow)}
 
-/* ── CHARTS ROW ── */
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-
-/* ── PROGRESS BARS ── */
-.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+/* PROGRESS */
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
 .prog-label{font-size:11px;color:var(--sub);width:72px;flex-shrink:0;font-weight:500}
-.prog-track{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.prog-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
 .prog-fill{height:100%;border-radius:3px;transition:width .9s}
-.prog-pct{font-size:11px;font-weight:700;width:36px;text-align:right;flex-shrink:0;font-family:var(--font-mono)}
+.prog-pct{font-size:11px;font-weight:600;width:36px;text-align:right;flex-shrink:0;font-family:var(--mono)}
 
-/* ── INSIGHT ── */
-.insight{
-  background:var(--bg2);border-radius:12px;
-  padding:14px 16px;border:1px solid var(--border);
-  border-left:3px solid var(--accent);
-}
-.insight-items{display:flex;flex-direction:column;gap:6px}
-.insight-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--sub);line-height:1.5}
-.itag{flex-shrink:0;font-size:9px;font-weight:700;padding:2px 7px;border-radius:99px;margin-top:1px}
+/* CHARTS ROW */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.period-btns{display:flex;gap:4px}
+.period-btn{font-size:10px;font-weight:600;padding:3px 10px;border-radius:4px;border:1px solid var(--border-s);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.period-btn.active{background:var(--yellow);color:#000;border-color:var(--yellow)}
+
+/* INSIGHT */
+.insight{background:var(--bg2);border-radius:var(--r);padding:12px 16px;border-left:3px solid var(--yellow);border:1px solid var(--border);border-left:3px solid var(--yellow);box-shadow:var(--shadow)}
+.insight-items{display:flex;flex-direction:column;gap:5px}
+.insight-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--sub);line-height:1.5}
+.itag{flex-shrink:0;font-size:9px;font-weight:600;padding:2px 7px;border-radius:99px;margin-top:1px}
+.itag.y{background:var(--yellow-bg);color:var(--yellow)}
 .itag.g{background:var(--green-bg);color:var(--green)}
-.itag.a{background:var(--amber-bg);color:var(--amber)}
 .itag.r{background:var(--red-bg);color:var(--red)}
 
-/* ── PERIOD FILTER ── */
-.period-row{display:flex;gap:6px;margin-bottom:16px}
-.period-btn{
-  padding:5px 14px;border-radius:6px;font-size:11px;font-weight:600;
-  font-family:var(--font-body);cursor:pointer;
-  background:var(--bg3);border:1px solid var(--border);
-  color:var(--sub);transition:all .15s;
-}
-.period-btn:hover{color:var(--text);border-color:var(--accent)}
-.period-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+/* ANALYTICS PAGE */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.analytics-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
 
-/* ── ANALYTICS ── */
-.analytics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
-.analytics-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.stat-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--bg3);border-radius:8px;padding:8px 12px;
-  margin:0 6px 6px 0;font-size:12px;
-}
-.stat-badge-val{font-family:var(--font-mono);font-weight:700;color:var(--accent)}
+/* MANAGER PAGE */
+.mgr-back{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:16px;width:fit-content}
+.mgr-back:hover{color:var(--yellow)}
+.mgr-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.mgr-avatar{width:48px;height:48px;border-radius:12px;background:var(--yellow-bg);border:2px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:16px;color:var(--yellow)}
+.mgr-name{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text)}
+.mgr-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.mgr-lessons{background:var(--bg2);border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
+.mgr-lessons-header{display:grid;grid-template-columns:1fr 80px 80px 80px 120px;gap:8px;padding:8px 12px;font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
+.mgr-lesson-row{display:grid;grid-template-columns:1fr 80px 80px 80px 120px;gap:8px;padding:8px 12px;font-size:12px;color:var(--sub);border-bottom:1px solid var(--bg3);align-items:center}
+.mgr-lesson-row:last-child{border-bottom:none}
+.mgr-lesson-row:hover{background:var(--bg3)}
+.crm-link{font-size:10px;color:var(--blue);text-decoration:none}
+.crm-link:hover{text-decoration:underline}
 
-/* ── MANAGER DETAIL ── */
-.manager-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.mcard{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:10px;padding:14px;cursor:pointer;
-  transition:all .15s;
-}
-.mcard:hover{border-color:var(--accent);transform:translateY(-1px)}
-.mcard.selected{border-color:var(--accent);background:var(--bg3)}
-.mcard-name{font-weight:700;font-size:13px;color:var(--text);margin-bottom:8px}
-.mcard-stats{display:flex;gap:10px;flex-wrap:wrap}
-.mcard-stat{font-size:11px;color:var(--muted)}
-.mcard-stat strong{color:var(--text);font-family:var(--font-mono)}
-.mcard-badge{font-size:10px;margin-top:8px}
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:32px;margin-bottom:8px}
+.empty-text{font-size:13px}
 
-.detail-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
-.detail-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.detail-name{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--text)}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-/* ── RESPONSIVE ── */
-@media(max-width:1100px){
+/* RESPONSIVE */
+@media(max-width:960px){
   .kpis{grid-template-columns:repeat(3,1fr)}
-  .main-grid{grid-template-columns:1fr}
-  .analytics-grid{grid-template-columns:1fr 1fr}
-  .manager-cards{grid-template-columns:repeat(2,1fr)}
+  .main-grid,.charts-row,.analytics-grid{grid-template-columns:1fr}
+  .countdown-row{grid-template-columns:auto 1fr 1fr}
+  .analytics-grid-3{grid-template-columns:1fr 1fr}
 }
-@media(max-width:700px){
+@media(max-width:600px){
   body{font-size:12px}
   .kpis{grid-template-columns:repeat(2,1fr)}
-  .charts-row,.analytics-2{grid-template-columns:1fr}
-  .countdown-row{grid-template-columns:1fr}
-  .countdown-stats{grid-template-columns:1fr 1fr}
-  .page{padding:12px 14px 30px}
-  .nav{padding:0 14px}
+  .nav{padding:0 12px}
+  .page{padding:14px 12px}
+  .countdown-row{grid-template-columns:1fr 1fr}
+  .day-ring{display:none}
+  .mgr-stats{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="nav">
   <div class="nav-brand">
-    <div class="nav-brand-dot"></div>
-    EDUSON KIDS
+    <div class="nav-logo">EDUSON KIDS <span>· SALES OS</span></div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('main',this)">Главная</button>
-    <button class="nav-tab" onclick="showPage('analytics',this)">Аналитика</button>
-    <button class="nav-tab" onclick="showPage('manager',this)">Менеджеры</button>
+    <button class="tab-btn active" onclick="showPage('main')">Главная</button>
+    <button class="tab-btn" onclick="showPage('analytics')">Аналитика</button>
+    <button class="tab-btn" onclick="showPage('managers')">Менеджеры</button>
   </div>
   <div class="nav-right">
-    <div class="nav-upd" id="upd">загрузка...</div>
-    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    <div class="upd" id="upd">—</div>
     <button class="nav-btn" onclick="loadAll()">↻ Обновить</button>
   </div>
 </nav>
 
-<!-- PAGE: MAIN -->
-<div id="page-main" class="page active">
+<!-- ══════════════ ГЛАВНАЯ ══════════════ -->
+<div class="page active" id="page-main">
 
   <div class="alert">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><path d="M7 1L13 12H1L7 1Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 5.5V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="10" r=".75" fill="currentColor"/></svg>
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M8 1.5L14.5 13.5H1.5L8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="currentColor"/></svg>
     <span id="alert-text">Загрузка данных...</span>
   </div>
 
-  <!-- COUNTDOWN -->
   <div class="countdown-row">
-    <div class="countdown-circle">
-      <svg class="circle-svg" width="120" height="120" viewBox="0 0 120 120">
-        <circle class="circle-bg" cx="60" cy="60" r="50"/>
-        <circle class="circle-fill" id="circle-fill" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="314"/>
+    <div class="day-ring">
+      <svg viewBox="0 0 80 80">
+        <circle class="ring-bg" cx="40" cy="40" r="32"/>
+        <circle class="ring-fg" id="ring-fg" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"/>
+        <text class="ring-text" x="40" y="44" text-anchor="middle" id="ring-days">—</text>
+        <text class="ring-sub" x="40" y="55" text-anchor="middle">ДНЕЙ</text>
       </svg>
-      <div class="circle-label">
-        <div class="circle-days" id="days-left">—</div>
-        <div class="circle-sub">ДНЕЙ</div>
-      </div>
     </div>
-    <div class="countdown-stats">
-      <div class="cstat">
-        <div class="cstat-label">Осталось выручки</div>
-        <div class="cstat-val r" id="rev-left">—</div>
-        <div class="cstat-sub">до плана месяца</div>
-      </div>
-      <div class="cstat">
-        <div class="cstat-label">Нужно в день</div>
-        <div class="cstat-val a" id="rev-per-day">—</div>
-        <div class="cstat-sub">чтобы закрыть месяц</div>
-      </div>
-      <div class="cstat">
-        <div class="cstat-label">МК осталось</div>
-        <div class="cstat-val" id="mk-left" style="color:var(--text)">—</div>
-        <div class="cstat-sub">до плана</div>
-      </div>
+    <div class="countdown-card">
+      <div class="cc-label">Осталось выручки</div>
+      <div class="cc-val a" id="cc-rev">—</div>
+      <div class="cc-sub" id="cc-rev-sub">до конца месяца</div>
+    </div>
+    <div class="countdown-card">
+      <div class="cc-label">Нужно в день</div>
+      <div class="cc-val g" id="cc-daily">—</div>
+      <div class="cc-sub">чтобы закрыть месяц</div>
+    </div>
+    <div class="countdown-card">
+      <div class="cc-label">МК осталось</div>
+      <div class="cc-val b" id="cc-mk">—</div>
+      <div class="cc-sub">до плана</div>
     </div>
   </div>
 
-  <!-- KPIS -->
   <div class="kpis">
-    <div class="kpi bad"><div class="kl">Выручка факт</div><div class="kv r" id="kv-rev">—</div><div class="ks m" id="ks-rev">—</div><span class="ktag bad" id="kt-rev">—</span></div>
-    <div class="kpi warn"><div class="kl">МК проведено</div><div class="kv a" id="kv-mk">—</div><div class="ks m" id="ks-mk">—</div><span class="ktag warn" id="kt-mk">—</span></div>
+    <div class="kpi bad"><div class="kl">Выручка факт</div><div class="kv r" id="kv-rev">—</div><div class="ks" id="ks-rev">—</div><span class="ktag bad" id="kt-rev">—</span></div>
+    <div class="kpi warn"><div class="kl">МК проведено</div><div class="kv a" id="kv-mk">—</div><div class="ks" id="ks-mk">—</div><span class="ktag warn" id="kt-mk">—</span></div>
     <div class="kpi ok"><div class="kl">Конверсия</div><div class="kv g" id="kv-conv">—</div><div class="ks g" id="ks-conv">—</div><span class="ktag ok" id="kt-conv">—</span></div>
-    <div class="kpi ok"><div class="kl">Средний чек</div><div class="kv a" id="kv-avg">—</div><div class="ks m" id="ks-avg">—</div><span class="ktag ok" id="kt-avg">—</span></div>
-    <div class="kpi info"><div class="kl">Выручка / МК</div><div class="kv b" id="kv-rpm">—</div><div class="ks m" id="ks-rpm">—</div><span class="ktag info" id="kt-rpm">—</span></div>
+    <div class="kpi ok"><div class="kl">Средний чек</div><div class="kv a" id="kv-avg">—</div><div class="ks" id="ks-avg">—</div><span class="ktag ok" id="kt-avg">—</span></div>
+    <div class="kpi info"><div class="kl">Выручка / МК</div><div class="kv b" id="kv-rpm">—</div><div class="ks" id="ks-rpm">—</div><span class="ktag info" id="kt-rpm">—</span></div>
   </div>
 
-  <!-- MAIN GRID -->
   <div class="main-grid">
     <div class="panel">
-      <div class="panel-title">
-        <span>Рейтинг команды</span>
-        <input type="text" id="search-input" placeholder="🔍 Поиск менеджера..." oninput="filterTeam(this.value)">
+      <div class="pt">
+        Рейтинг команды
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Поиск менеджера..." oninput="filterTeam(this.value)">
+        </div>
       </div>
-      <table class="tt">
+      <table class="team-table">
         <thead><tr><th>Менеджер</th><th>МК</th><th>Оплат</th><th>Конв.</th><th>Выручка</th><th>₽/МК</th><th></th></tr></thead>
         <tbody id="team-tbody"></tbody>
       </table>
     </div>
     <div class="panel">
-      <div class="panel-title">МК сегодня</div>
-      <div id="slots-container"><div class="slot-empty">Загрузка слотов...</div></div>
+      <div class="pt">МК сегодня <span class="pt-badge" id="slots-count">0</span></div>
+      <div id="slots-container"><div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Загрузка слотов...</div></div></div>
     </div>
   </div>
 
-  <!-- CHARTS -->
   <div class="charts-row">
     <div class="panel">
-      <div class="panel-title">
-        <span>Выполнение плана</span>
+      <div class="pt">
+        Выполнение плана
       </div>
       <div id="prog-bars" style="margin-bottom:16px"></div>
-      <div class="panel-title" style="margin-top:8px">
-        <span>Выручка по неделям</span>
-        <div style="display:flex;gap:4px">
+      <div class="pt">
+        Динамика выручки
+        <div class="period-btns">
           <button class="period-btn active" onclick="setPeriod('week',this)">Нед</button>
           <button class="period-btn" onclick="setPeriod('month',this)">Мес</button>
         </div>
       </div>
-      <div style="position:relative;height:90px"><canvas id="wkChart"></canvas></div>
+      <div style="position:relative;height:100px"><canvas id="revChart"></canvas></div>
     </div>
     <div class="panel">
-      <div class="panel-title">Выручка по менеджерам</div>
-      <div style="position:relative;height:180px"><canvas id="revChart"></canvas></div>
+      <div class="pt">Выручка по менеджерам</div>
+      <div style="position:relative;height:200px"><canvas id="teamChart"></canvas></div>
     </div>
   </div>
 
-  <!-- INSIGHT -->
   <div class="insight">
-    <div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px">Что делать сейчас</div>
+    <div class="pt" style="margin-bottom:10px">Что делать сейчас</div>
     <div class="insight-items" id="insight-items"></div>
   </div>
 </div>
 
-<!-- PAGE: ANALYTICS -->
-<div id="page-analytics" class="page">
-  <div class="period-row">
-    <button class="period-btn active" onclick="setAnalyticsPeriod('month',this)">Этот месяц</button>
-    <button class="period-btn" onclick="setAnalyticsPeriod('week',this)">Эта неделя</button>
-    <button class="period-btn" onclick="setAnalyticsPeriod('all',this)">Всё время</button>
-  </div>
-
+<!-- ══════════════ АНАЛИТИКА ══════════════ -->
+<div class="page" id="page-analytics">
   <div class="analytics-grid">
     <div class="panel">
-      <div class="panel-title">Топ возражений</div>
+      <div class="pt">Топ возражений</div>
       <div style="position:relative;height:200px"><canvas id="objChart"></canvas></div>
     </div>
     <div class="panel">
-      <div class="panel-title">Распределение по практикам</div>
+      <div class="pt">Распределение по практикам</div>
       <div style="position:relative;height:200px"><canvas id="practChart"></canvas></div>
     </div>
+  </div>
+  <div class="analytics-grid">
     <div class="panel">
-      <div class="panel-title">Пакетный микс</div>
-      <div style="position:relative;height:200px"><canvas id="packChart"></canvas></div>
+      <div class="pt">Пакетный микс</div>
+      <div style="position:relative;height:180px"><canvas id="packChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="pt">Конверсия по дням</div>
+      <div style="position:relative;height:180px"><canvas id="convChart"></canvas></div>
     </div>
   </div>
-
-  <div class="analytics-2">
-    <div class="panel">
-      <div class="panel-title">Варианты оплаты</div>
-      <div style="position:relative;height:180px"><canvas id="payChart"></canvas></div>
-    </div>
-    <div class="panel">
-      <div class="panel-title">Конверсия по дням недели</div>
-      <div style="position:relative;height:180px"><canvas id="dayChart"></canvas></div>
-    </div>
-  </div>
-
   <div class="panel">
-    <div class="panel-title">Все МК — детальная таблица</div>
-    <div style="overflow-x:auto">
-      <table class="tt" id="detail-table">
-        <thead><tr><th>Дата</th><th>Менеджер</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Бронь</th><th>Возражение</th></tr></thead>
-        <tbody id="detail-tbody"></tbody>
-      </table>
-    </div>
+    <div class="pt">Все уроки — история</div>
+    <div id="all-lessons-table"></div>
   </div>
 </div>
 
-<!-- PAGE: MANAGER -->
-<div id="page-manager" class="page">
-  <div class="manager-cards" id="manager-cards"></div>
-  <div id="manager-detail" style="display:none">
-    <div class="detail-panel">
-      <div class="detail-header">
-        <div class="detail-name" id="detail-name">—</div>
-        <button class="nav-btn" onclick="closeDetail()">✕ Закрыть</button>
-      </div>
-      <div class="kpis" style="margin-bottom:16px" id="detail-kpis"></div>
-      <div class="detail-grid">
-        <div>
-          <div class="panel-title">Возражения</div>
-          <div style="position:relative;height:160px"><canvas id="detailObjChart"></canvas></div>
-        </div>
-        <div>
-          <div class="panel-title">Динамика по неделям</div>
-          <div style="position:relative;height:160px"><canvas id="detailWkChart"></canvas></div>
-        </div>
+<!-- ══════════════ МЕНЕДЖЕРЫ ══════════════ -->
+<div class="page" id="page-managers">
+  <div id="mgr-list-view">
+    <div class="analytics-grid-3" id="mgr-cards"></div>
+  </div>
+  <div id="mgr-detail-view" style="display:none">
+    <div class="mgr-back" onclick="showMgrList()">← Назад к команде</div>
+    <div class="mgr-header">
+      <div class="mgr-avatar" id="mgr-avatar">—</div>
+      <div>
+        <div class="mgr-name" id="mgr-name">—</div>
+        <div style="font-size:12px;color:var(--muted)" id="mgr-sub">—</div>
       </div>
     </div>
+    <div class="mgr-stats" id="mgr-stats"></div>
+    <div class="panel" style="margin-bottom:12px">
+      <div class="pt">Динамика по неделям</div>
+      <div style="position:relative;height:120px"><canvas id="mgrWeekChart"></canvas></div>
+    </div>
+    <div class="panel" style="margin-bottom:12px">
+      <div class="pt">Возражения</div>
+      <div style="position:relative;height:160px"><canvas id="mgrObjChart"></canvas></div>
+    </div>
     <div class="panel">
-      <div class="panel-title">История МК</div>
-      <div style="overflow-x:auto">
-        <table class="tt" id="detail-history">
-          <thead><tr><th>Дата</th><th>Время</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Возражение</th><th>CRM</th></tr></thead>
-          <tbody id="detail-history-body"></tbody>
-        </table>
-      </div>
+      <div class="pt">История уроков</div>
+      <div id="mgr-lessons"></div>
     </div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════
-// НАСТРОЙКИ
-// ══════════════════════════════════════════
-const SHEET_ID = '1U5L4zrFcqPAy4_6VXA5xHxqM2xAKPkWW-At2neINj18';
-const GVIZ = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet=';
+// ══════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════
+const BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTWvSJXhLj4Vfbwvrm7QprGNfAqUxwNH0D4DHD-rpjNQRD1H5rLh_jA3hae_iFAq8FYwOm6tGIctTeV/pub';
+const SHEET_URLS = {
+  'Ответы на форму': BASE_URL + '?gid=1621541455&single=true&output=csv',
+  'Таргеты':         BASE_URL + '?gid=325926893&single=true&output=csv',
+  'Менеджеры':       BASE_URL + '?gid=1534781490&single=true&output=csv',
+  'Слоты':           BASE_URL + '?gid=1947250313&single=true&output=csv',
+};
+const GVZ = (sheet) => SHEET_URLS[sheet] || '';
 
-// ══════════════════════════════════════════
-// ТЕМА
-// ══════════════════════════════════════════
-let theme = localStorage.getItem('eds2-theme') || 'dark';
-function applyTheme(t){
-  theme=t;
-  document.documentElement.setAttribute('data-theme',t);
-  document.getElementById('themeBtn').textContent = t==='dark'?'☀️':'🌙';
-  localStorage.setItem('eds2-theme',t);
-  rebuildCharts();
-}
-function toggleTheme(){ applyTheme(theme==='dark'?'light':'dark'); }
-applyTheme(theme);
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let lessons = [];      // All form responses
+let managers = [];     // Active managers list
+let targets = {};      // Current month targets
+let slots = [];        // Today's MK slots
+let currentPeriod = 'week';
+let currentMgr = null;
 
-// ══════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════
-function showPage(id, btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  btn.classList.add('active');
-}
+// Charts
+let charts = {};
 
-// ══════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════
-let allRows = [];
-let teamData = [];
-let targets = { mk:52, rev:1885140, conv:40, avg:36000, rpm:180000 };
-let managers = [];
-let todaySlots = [];
-let analyticsPeriod = 'month';
-
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
 const fmt = n => Math.round(n).toLocaleString('ru');
 const pct = (a,b) => b ? Math.round(a/b*100) : 0;
+const cc = s => s ? s.replace(/^"|"$/g,'').trim() : '';
 
-function gc(){
-  const d = theme==='dark';
-  return {
-    grid: d?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)',
-    tick: d?'#555':'#999',
-    accent:'#f5c518',
-    green: d?'#22c55e':'#16a34a',
-    red:   d?'#ef4444':'#dc2626',
-    amber: d?'#f59e0b':'#d97706',
-    blue:  d?'#3b82f6':'#2563eb',
-  };
-}
-
-async function fetchCSV(sheet){
-  try{
-    const r = await fetch(GVIZ + encodeURIComponent(sheet));
-    if(!r.ok) return [];
-    const txt = await r.text();
-    const lines = txt.trim().split('\n');
-    const headers = parseCSVLine(lines[0]);
-    const rows = [];
-    for(let i=1;i<lines.length;i++){
-      const cols = parseCSVLine(lines[i]);
-      const obj = {};
-      headers.forEach((h,j)=>{ obj[h.trim().replace(/^"|"$/g,'')] = (cols[j]||'').trim().replace(/^"|"$/g,''); });
-      rows.push(obj);
+function parseCSV(txt) {
+  const rows = [];
+  const lines = txt.trim().split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let c = 0; c < lines[i].length; c++) {
+      const ch = lines[i][c];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
     }
-    return rows;
-  }catch(e){ console.log('CSV error',sheet,e); return []; }
-}
-
-function parseCSVLine(line){
-  const res=[]; let cur=''; let inQ=false;
-  for(let i=0;i<line.length;i++){
-    const c=line[i];
-    if(c==='"'){ inQ=!inQ; }
-    else if(c===','&&!inQ){ res.push(cur); cur=''; }
-    else { cur+=c; }
+    cols.push(cur.trim());
+    rows.push(cols);
   }
-  res.push(cur);
-  return res;
+  return rows;
 }
 
-async function loadAll(){
-  const [rows, tgtRows, slotRows, mgrRows] = await Promise.all([
-    fetchCSV('Ответы формы'),
+async function fetchCSV(sheetName) {
+  const url = GVZ(sheetName);
+  if (!url) { console.log('No URL for sheet:', sheetName); return []; }
+  try {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) { console.log('HTTP error:', sheetName, r.status); return []; }
+    const txt = await r.text();
+    if (!txt || txt.includes('<!DOCTYPE')) { console.log('Bad response for:', sheetName); return []; }
+    return parseCSV(txt);
+  } catch(e) { console.log('Fetch error:', sheetName, e); return []; }
+}
+
+function getWorkdaysLeft() {
+  const now = new Date();
+  const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  let days = 0;
+  for (let d = new Date(now); d <= lastDay; d.setDate(d.getDate()+1)) {
+    const wd = d.getDay();
+    if (wd !== 0 && wd !== 6) days++;
+  }
+  return days;
+}
+
+function getTotalWorkdays() {
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  let days = 0;
+  for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate()+1)) {
+    const wd = d.getDay();
+    if (wd !== 0 && wd !== 6) days++;
+  }
+  return days;
+}
+
+function getChartColors() {
+  return { grid: 'rgba(255,255,255,0.05)', tick: '#606060', yellow: '#f5c842', green: '#3ecf8e', red: '#f05252', blue: '#60a5fa' };
+}
+
+// ══════════════════════════════════════════════════════
+// LOAD DATA
+// ══════════════════════════════════════════════════════
+async function loadAll() {
+  // Load all sheets in parallel
+  const [rawLessons, rawManagers, rawTargets, rawSlots] = await Promise.all([
+    fetchCSV('Ответы на форму'),
+    fetchCSV('Менеджеры'),
     fetchCSV('Таргеты'),
     fetchCSV('Слоты'),
-    fetchCSV('Менеджеры'),
   ]);
 
-  allRows = rows;
-  todaySlots = slotRows;
-  managers = mgrRows.filter(r => (r['Активен']||'').toLowerCase()==='да').map(r=>r['Имя']||'');
-
-  // Targets — берём текущий месяц
-  if(tgtRows.length>0){
-    const now = new Date();
-    const monthStr = now.toLocaleString('ru',{month:'long',year:'numeric'});
-    let tgt = tgtRows.find(r=>{
-      const m = (r['Месяц']||'').toLowerCase();
-      return m.includes(now.toLocaleString('ru',{month:'long'}).toLowerCase());
-    }) || tgtRows[tgtRows.length-1];
-    if(tgt){
-      targets.mk  = parseInt(tgt['МК план'])||targets.mk;
-      targets.rev = parseInt((tgt['Выручка план']||'').replace(/\D/g,''))||targets.rev;
-      targets.avg = parseInt((tgt['Ср. чек план']||'').replace(/\D/g,''))||targets.avg;
-      targets.rpm = parseInt((tgt['₽/МК план']||'').replace(/\D/g,''))||targets.rpm;
-    }
-  }
-
-  processData();
-  renderAll();
-
-  const n=new Date();
-  document.getElementById('upd').textContent = n.toLocaleDateString('ru',{day:'2-digit',month:'short'})+' '+n.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-
-function processData(){
-  // Фильтруем по активным менеджерам
-  // Строим teamData из ответов формы
-  const byManager = {};
-  const activeSet = new Set(managers.map(m=>m.trim()));
-
-  allRows.forEach(row => {
-    const raw = (row['Кто провёл урок?']||row['Менеджер']||'').trim();
-    if(!raw) return;
-    // Пытаемся матчить с активными менеджерами
-    const name = raw;
-    if(!byManager[name]) byManager[name]={name,mk:0,paid:0,rev:0,rows:[]};
-    byManager[name].mk++;
-    byManager[name].rows.push(row);
-
-    const sum = parseInt((row['Сумма оплаты в рублях']||'').replace(/\D/g,''))||0;
-    if(sum>0){ byManager[name].paid++; byManager[name].rev+=sum; }
-  });
-
-  teamData = Object.values(byManager)
-    .filter(r=> managers.length===0 || managers.some(m=>r.name.includes(m.split(' ')[0])||m.includes(r.name.split(' ')[0])))
-    .sort((a,b)=>b.rev-a.rev)
-    .map(r=>({
-      ...r,
-      conv: r.mk ? Math.round(r.paid/r.mk*1000)/10 : 0,
-      rpm:  r.mk ? Math.round(r.rev/r.mk) : 0,
-      avg:  r.paid ? Math.round(r.rev/r.paid) : 0,
-    }));
-}
-
-function calcTotals(data){
-  const mk=data.reduce((s,r)=>s+r.mk,0);
-  const paid=data.reduce((s,r)=>s+r.paid,0);
-  const rev=data.reduce((s,r)=>s+r.rev,0);
-  return {mk,paid,rev,conv:mk?Math.round(paid/mk*1000)/10:0,avg:paid?Math.round(rev/paid):0,rpm:mk?Math.round(rev/mk):0};
-}
-
-function getFilteredRows(){
-  const now=new Date();
-  if(analyticsPeriod==='week'){
-    const wStart=new Date(now); wStart.setDate(now.getDate()-now.getDay()+1); wStart.setHours(0,0,0,0);
-    return allRows.filter(r=>{ const d=parseDate(r['Дата МК']||r['Отметка времени']); return d&&d>=wStart; });
-  } else if(analyticsPeriod==='month'){
-    return allRows.filter(r=>{ const d=parseDate(r['Дата МК']||r['Отметка времени']); return d&&d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear(); });
-  }
-  return allRows;
-}
-
-function parseDate(str){
-  if(!str) return null;
-  try{ const d=new Date(str); return isNaN(d)?null:d; }catch(e){ return null; }
-}
-
-// ══════════════════════════════════════════
-// RENDER
-// ══════════════════════════════════════════
-function renderAll(){
-  const t=calcTotals(teamData);
-  renderCountdown(t);
-  renderKPIs(t);
-  renderAlert(t);
-  renderTeam(teamData);
-  renderSlots();
-  renderProgress(t);
-  renderCharts();
-  renderInsights(t);
-  renderAnalytics();
-  renderManagerCards();
-}
-
-function renderCountdown(t){
-  const now=new Date();
-  const lastDay=new Date(now.getFullYear(),now.getMonth()+1,0);
-  const daysLeft=lastDay.getDate()-now.getDate()+1;
-  const daysTotal=lastDay.getDate();
-  const revLeft=Math.max(0,targets.rev-t.rev);
-  const revPerDay=daysLeft>0?Math.round(revLeft/daysLeft):0;
-  const mkLeft=Math.max(0,targets.mk-t.mk);
-  const pctDone=(daysTotal-daysLeft)/daysTotal;
-  const circumference=314;
-  const offset=circumference-(circumference*pctDone);
-
-  document.getElementById('days-left').textContent=daysLeft;
-  document.getElementById('circle-fill').style.strokeDashoffset=offset;
-  document.getElementById('rev-left').textContent=fmt(revLeft)+' ₽';
-  document.getElementById('rev-per-day').textContent=fmt(revPerDay)+' ₽';
-  document.getElementById('mk-left').textContent=mkLeft+' МК';
-}
-
-function renderKPIs(t){
-  const rp=pct(t.rev,targets.rev), mp=pct(t.mk,targets.mk);
-  document.getElementById('kv-rev').textContent=fmt(t.rev)+' ₽';
-  document.getElementById('ks-rev').textContent=rp+'% от плана ('+fmt(targets.rev)+' ₽)';
-  document.getElementById('kt-rev').textContent=rp+'%';
-  document.getElementById('kv-mk').textContent=t.mk+' / '+targets.mk;
-  document.getElementById('ks-mk').textContent=mp+'% · осталось '+(targets.mk-t.mk)+' МК';
-  document.getElementById('kt-mk').textContent=(t.mk-targets.mk)+' МК';
-  document.getElementById('kv-conv').textContent=t.conv+'%';
-  document.getElementById('ks-conv').textContent='план '+targets.conv+'% · +'+(t.conv-targets.conv).toFixed(1)+'%';
-  document.getElementById('kt-conv').textContent='↑'+pct(t.conv,targets.conv)+'%';
-  document.getElementById('kv-avg').textContent=fmt(t.avg)+' ₽';
-  document.getElementById('ks-avg').textContent='цель '+fmt(targets.avg)+' ₽ · '+pct(t.avg,targets.avg)+'%';
-  document.getElementById('kt-avg').textContent='≈ норма';
-  document.getElementById('kv-rpm').textContent=fmt(t.rpm)+' ₽';
-  document.getElementById('ks-rpm').textContent='цель '+fmt(targets.rpm)+' ₽';
-  document.getElementById('kt-rpm').textContent='↑ растём';
-}
-
-function renderAlert(t){
-  document.getElementById('alert-text').innerHTML=
-    '<strong>Узкое место:</strong> нужно ещё <strong>+'+(targets.mk-t.mk)+' МК</strong> до конца месяца. '+
-    'Конверсия '+t.conv+'% · Осталось: <strong>'+fmt(targets.rev-t.rev)+' ₽</strong>';
-}
-
-function getBadge(r,rank){
-  if(r.mk===0&&r.rev===0) return '<span class="eb">🔴</span>';
-  if(rank===0) return '<span class="eb">👑</span>';
-  const c=r.mk?r.paid/r.mk:0;
-  if(c>=0.5) return '<span class="eb">⭐</span>';
-  if(c>=0.35) return '<span class="eb">😊</span>';
-  if(c>0||r.mk>0) return '<span class="eb">⚠️</span>';
-  return '<span class="eb">🔴</span>';
-}
-
-let filteredTeam = [];
-function renderTeam(data){
-  filteredTeam=[...data];
-  const t=calcTotals(data);
-  const tbody=document.getElementById('team-tbody');
-  tbody.innerHTML='';
-  data.forEach((r,i)=>{
-    const conv=r.mk?(r.paid/r.mk*100).toFixed(1):'—';
-    const cn=parseFloat(conv);
-    const cc=cn>=40?'var(--green)':cn>=30?'var(--amber)':'var(--red)';
-    const dim=r.rev===0&&r.mk===0;
-    tbody.innerHTML+=`<tr class="member-row" onclick="openManagerDetail('${r.name}')">
-      <td class="${dim?'':'tname'}" style="color:${dim?'var(--muted)':'var(--text)'}">${r.name}</td>
-      <td style="color:${dim?'var(--muted)':'var(--sub)'}">${r.mk}</td>
-      <td>${r.paid}</td>
-      <td style="color:${r.mk?cc:'var(--muted)'}">${conv!=='—'?conv+'%':'—'}</td>
-      <td style="color:${dim?'var(--muted)':r.rev>100000?'var(--green)':'var(--sub)'}">${fmt(r.rev)}</td>
-      <td style="color:${dim?'var(--muted)':'var(--blue)'}">${r.rpm?fmt(r.rpm):'—'}</td>
-      <td>${getBadge(r,i)}</td>
-    </tr>`;
-  });
-  tbody.innerHTML+=`<tr class="total-row"><td>Итого</td><td>${t.mk}</td><td>${t.paid}</td><td class="g">${t.conv}%</td><td class="g">${fmt(t.rev)} ₽</td><td class="b">${fmt(t.rpm)}</td><td></td></tr>`;
-}
-
-function filterTeam(q){
-  const query=q.toLowerCase();
-  const filtered=teamData.filter(r=>r.name.toLowerCase().includes(query));
-  renderTeam(filtered);
-}
-
-function renderSlots(){
-  const el=document.getElementById('slots-container');
-  if(!todaySlots.length){ el.innerHTML='<div class="slot-empty">Нет МК на сегодня</div>'; return; }
-  const groups={};
-  const now=new Date();
-  todaySlots.forEach(s=>{
-    const who=(s['Менеджер']||s['who']||'').trim();
-    if(!who) return;
-    if(!groups[who]) groups[who]=[];
-    const time=(s['Время']||s['time']||'').trim();
-    let status=(s['Статус']||s['status']||'wait').trim().toLowerCase();
-    // Автостатус по времени
-    if(time){
-      const [h,m]=time.split(':').map(Number);
-      const slotStart=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0);
-      const slotEnd=new Date(slotStart.getTime()+60*60*1000);
-      if(now>=slotEnd) status='done';
-      else if(now>=slotStart&&now<slotEnd) status='live';
-      else status='wait';
-    }
-    groups[who].push({time,status});
-  });
-
-  const colors=['var(--green)','var(--amber)','var(--blue)','#a855f7','#ec4899'];
-  const dotC={done:'var(--muted)',live:'var(--green)',wait:'var(--blue)'};
-  const stMap={done:['s-done','завершён'],live:['s-live','Live'],wait:['s-wait','ожидает']};
-  let html='<div class="slot-grid">';
-  Object.entries(groups).forEach(([who,slots],gi)=>{
-    const c=colors[gi%colors.length];
-    html+=`<div class="slot-manager"><div class="slot-name" style="color:${c}">${who}</div>`;
-    slots.forEach(s=>{
-      const[cls,lbl]=stMap[s.status]||stMap.wait;
-      html+=`<div class="slot-row"><div class="slot-dot" style="background:${dotC[s.status]}"></div><span class="slot-time">${s.time}</span><span class="slot-status ${cls}">${lbl}</span></div>`;
+  // Parse lessons (skip header row)
+  lessons = [];
+  for (let i = 1; i < rawLessons.length; i++) {
+    const r = rawLessons[i];
+    if (!r[1]) continue; // skip empty rows
+    const rev = parseFloat(cc(r[10]).replace(/[^0-9.]/g,'')) || 0;
+    const isPaid = (cc(r[9]) !== 'Не оплатили') && rev > 0;
+    const isBron = cc(r[11]).toLowerCase() === 'да';
+    lessons.push({
+      timestamp: cc(r[0]),
+      manager:   cc(r[1]),
+      date:      cc(r[2]),
+      time:      cc(r[3]),
+      crm:       cc(r[4]),
+      recording: cc(r[5]),
+      practice:  cc(r[6]),
+      age:       cc(r[7]),
+      pack:      cc(r[8]),
+      payType:   cc(r[9]),
+      rev:       rev,
+      paid:      isPaid,
+      bron:      isBron,
+      notes:     cc(r[12]),
+      objection: cc(r[13]),
     });
-    html+='</div>';
-  });
-  html+='</div>';
-  const tot=todaySlots.length, pot=Math.round(tot*0.45);
-  html+=`<div class="slot-pot"><span>Всего: <strong>${tot}</strong></span><span>Потенциал: <strong>+${pot} · ~${fmt(pot*35000)} ₽</strong></span></div>`;
-  el.innerHTML=html;
-}
-
-function renderProgress(t){
-  const bars=[
-    {l:'МК',v:pct(t.mk,targets.mk),c:pct(t.mk,targets.mk)>=80?'var(--green)':'var(--amber)'},
-    {l:'Выручка',v:pct(t.rev,targets.rev),c:pct(t.rev,targets.rev)<50?'var(--red)':'var(--amber)'},
-    {l:'Конверсия',v:Math.min(100,pct(t.conv,targets.conv)),c:'var(--green)'},
-    {l:'Ср. чек',v:pct(t.avg,targets.avg),c:'var(--green)'},
-  ];
-  document.getElementById('prog-bars').innerHTML=bars.map(b=>`
-    <div class="prog-row">
-      <span class="prog-label">${b.l}</span>
-      <div class="prog-track"><div class="prog-fill" style="width:${b.v}%;background:${b.c}"></div></div>
-      <span class="prog-pct" style="color:${b.c}">${b.v}%</span>
-    </div>`).join('');
-}
-
-function renderInsights(t){
-  const items=[];
-  const atRisk=teamData.filter(r=>r.mk===0);
-  const lowConv=teamData.filter(r=>r.mk>3&&r.paid/r.mk<0.35);
-  items.push({tag:'Фокус',tc:'a',text:`Нужно +${targets.mk-t.mk} МК до конца месяца. Конверсия в норме — работаем над количеством МК.`});
-  if(lowConv.length) items.push({tag:'Внимание',tc:'a',text:`${lowConv.map(r=>r.name.split(' ')[0]).join(', ')} — низкая конверсия. Разобрать звонок сегодня.`});
-  if(atRisk.length) items.push({tag:'Риск',tc:'r',text:`${atRisk.map(r=>r.name.split(' ')[0]).join(', ')} — 0 МК. Поставить первый слот сегодня.`});
-  if(teamData.length&&teamData[0].mk>0) items.push({tag:'Лидер',tc:'g',text:`${teamData[0].name.split(' ')[0]} — ${teamData[0].mk} МК, ${teamData[0].conv}% конв., ${fmt(teamData[0].rev)} ₽. Снять лучшие практики.`});
-  document.getElementById('insight-items').innerHTML=items.map(i=>`<div class="insight-item"><span class="itag ${i.tc}">${i.tag}</span><span>${i.text}</span></div>`).join('');
-}
-
-// ── CHARTS ──
-let charts={};
-function destroyChart(id){ if(charts[id]){ charts[id].destroy(); delete charts[id]; } }
-
-function makeChart(id,config){
-  destroyChart(id);
-  const el=document.getElementById(id);
-  if(!el) return;
-  charts[id]=new Chart(el,config);
-}
-
-function renderCharts(){
-  const c=gc();
-  const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}};
-
-  // Weekly revenue
-  const weeklyData=getWeeklyRevenue();
-  makeChart('wkChart',{type:'bar',data:{labels:weeklyData.labels,datasets:[{data:weeklyData.vals,backgroundColor:weeklyData.vals.map((_,i)=>i===weeklyData.vals.length-1?c.accent:'rgba(245,197,24,0.25)'),borderRadius:4,borderSkipped:false}]},options:{...base,scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>Math.round(v/1000)+'к'},grid:{color:c.grid}}}}});
-
-  // Revenue by manager
-  const sorted=[...teamData].sort((a,b)=>b.rev-a.rev);
-  makeChart('revChart',{type:'bar',data:{labels:sorted.map(r=>r.name.split(' ')[0]),datasets:[{data:sorted.map(r=>r.rev),backgroundColor:sorted.map((_,i)=>[c.accent,'rgba(245,197,24,0.6)','rgba(245,197,24,0.4)','rgba(245,197,24,0.25)','rgba(245,197,24,0.15)'][Math.min(i,4)]),borderRadius:4,borderSkipped:false}]},options:{...base,scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>Math.round(v/1000)+'к'},grid:{color:c.grid}}}}});
-}
-
-function getWeeklyRevenue(){
-  const now=new Date();
-  const weeks=[];
-  for(let w=4;w>=0;w--){
-    const start=new Date(now); start.setDate(now.getDate()-w*7-now.getDay()+1); start.setHours(0,0,0,0);
-    const end=new Date(start); end.setDate(start.getDate()+6); end.setHours(23,59,59,999);
-    const label='Нд'+(5-w);
-    const val=allRows.reduce((s,r)=>{
-      const d=parseDate(r['Дата МК']||r['Отметка времени']);
-      if(!d||d<start||d>end) return s;
-      return s+(parseInt((r['Сумма оплаты в рублях']||'').replace(/\D/g,''))||0);
-    },0);
-    weeks.push({label,val});
   }
-  return {labels:weeks.map(w=>w.label),vals:weeks.map(w=>w.val)};
-}
 
-function rebuildCharts(){ renderCharts(); renderAnalytics(); }
+  // Parse managers — with fallback list
+  const FALLBACK_MANAGERS = ['Перебейносов А.', 'Куюмджу Д.', 'Николаев Г.', 'Папашвили Д.', 'Федяинов Е.', 'Масимова Р.'];
+  managers = [];
+  for (let i = 1; i < rawManagers.length; i++) {
+    const r = rawManagers[i];
+    const name = cc(r[0]);
+    const active = cc(r[1]).toLowerCase();
+    if (name && (active === 'да' || active === 'yes' || active === 'true' || active === '1')) {
+      managers.push(name);
+    }
+  }
+  if (managers.length === 0) {
+    console.log('Managers sheet empty — using fallback');
+    managers = FALLBACK_MANAGERS;
+  }
 
-// ── ANALYTICS ──
-function setAnalyticsPeriod(p,btn){
-  analyticsPeriod=p;
-  document.querySelectorAll('.period-row .period-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  // Parse targets — find current month
+  targets = { mk: 52, rev: 1885140, conv: 40, avg: 36000, rpm: 180000 };
+  const now = new Date();
+  const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const currentMonthStr = monthNames[now.getMonth()] + ' ' + now.getFullYear();
+  for (let i = 1; i < rawTargets.length; i++) {
+    const r = rawTargets[i];
+    if (!r[0]) continue;
+    const rowMonth = cc(r[0]);
+    if (rowMonth.includes(monthNames[now.getMonth()]) && rowMonth.includes(String(now.getFullYear()))) {
+      targets = {
+        mk:   parseInt(cc(r[1])) || 52,
+        rev:  parseInt(cc(r[2]).replace(/[^0-9]/g,'')) || 1885140,
+        avg:  parseInt(cc(r[3]).replace(/[^0-9]/g,'')) || 36000,
+        rpm:  parseInt(cc(r[4]).replace(/[^0-9]/g,'')) || 180000,
+        conv: 40,
+      };
+      break;
+    }
+  }
+
+  // Parse slots
+  slots = [];
+  const nowT = new Date();
+  for (let i = 1; i < rawSlots.length; i++) {
+    const r = rawSlots[i];
+    const time = cc(r[0]);
+    const who = cc(r[1]);
+    if (!time || !who) continue;
+    let status = cc(r[2]) || 'wait';
+    // Auto-update status based on current time
+    const [hh,mm] = time.split(':').map(Number);
+    const slotTime = new Date(nowT);
+    slotTime.setHours(hh, mm, 0, 0);
+    const slotEnd = new Date(slotTime.getTime() + 60*60*1000);
+    if (slotEnd < nowT) status = 'done';
+    else if (slotTime <= nowT && nowT < slotEnd) status = 'live';
+    else status = 'wait';
+    slots.push({ time, who, status });
+  }
+
+  // Render everything
+  renderMain();
   renderAnalytics();
+  renderManagers();
+
+  const n = new Date();
+  document.getElementById('upd').textContent =
+    n.toLocaleDateString('ru',{day:'2-digit',month:'short'}) + ' ' +
+    n.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
 }
 
-function setPeriod(p,btn){
-  document.querySelectorAll('.charts-row .period-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+// ══════════════════════════════════════════════════════
+// CALC TOTALS
+// ══════════════════════════════════════════════════════
+function calcTotals(data) {
+  const mk = data.length;
+  const paid = data.filter(r => r.paid).length;
+  const rev = data.reduce((s,r) => s+r.rev, 0);
+  const bron = data.filter(r => r.bron).length;
+  const conv = mk ? Math.round(paid/mk*1000)/10 : 0;
+  const avg = paid ? Math.round(rev/paid) : 0;
+  const rpm = mk ? Math.round(rev/mk) : 0;
+  return { mk, paid, rev, conv, avg, rpm, bron };
 }
 
-function renderAnalytics(){
-  const c=gc();
-  const rows=getFilteredRows();
-  const base={responsive:true,maintainAspectRatio:false};
-
-  // Objections
-  const objMap={};
-  rows.forEach(r=>{ const v=(r['Итоговое возражение']||'').trim(); if(v) objMap[v]=(objMap[v]||0)+1; });
-  const objSorted=Object.entries(objMap).sort((a,b)=>b[1]-a[1]);
-  makeChart('objChart',{type:'bar',data:{labels:objSorted.map(e=>e[0]),datasets:[{data:objSorted.map(e=>e[1]),backgroundColor:c.accent+'99',borderRadius:4}]},options:{...base,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{color:c.grid}},y:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}}}}});
-
-  // Practices
-  const practMap={};
-  rows.forEach(r=>{ const v=(r['Практика']||'').trim(); if(v) practMap[v]=(practMap[v]||0)+1; });
-  const practKeys=Object.keys(practMap);
-  makeChart('practChart',{type:'doughnut',data:{labels:practKeys,datasets:[{data:Object.values(practMap),backgroundColor:[c.accent,'rgba(245,197,24,0.5)','rgba(245,197,24,0.25)'],borderWidth:0}]},options:{...base,plugins:{legend:{display:true,position:'bottom',labels:{color:c.tick,font:{size:10},boxWidth:10}}}}});
-
-  // Packages
-  const packMap={};
-  rows.forEach(r=>{ const v=(r['Пакет']||'').trim(); if(v) packMap[v]=(packMap[v]||0)+1; });
-  const packKeys=Object.keys(packMap);
-  makeChart('packChart',{type:'doughnut',data:{labels:packKeys,datasets:[{data:Object.values(packMap),backgroundColor:[c.accent,'rgba(245,197,24,0.6)','rgba(245,197,24,0.35)','rgba(245,197,24,0.15)'],borderWidth:0}]},options:{...base,plugins:{legend:{display:true,position:'bottom',labels:{color:c.tick,font:{size:10},boxWidth:10}}}}});
-
-  // Payment types
-  const payMap={};
-  rows.forEach(r=>{ const v=(r['Вариант оплаты']||'').trim(); if(v) payMap[v]=(payMap[v]||0)+1; });
-  makeChart('payChart',{type:'bar',data:{labels:Object.keys(payMap),datasets:[{data:Object.values(payMap),backgroundColor:c.accent+'99',borderRadius:4}]},options:{...base,plugins:{legend:{display:false}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9}},grid:{color:c.grid}}}}});
-
-  // Conv by day of week
-  const days=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-  const dayMK=[0,0,0,0,0,0,0];
-  const dayPaid=[0,0,0,0,0,0,0];
-  rows.forEach(r=>{
-    const d=parseDate(r['Дата МК']||r['Отметка времени']);
-    if(!d) return;
-    const idx=(d.getDay()+6)%7;
-    dayMK[idx]++;
-    if(parseInt((r['Сумма оплаты в рублях']||'').replace(/\D/g,''))>0) dayPaid[idx]++;
-  });
-  const dayConv=dayMK.map((m,i)=>m?Math.round(dayPaid[i]/m*100):0);
-  makeChart('dayChart',{type:'bar',data:{labels:days,datasets:[{data:dayConv,backgroundColor:dayConv.map(v=>v>=40?c.accent+'dd':c.accent+'44'),borderRadius:4}]},options:{...base,plugins:{legend:{display:false}},scales:{x:{ticks:{color:c.tick,font:{size:10}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>v+'%'},grid:{color:c.grid},max:100}}}});
-
-  // Detail table
-  const tbody=document.getElementById('detail-tbody');
-  tbody.innerHTML='';
-  const sorted=[...rows].sort((a,b)=>{
-    const da=parseDate(a['Дата МК']||a['Отметка времени'])||new Date(0);
-    const db=parseDate(b['Дата МК']||b['Отметка времени'])||new Date(0);
-    return db-da;
-  });
-  sorted.forEach(r=>{
-    const d=parseDate(r['Дата МК']||r['Отметка времени']);
-    const sum=parseInt((r['Сумма оплаты в рублях']||'').replace(/\D/g,''))||0;
-    tbody.innerHTML+=`<tr>
-      <td>${d?d.toLocaleDateString('ru'):'-'}</td>
-      <td class="tname">${r['Кто провёл урок?']||r['Менеджер']||'-'}</td>
-      <td>${r['Практика']||'-'}</td>
-      <td>${r['Пакет']||'-'}</td>
-      <td>${r['Вариант оплаты']||'-'}</td>
-      <td class="${sum>0?'g':''}">${sum>0?fmt(sum)+' ₽':'-'}</td>
-      <td>${r['Бронь']||'-'}</td>
-      <td>${r['Итоговое возражение']||'-'}</td>
-    </tr>`;
-  });
+function getVisibleLessons() {
+  if (!managers.length) return lessons;
+  return lessons.filter(r => managers.some(m => r.manager && r.manager.includes(m.split(' ')[0])));
 }
 
-// ── MANAGER DETAIL ──
-function renderManagerCards(){
-  const el=document.getElementById('manager-cards');
-  el.innerHTML='';
-  teamData.forEach(r=>{
-    const badge=getBadge(r,teamData.indexOf(r));
-    el.innerHTML+=`<div class="mcard" onclick="openManagerDetail('${r.name}')">
-      <div class="mcard-name">${r.name}</div>
-      <div class="mcard-stats">
-        <div class="mcard-stat">МК: <strong>${r.mk}</strong></div>
-        <div class="mcard-stat">Оплат: <strong>${r.paid}</strong></div>
-        <div class="mcard-stat">Конв: <strong class="${r.conv>=40?'g':r.conv>=30?'a':'r'}">${r.conv}%</strong></div>
-        <div class="mcard-stat">₽: <strong>${fmt(r.rev)}</strong></div>
-      </div>
-      <div class="mcard-badge">${badge}</div>
-    </div>`;
-  });
-}
+// ══════════════════════════════════════════════════════
+// RENDER MAIN
+// ══════════════════════════════════════════════════════
+function renderMain() {
+  const data = getVisibleLessons();
+  const t = calcTotals(data);
 
-let detailCharts={};
-function openManagerDetail(name){
-  showPage('manager',document.querySelectorAll('.nav-tab')[2]);
-  const r=teamData.find(m=>m.name===name);
-  if(!r) return;
+  // Countdown
+  const wdLeft = getWorkdaysLeft();
+  const wdTotal = getTotalWorkdays();
+  const revLeft = Math.max(0, targets.rev - t.rev);
+  const dailyNeed = wdLeft > 0 ? Math.round(revLeft / wdLeft) : 0;
+  const mkLeft = Math.max(0, targets.mk - t.mk);
+  const ringPct = (wdTotal - wdLeft) / wdTotal;
 
-  document.querySelectorAll('.mcard').forEach(c=>{ c.classList.toggle('selected',c.textContent.includes(name.split(' ')[0])); });
-  document.getElementById('manager-detail').style.display='block';
-  document.getElementById('detail-name').textContent=r.name;
+  document.getElementById('ring-days').textContent = wdLeft;
+  const fg = document.getElementById('ring-fg');
+  const circ = 2 * Math.PI * 32;
+  fg.style.strokeDashoffset = circ * (1 - ringPct);
+
+  document.getElementById('cc-rev').textContent = fmt(revLeft) + ' ₽';
+  document.getElementById('cc-rev-sub').textContent = fmt(targets.rev) + ' ₽ план';
+  document.getElementById('cc-daily').textContent = fmt(dailyNeed) + ' ₽';
+  document.getElementById('cc-mk').textContent = mkLeft + ' МК';
 
   // KPIs
-  document.getElementById('detail-kpis').innerHTML=`
-    <div class="kpi ok"><div class="kl">МК</div><div class="kv" style="color:var(--text)">${r.mk}</div></div>
-    <div class="kpi ok"><div class="kl">Оплат</div><div class="kv g">${r.paid}</div></div>
-    <div class="kpi ${r.conv>=40?'ok':'warn'}"><div class="kl">Конверсия</div><div class="kv ${r.conv>=40?'g':'a'}">${r.conv}%</div></div>
-    <div class="kpi ok"><div class="kl">Выручка</div><div class="kv" style="color:var(--text)">${fmt(r.rev)} ₽</div></div>
-    <div class="kpi info"><div class="kl">₽/МК</div><div class="kv b">${fmt(r.rpm)}</div></div>
-  `;
+  const rp = pct(t.rev, targets.rev);
+  const mp = pct(t.mk, targets.mk);
+  document.getElementById('kv-rev').textContent = fmt(t.rev) + ' ₽';
+  document.getElementById('ks-rev').textContent = rp + '% от плана (' + fmt(targets.rev) + ' ₽)';
+  document.getElementById('kt-rev').textContent = rp + '%';
+  document.getElementById('kv-mk').textContent = t.mk + ' / ' + targets.mk;
+  document.getElementById('ks-mk').textContent = mp + '% от плана';
+  document.getElementById('kt-mk').textContent = (t.mk - targets.mk) + ' МК';
+  document.getElementById('kv-conv').textContent = t.conv + '%';
+  document.getElementById('ks-conv').textContent = 'план ' + targets.conv + '% · +' + (t.conv - targets.conv).toFixed(1) + '%';
+  document.getElementById('kt-conv').textContent = '↑' + pct(t.conv, targets.conv) + '%';
+  document.getElementById('kv-avg').textContent = fmt(t.avg) + ' ₽';
+  document.getElementById('ks-avg').textContent = 'цель ' + fmt(targets.avg) + ' ₽';
+  document.getElementById('kt-avg').textContent = pct(t.avg, targets.avg) + '%';
+  document.getElementById('kv-rpm').textContent = fmt(t.rpm) + ' ₽';
+  document.getElementById('ks-rpm').textContent = 'цель ' + fmt(targets.rpm) + ' ₽';
+  document.getElementById('kt-rpm').textContent = '↑ растём';
 
-  const c=gc();
-  const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}};
+  // Fix KPI borders
+  document.querySelector('#kv-rev').closest('.kpi').className = 'kpi ' + (rp >= 80 ? 'ok' : rp >= 40 ? 'warn' : 'bad');
+  document.querySelector('#kv-mk').closest('.kpi').className = 'kpi ' + (mp >= 80 ? 'ok' : 'warn');
+  document.querySelector('#kv-conv').closest('.kpi').className = 'kpi ' + (t.conv >= targets.conv ? 'ok' : 'warn');
 
-  // Objections
-  const objMap={};
-  r.rows.forEach(row=>{ const v=(row['Итоговое возражение']||'').trim(); if(v) objMap[v]=(objMap[v]||0)+1; });
-  const objS=Object.entries(objMap).sort((a,b)=>b[1]-a[1]);
-  if(charts['detailObjChart']){ charts['detailObjChart'].destroy(); }
-  charts['detailObjChart']=new Chart(document.getElementById('detailObjChart'),{type:'bar',data:{labels:objS.map(e=>e[0]),datasets:[{data:objS.map(e=>e[1]),backgroundColor:c.accent+'99',borderRadius:4}]},options:{...base,indexAxis:'y',scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{color:c.grid}},y:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}}}}});
+  // Alert
+  document.getElementById('alert-text').innerHTML =
+    '<strong>Узкое место:</strong> нужно ещё <strong>+' + mkLeft + ' МК</strong> до конца месяца. ' +
+    'Конверсия ' + t.conv + '% — ' + (t.conv >= targets.conv ? '✓ выше плана' : '↓ ниже плана') + ' · ' +
+    'Осталось: <strong>' + fmt(revLeft) + ' ₽</strong>';
 
-  // Weekly dynamics
-  const wData=[];
-  for(let w=4;w>=0;w--){
-    const now=new Date();
-    const start=new Date(now); start.setDate(now.getDate()-w*7-now.getDay()+1); start.setHours(0,0,0,0);
-    const end=new Date(start); end.setDate(start.getDate()+6); end.setHours(23,59,59,999);
-    const wRows=r.rows.filter(row=>{ const d=parseDate(row['Дата МК']||row['Отметка времени']); return d&&d>=start&&d<=end; });
-    const wRev=wRows.reduce((s,row)=>s+(parseInt((row['Сумма оплаты в рублях']||'').replace(/\D/g,''))||0),0);
-    wData.push({label:'Нд'+(5-w),val:wRev});
-  }
-  if(charts['detailWkChart']){ charts['detailWkChart'].destroy(); }
-  charts['detailWkChart']=new Chart(document.getElementById('detailWkChart'),{type:'line',data:{labels:wData.map(w=>w.label),datasets:[{data:wData.map(w=>w.val),borderColor:c.accent,backgroundColor:c.accent+'22',borderWidth:2,pointBackgroundColor:c.accent,fill:true,tension:0.3}]},options:{...base,scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>Math.round(v/1000)+'к'},grid:{color:c.grid}}}}});
+  // Team table
+  renderTeamTable(data, '');
 
-  // History
-  const tbody=document.getElementById('detail-history-body');
-  tbody.innerHTML='';
-  const sorted=[...r.rows].sort((a,b)=>{
-    const da=parseDate(a['Дата МК']||a['Отметка времени'])||new Date(0);
-    const db=parseDate(b['Дата МК']||b['Отметка времени'])||new Date(0);
-    return db-da;
+  // Slots
+  renderSlots();
+
+  // Progress bars
+  const bars = [
+    {l:'МК', v:mp, c:mp>=80?'var(--green)':'var(--yellow)'},
+    {l:'Выручка', v:rp, c:rp<40?'var(--red)':'var(--yellow)'},
+    {l:'Конверсия', v:Math.min(100,pct(t.conv,targets.conv)), c:'var(--green)'},
+    {l:'Ср. чек', v:pct(t.avg,targets.avg), c:'var(--green)'},
+  ];
+  document.getElementById('prog-bars').innerHTML = bars.map(b =>
+    `<div class="prog-row"><span class="prog-label">${b.l}</span><div class="prog-track"><div class="prog-fill" style="width:${b.v}%;background:${b.c}"></div></div><span class="prog-pct" style="color:${b.c}">${b.v}%</span></div>`
+  ).join('');
+
+  // Charts
+  renderRevChart(data);
+  renderTeamChart(data);
+
+  // Insights
+  renderInsights(data, t);
+}
+
+function renderTeamTable(data, filter) {
+  const tbody = document.getElementById('team-tbody');
+  // Group by manager
+  const mgrs = {};
+  data.forEach(r => {
+    const name = r.manager;
+    if (!mgrs[name]) mgrs[name] = [];
+    mgrs[name].push(r);
   });
-  sorted.forEach(row=>{
-    const d=parseDate(row['Дата МК']||row['Отметка времени']);
-    const sum=parseInt((row['Сумма оплаты в рублях']||'').replace(/\D/g,''))||0;
-    const crm=row['Ссылка на СRM']||row['Ссылка на CRM']||'';
-    tbody.innerHTML+=`<tr>
-      <td>${d?d.toLocaleDateString('ru'):'-'}</td>
-      <td>${row['Время МК']||'-'}</td>
-      <td>${row['Практика']||'-'}</td>
-      <td>${row['Пакет']||'-'}</td>
-      <td>${row['Вариант оплаты']||'-'}</td>
-      <td class="${sum>0?'g':''}">${sum>0?fmt(sum)+' ₽':'-'}</td>
-      <td>${row['Итоговое возражение']||'-'}</td>
-      <td>${crm?`<a href="${crm}" target="_blank" style="color:var(--blue);font-size:10px">→ CRM</a>`:'-'}</td>
+  // Sort by revenue
+  const sorted = Object.entries(mgrs).map(([name, rows]) => {
+    const t = calcTotals(rows);
+    return { name, ...t };
+  }).sort((a,b) => b.rev - a.rev);
+
+  const filtered = filter ? sorted.filter(r => r.name.toLowerCase().includes(filter.toLowerCase())) : sorted;
+  const totals = calcTotals(data);
+
+  tbody.innerHTML = '';
+  filtered.forEach((r, i) => {
+    const conv = r.mk ? (r.paid/r.mk*100).toFixed(1) : '—';
+    const cn = parseFloat(conv);
+    const badge = i === 0 ? '👑' : cn >= 50 ? '⭐' : cn >= 35 ? '😊' : r.mk > 0 ? '⚠️' : '🔴';
+    const cc2 = cn >= 40 ? 'var(--green)' : cn >= 30 ? 'var(--yellow)' : 'var(--red)';
+    tbody.innerHTML += `<tr onclick="openManager('${r.name}')">
+      <td class="tname">${r.name}</td>
+      <td>${r.mk}</td>
+      <td>${r.paid}</td>
+      <td style="color:${r.mk?cc2:'var(--muted)'}">${conv !== '—' ? conv+'%' : '—'}</td>
+      <td style="color:${r.rev>100000?'var(--green)':'var(--sub)'}">${fmt(r.rev)}</td>
+      <td style="color:var(--blue)">${r.rpm ? fmt(r.rpm) : '—'}</td>
+      <td><span class="eb">${badge}</span></td>
     </tr>`;
   });
-  document.getElementById('manager-detail').scrollIntoView({behavior:'smooth'});
+  // Total row
+  tbody.innerHTML += `<tr>
+    <td>Итого</td>
+    <td class="g">${totals.mk}</td>
+    <td class="g">${totals.paid}</td>
+    <td class="g">${totals.conv}%</td>
+    <td class="g">${fmt(totals.rev)} ₽</td>
+    <td class="b">${fmt(totals.rpm)}</td>
+    <td></td>
+  </tr>`;
 }
 
-function closeDetail(){
-  document.getElementById('manager-detail').style.display='none';
-  document.querySelectorAll('.mcard').forEach(c=>c.classList.remove('selected'));
+function filterTeam(val) {
+  renderTeamTable(getVisibleLessons(), val);
 }
 
-// ── INIT ──
+function renderSlots() {
+  const el = document.getElementById('slots-container');
+  document.getElementById('slots-count').textContent = slots.length;
+
+  if (!slots.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Нет МК на сегодня</div></div>';
+    return;
+  }
+
+  const groups = {};
+  slots.forEach(s => {
+    if (!groups[s.who]) groups[s.who] = [];
+    groups[s.who].push(s);
+  });
+
+  const colors = { '@lucky_8_8':'var(--green)', '@GeorgiPC':'var(--yellow)', '@Daria_K53':'var(--blue)', '@orlean40':'#a78bfa' };
+  const dotC = { done:'var(--dim)', live:'var(--green)', wait:'var(--blue)' };
+  const stMap = { done:['s-done','завершён'], live:['s-live','Live ●'], wait:['s-wait','ожидает'] };
+
+  let html = '<div class="slots-grid">';
+  Object.entries(groups).forEach(([who, ss]) => {
+    const c = colors[who] || 'var(--sub)';
+    html += `<div><div class="slot-group-title" style="color:${c}">${who}</div>`;
+    ss.forEach(s => {
+      const [cls, lbl] = stMap[s.status] || stMap.wait;
+      html += `<div class="slot-row"><div class="sdot" style="background:${dotC[s.status]}"></div><span class="stime">${s.time}</span><span class="sstatus ${cls}">${lbl}</span></div>`;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+
+  const pot = Math.round(slots.length * 0.45);
+  html += `<div class="slot-pot"><span>Всего: <strong>${slots.length}</strong></span><span>Потенциал: <strong>+${pot} · ~${fmt(pot*35000)} ₽</strong></span></div>`;
+  el.innerHTML = html;
+}
+
+function renderInsights(data, t) {
+  const items = [];
+  const sorted = (() => {
+    const mgrs = {};
+    data.forEach(r => { if (!mgrs[r.manager]) mgrs[r.manager] = []; mgrs[r.manager].push(r); });
+    return Object.entries(mgrs).map(([name, rows]) => { const tt = calcTotals(rows); return {name, ...tt}; }).sort((a,b) => b.rev-a.rev);
+  })();
+
+  const atRisk = sorted.filter(r => r.mk === 0);
+  const lowConv = sorted.filter(r => r.mk > 3 && r.paid/r.mk < 0.35);
+  const wdLeft = getWorkdaysLeft();
+  const revLeft = Math.max(0, targets.rev - t.rev);
+
+  items.push({ tag:'Фокус', tc:'y', text:`Нужно +${targets.mk - t.mk} МК до конца месяца (${wdLeft} раб. дней). Нужно в день: ${fmt(wdLeft > 0 ? revLeft/wdLeft : 0)} ₽.` });
+  if (lowConv.length) items.push({ tag:'Внимание', tc:'y', text:`${lowConv.map(r=>r.name.split(' ')[0]).join(', ')} — низкая конверсия при большом кол-ве МК. Разобрать звонок сегодня.` });
+  if (atRisk.length) items.push({ tag:'Риск', tc:'r', text:`${atRisk.map(r=>r.name.split(' ')[0]).join(', ')} — 0 МК. Поставить первый слот сегодня.` });
+  if (sorted.length && sorted[0].mk > 0) items.push({ tag:'Лидер', tc:'g', text:`${sorted[0].name.split(' ')[0]} — ${sorted[0].mk} МК, ${(sorted[0].paid/sorted[0].mk*100).toFixed(1)}% конв., ${fmt(sorted[0].rev)} ₽. Снять лучшие практики.` });
+
+  document.getElementById('insight-items').innerHTML = items.map(i =>
+    `<div class="insight-item"><span class="itag ${i.tc}">${i.tag}</span><span>${i.text}</span></div>`
+  ).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════════════════
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+function renderRevChart(data) {
+  destroyChart('rev');
+  const c = getChartColors();
+  const now = new Date();
+
+  let labels, values;
+  if (currentPeriod === 'week') {
+    // Last 7 days
+    labels = [];
+    values = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const ds = d.toLocaleDateString('ru', {day:'2-digit', month:'2-digit'});
+      const dateStr = d.toISOString().split('T')[0].split('-').reverse().join('.');
+      const dayRev = data.filter(r => r.date && r.date.startsWith(dateStr.split('.')[2]+'-'+dateStr.split('.')[1]+'-'+dateStr.split('.')[0])).reduce((s,r) => s+r.rev, 0);
+      // Also try DD.MM.YYYY format
+      const dayRev2 = data.filter(r => {
+        if (!r.date) return false;
+        const rdate = r.date.replace(/\//g,'.').replace(/-/g,'.');
+        return rdate.startsWith(dateStr) || rdate === dateStr;
+      }).reduce((s,r) => s+r.rev, 0);
+      labels.push(ds);
+      values.push(dayRev || dayRev2);
+    }
+  } else {
+    // Last 4 weeks
+    labels = ['Нд 1','Нд 2','Нд 3','Нд 4'];
+    values = [0,0,0,0];
+    data.forEach(r => {
+      if (!r.date) return;
+      const parts = r.date.split(/[-/.]/);
+      if (parts.length < 3) return;
+      let d;
+      // Try YYYY-MM-DD first, then DD.MM.YYYY
+      if (parts[0].length === 4) d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+      else d = new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]));
+      if (isNaN(d)) return;
+      const diff = Math.floor((now - d) / (7*24*60*60*1000));
+      if (diff >= 0 && diff < 4) values[3-diff] += r.rev;
+    });
+  }
+
+  charts.rev = new Chart(document.getElementById('revChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: values.map((v,i) => i === values.length-1 ? '#f5c842' : 'rgba(245,200,66,0.3)'),
+        borderRadius: 4, borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => fmt(v.raw) + ' ₽' } } },
+      scales: {
+        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
+        y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => Math.round(v/1000)+'к' }, grid: { color: c.grid } }
+      }
+    }
+  });
+}
+
+function renderTeamChart(data) {
+  destroyChart('team');
+  const c = getChartColors();
+  const mgrs = {};
+  data.forEach(r => { if (!mgrs[r.manager]) mgrs[r.manager] = 0; mgrs[r.manager] += r.rev; });
+  const sorted = Object.entries(mgrs).sort((a,b) => b[1]-a[1]);
+  const bgColors = ['#f5c842','#3ecf8e','#60a5fa','#f05252','#a78bfa','#fb923c'];
+
+  charts.team = new Chart(document.getElementById('teamChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(([name]) => name.split(' ')[0]),
+      datasets: [{ data: sorted.map(([,v]) => v), backgroundColor: sorted.map((_,i) => bgColors[i % bgColors.length] + '99'), borderRadius: 4, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => fmt(v.raw) + ' ₽' } } },
+      scales: {
+        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
+        y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => Math.round(v/1000)+'к' }, grid: { color: c.grid } }
+      }
+    }
+  });
+}
+
+function setPeriod(p, btn) {
+  currentPeriod = p;
+  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRevChart(getVisibleLessons());
+}
+
+// ══════════════════════════════════════════════════════
+// ANALYTICS PAGE
+// ══════════════════════════════════════════════════════
+function renderAnalytics() {
+  const data = getVisibleLessons();
+  const c = getChartColors();
+
+  // Objections
+  const objMap = {};
+  data.forEach(r => { if (r.objection) { objMap[r.objection] = (objMap[r.objection]||0)+1; } });
+  const objSorted = Object.entries(objMap).sort((a,b) => b[1]-a[1]);
+  destroyChart('obj');
+  if (document.getElementById('objChart')) {
+    charts.obj = new Chart(document.getElementById('objChart'), {
+      type: 'bar',
+      data: {
+        labels: objSorted.map(([k]) => k),
+        datasets: [{ data: objSorted.map(([,v]) => v), backgroundColor: '#f5c842aa', borderRadius: 4, borderSkipped: false }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { color: c.grid } },
+          y: { ticks: { color: c.tick, font: { size: 10 } }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // Practices (donut)
+  const practMap = {};
+  data.forEach(r => { if (r.practice) { practMap[r.practice] = (practMap[r.practice]||0)+1; } });
+  destroyChart('pract');
+  if (document.getElementById('practChart')) {
+    const pKeys = Object.keys(practMap);
+    charts.pract = new Chart(document.getElementById('practChart'), {
+      type: 'doughnut',
+      data: {
+        labels: pKeys,
+        datasets: [{ data: pKeys.map(k => practMap[k]), backgroundColor: ['#f5c842','#3ecf8e','#60a5fa'], borderColor: '#111', borderWidth: 2 }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { color: c.tick, font: { size: 10 }, boxWidth: 12 } },
+          tooltip: { callbacks: { label: v => v.label + ': ' + v.raw + ' МК' } }
+        }
+      }
+    });
+  }
+
+  // Packs
+  const packMap = {};
+  data.forEach(r => { if (r.pack) { packMap[r.pack] = (packMap[r.pack]||0)+1; } });
+  destroyChart('pack');
+  if (document.getElementById('packChart')) {
+    const pKeys = ['1 месяц','3 месяца','6 месяцев','12 месяцев'];
+    charts.pack = new Chart(document.getElementById('packChart'), {
+      type: 'bar',
+      data: {
+        labels: pKeys,
+        datasets: [{ data: pKeys.map(k => packMap[k]||0), backgroundColor: ['#f5c84244','#f5c84266','#f5c84288','#f5c842'], borderRadius: 4, borderSkipped: false }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
+          y: { ticks: { color: c.tick, font: { size: 9 } }, grid: { color: c.grid } }
+        }
+      }
+    });
+  }
+
+  // Conversion by day
+  const dayConv = {};
+  data.forEach(r => {
+    const d = r.date || '';
+    if (!d) return;
+    if (!dayConv[d]) dayConv[d] = { mk:0, paid:0 };
+    dayConv[d].mk++;
+    if (r.paid) dayConv[d].paid++;
+  });
+  const dayEntries = Object.entries(dayConv).sort((a,b) => a[0].localeCompare(b[0])).slice(-14);
+  destroyChart('conv');
+  if (document.getElementById('convChart')) {
+    charts.conv = new Chart(document.getElementById('convChart'), {
+      type: 'line',
+      data: {
+        labels: dayEntries.map(([d]) => d),
+        datasets: [{
+          data: dayEntries.map(([,v]) => v.mk ? Math.round(v.paid/v.mk*100) : 0),
+          borderColor: '#3ecf8e', backgroundColor: 'rgba(62,207,142,0.1)',
+          borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#3ecf8e', fill: true, tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => v.raw + '%' } } },
+        scales: {
+          x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
+          y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => v+'%' }, grid: { color: c.grid }, min: 0, max: 100 }
+        }
+      }
+    });
+  }
+
+  // All lessons table
+  const recentLessons = [...data].sort((a,b) => (b.date||'').localeCompare(a.date||'')).slice(0,50);
+  const tableHtml = recentLessons.length ? `
+    <div style="overflow-x:auto">
+      <table class="team-table" style="min-width:600px">
+        <thead><tr><th>Дата</th><th>Менеджер</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Возражение</th><th>CRM</th></tr></thead>
+        <tbody>
+          ${recentLessons.map(r => `<tr>
+            <td style="font-family:var(--mono);font-size:10px">${r.date}</td>
+            <td class="tname">${r.manager}</td>
+            <td>${r.practice}</td>
+            <td>${r.pack}</td>
+            <td style="color:${r.paid?'var(--green)':'var(--red)'}">${r.paid?'Оплачен':'—'}</td>
+            <td style="font-family:var(--mono);color:${r.rev?'var(--yellow)':'var(--muted)'}">${r.rev?fmt(r.rev)+' ₽':'—'}</td>
+            <td style="font-size:11px">${r.objection||'—'}</td>
+            <td>${r.crm?`<a href="${r.crm}" target="_blank" class="crm-link">→ CRM</a>`:'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Нет данных</div></div>';
+  document.getElementById('all-lessons-table').innerHTML = tableHtml;
+}
+
+// ══════════════════════════════════════════════════════
+// MANAGERS PAGE
+// ══════════════════════════════════════════════════════
+function renderManagers() {
+  const data = getVisibleLessons();
+  const mgrs = {};
+  data.forEach(r => {
+    if (!mgrs[r.manager]) mgrs[r.manager] = [];
+    mgrs[r.manager].push(r);
+  });
+
+  // Add managers with 0 lessons
+  managers.forEach(m => {
+    const key = Object.keys(mgrs).find(k => k.includes(m.split(' ')[0])) || m;
+    if (!mgrs[key]) mgrs[key] = [];
+  });
+
+  const sorted = Object.entries(mgrs).map(([name, rows]) => {
+    const t = calcTotals(rows);
+    return { name, rows, ...t };
+  }).sort((a,b) => b.rev - a.rev);
+
+  const el = document.getElementById('mgr-cards');
+  const bgColors = ['#f5c842','#3ecf8e','#60a5fa','#f05252','#a78bfa','#fb923c'];
+  el.innerHTML = sorted.map((m, i) => {
+    const conv = m.mk ? (m.paid/m.mk*100).toFixed(1) : '0';
+    const initial = m.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="panel" style="cursor:pointer" onclick="openManager('${m.name}')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:40px;height:40px;border-radius:10px;background:${bgColors[i%bgColors.length]}22;border:2px solid ${bgColors[i%bgColors.length]}55;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:${bgColors[i%bgColors.length]};font-family:var(--display)">${initial}</div>
+        <div>
+          <div style="font-weight:600;font-size:13px;color:var(--text)">${m.name}</div>
+          <div style="font-size:10px;color:var(--muted)">${m.mk} МК · ${conv}% конв.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:var(--bg3);border-radius:6px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Выручка</div>
+          <div style="font-size:14px;font-weight:600;color:${m.rev>0?'var(--yellow)':'var(--muted)'};">${fmt(m.rev)} ₽</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:6px;padding:8px 10px">
+          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Оплат</div>
+          <div style="font-size:14px;font-weight:600;color:var(--green)">${m.paid}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openManager(name) {
+  const data = getVisibleLessons().filter(r => r.manager === name);
+  const t = calcTotals(data);
+  currentMgr = name;
+
+  document.getElementById('mgr-list-view').style.display = 'none';
+  document.getElementById('mgr-detail-view').style.display = 'block';
+
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('mgr-avatar').textContent = initials;
+  document.getElementById('mgr-name').textContent = name;
+  document.getElementById('mgr-sub').textContent = t.mk + ' МК · ' + t.conv + '% конверсия · ' + fmt(t.rev) + ' ₽';
+
+  // Stats
+  document.getElementById('mgr-stats').innerHTML = [
+    {l:'МК', v:t.mk, c:'var(--text)'},
+    {l:'Оплат', v:t.paid, c:'var(--green)'},
+    {l:'Выручка', v:fmt(t.rev)+' ₽', c:'var(--yellow)'},
+    {l:'Конверсия', v:t.conv+'%', c:'var(--green)'},
+    {l:'Средний чек', v:fmt(t.avg)+' ₽', c:'var(--blue)'},
+    {l:'₽/МК', v:fmt(t.rpm), c:'var(--blue)'},
+    {l:'Броней', v:t.bron, c:'var(--yellow)'},
+    {l:'Ср. возраст', v:(() => { const ages = data.map(r=>parseInt(r.age)).filter(a=>!isNaN(a)&&a>0); return ages.length ? Math.round(ages.reduce((s,a)=>s+a,0)/ages.length) : '—'; })(), c:'var(--sub)'},
+  ].map(s => `<div class="kpi"><div class="kl">${s.l}</div><div class="kv" style="color:${s.c};font-size:18px">${s.v}</div></div>`).join('');
+
+  // Weekly chart
+  destroyChart('mgrWeek');
+  const c = getChartColors();
+  const now = new Date();
+  const weekLabels = ['Нд 1','Нд 2','Нд 3','Нд 4'];
+  const weekData = [0,0,0,0];
+  data.forEach(r => {
+    if (!r.date) return;
+    const parts = r.date.split(/[-/.]/);
+    if (parts.length < 3) return;
+    let d;
+    if (parts[0].length === 4) d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+    else d = new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]));
+    if (isNaN(d)) return;
+    const diff = Math.floor((now - d) / (7*24*60*60*1000));
+    if (diff >= 0 && diff < 4) weekData[3-diff] += r.rev;
+  });
+  charts.mgrWeek = new Chart(document.getElementById('mgrWeekChart'), {
+    type: 'line',
+    data: {
+      labels: weekLabels,
+      datasets: [{
+        data: weekData,
+        borderColor: '#f5c842', backgroundColor: 'rgba(245,200,66,0.1)',
+        borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#f5c842', fill: true, tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => fmt(v.raw) + ' ₽' } } },
+      scales: {
+        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
+        y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => Math.round(v/1000)+'к' }, grid: { color: c.grid } }
+      }
+    }
+  });
+
+  // Objections chart
+  destroyChart('mgrObj');
+  const objMap = {};
+  data.forEach(r => { if (r.objection) objMap[r.objection] = (objMap[r.objection]||0)+1; });
+  const objSorted = Object.entries(objMap).sort((a,b) => b[1]-a[1]);
+  charts.mgrObj = new Chart(document.getElementById('mgrObjChart'), {
+    type: 'bar',
+    data: {
+      labels: objSorted.map(([k]) => k),
+      datasets: [{ data: objSorted.map(([,v]) => v), backgroundColor: '#f5c84288', borderRadius: 4, borderSkipped: false }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { color: c.grid } },
+        y: { ticks: { color: c.tick, font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+
+  // Lessons table
+  const lessonsHtml = data.length ? `
+    <div style="overflow-x:auto">
+      <table class="team-table" style="min-width:500px">
+        <thead><tr><th>Дата</th><th>Время</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Возражение</th><th>CRM</th></tr></thead>
+        <tbody>
+          ${[...data].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(r => `<tr>
+            <td style="font-family:var(--mono);font-size:10px">${r.date}</td>
+            <td style="font-family:var(--mono);font-size:10px">${r.time}</td>
+            <td>${r.practice}</td>
+            <td>${r.pack}</td>
+            <td style="color:${r.paid?'var(--green)':'var(--red)'}">${r.paid?'✓':'—'}</td>
+            <td style="font-family:var(--mono);color:${r.rev?'var(--yellow)':'var(--muted)'}">${r.rev?fmt(r.rev)+' ₽':'—'}</td>
+            <td style="font-size:11px">${r.objection||'—'}</td>
+            <td>${r.crm?`<a href="${r.crm}" target="_blank" class="crm-link">→ CRM</a>`:'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Нет уроков</div></div>';
+  document.getElementById('mgr-lessons').innerHTML = lessonsHtml;
+
+  showPage('managers');
+}
+
+function showMgrList() {
+  currentMgr = null;
+  document.getElementById('mgr-list-view').style.display = 'block';
+  document.getElementById('mgr-detail-view').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.toLowerCase().includes(id === 'main' ? 'глав' : id === 'analytics' ? 'аналит' : 'менедж')) b.classList.add('active');
+  });
+  if (id !== 'managers') showMgrList();
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
 loadAll();
 setInterval(loadAll, 60000);
 </script>
