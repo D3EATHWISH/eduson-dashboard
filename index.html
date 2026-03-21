@@ -262,14 +262,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     </div>
     <div class="panel">
       <div class="pt">
-        <span id="slots-title">МК сегодня</span>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="ptb" id="slots-cnt">0</span>
-          <div class="slot-tabs" style="margin-bottom:0">
-            <button class="stab active" onclick="setSlotDay(0,this)">Сегодня</button>
-            <button class="stab" onclick="setSlotDay(1,this)">Завтра</button>
-          </div>
-        </div>
+        <span>Запланированные МК</span>
+        <span class="ptb" id="slots-cnt">0</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <button class="stab active" onclick="setSlotDate('today',this)" id="sd-today">Сегодня</button>
+        <button class="stab" onclick="setSlotDate('tomorrow',this)" id="sd-tom">Завтра</button>
+        <button class="stab" onclick="setSlotDate('after',this)" id="sd-after">Послезавтра</button>
+        <input type="date" id="sd-custom" class="dfinput" style="font-size:10px;padding:3px 8px" oninput="setSlotDate('custom',null)">
       </div>
       <div id="slots-box"><div class="empty"><div class="empty-ic">📅</div><div>Загрузка слотов...</div></div></div>
     </div>
@@ -654,10 +654,14 @@ function renderTeamTable(data,filter) {
 function filterTeam(v){renderTeamTable(visible(),v);}
 
 function renderSlots() {
-  var slotData=curSlotDay===0?slots:tomorrowSlots;
+  // For slots from Rubitime we only have today/tomorrow data
+  // Future dates show empty (will be filled when Rubitime has data)
+  var now = new Date();
+  var isToday = curSlotDate.toDateString() === now.toDateString();
+  var isTomorrow = curSlotDate.toDateString() === new Date(now.getTime()+86400000).toDateString();
+  var slotData = isToday ? slots : isTomorrow ? tomorrowSlots : [];
   var el=document.getElementById('slots-box');
   document.getElementById('slots-cnt').textContent=slotData.length;
-  document.getElementById('slots-title').textContent=curSlotDay===0?'МК сегодня':'МК завтра';
 
   if(!slotData.length){
     el.innerHTML='<div class="empty"><div class="empty-ic">📅</div><div>Нет МК '+(curSlotDay===0?'сегодня':'завтра')+'</div></div>';
@@ -684,12 +688,28 @@ function renderSlots() {
   el.innerHTML=html;
 }
 
-function setSlotDay(day,btn){
-  curSlotDay=day;
-  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+function setSlotDate(mode, btn) {
+  var now = new Date();
+  var target = new Date(now);
+  if (mode === 'today') target.setDate(now.getDate());
+  else if (mode === 'tomorrow') target.setDate(now.getDate() + 1);
+  else if (mode === 'after') target.setDate(now.getDate() + 2);
+  else if (mode === 'custom') {
+    var val = document.getElementById('sd-custom').value;
+    if (!val) return;
+    target = new Date(val);
+  }
+  curSlotDate = target;
+  // Update active buttons
+  ['today','tom','after'].forEach(id => {
+    var el = document.getElementById('sd-' + id);
+    if (el) el.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
   renderSlots();
 }
+
+function setSlotDay(day,btn){} // legacy stub
 
 function renderProg(t) {
   var bars=[
@@ -1102,6 +1122,11 @@ document.addEventListener('DOMContentLoaded',function(){
 // ═══════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════
+// Set today as default in date picker
+(function(){
+  var el=document.getElementById('sd-custom');
+  if(el){var n=new Date();el.value=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+})();
 loadAll();
 setInterval(loadAll,60000);
 </script>
