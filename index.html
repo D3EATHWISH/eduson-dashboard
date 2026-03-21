@@ -164,20 +164,38 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 /* SCHEDULE / HEATMAP */
 .hm-wrap{overflow-x:auto;margin-bottom:10px}
 .hm{border-collapse:collapse;min-width:900px;width:100%}
-.hm th{font-size:9px;color:var(--muted);font-weight:500;padding:4px 3px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap}
-.hm th.mgr-h{text-align:left;min-width:130px;padding-left:8px}
-.hm td{font-size:10px;padding:3px;text-align:center;border:1px solid var(--bg3);transition:background .15s;min-width:28px}
-.hm td.mgr-td{text-align:left;font-size:11px;color:var(--text);font-weight:500;padding:5px 8px;background:var(--bg2);position:sticky;left:0;z-index:2;white-space:nowrap}
-.hm td.date-hdr{background:var(--bg3);font-size:9px;color:var(--muted);font-weight:600}
-.hm td.empty{background:var(--bg3);color:var(--dim)}
-.slot-0{background:var(--bg3)}
-.slot-red{background:rgba(240,82,82,0.15);color:#f08080}
-.slot-amber{background:rgba(245,158,11,0.15);color:#d4a030}
-.slot-green{background:rgba(62,207,142,0.15);color:#3ecf8e}
-.slot-num{font-size:10px;font-weight:600}
-.hm-legend{display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.hm th{font-size:9px;color:var(--text);font-weight:600;padding:5px 2px;text-align:center;border-bottom:2px solid var(--border-s);white-space:nowrap;background:var(--bg3)}
+.hm th.mgr-h{text-align:left;min-width:130px;padding-left:10px;background:var(--bg3)}
+.hm th.day-hdr{font-size:10px;font-weight:700;color:var(--y);border-left:2px solid var(--border-s);cursor:pointer;transition:background .15s;padding:6px 4px}
+.hm th.day-hdr:hover{background:var(--y-bg)}
+.hm th.day-hdr.selected-day{background:var(--y-bg);color:var(--y);border-bottom:2px solid var(--y)}
+.hm th.weekend-hdr{color:#a78bfa}
+[data-theme="light"] .hm th.weekend-hdr{color:#7c3aed}
+.hm th.hr-hdr{font-size:9px;font-weight:500;color:var(--sub);padding:3px 2px;border-bottom:2px solid var(--border)}
+.hm td{font-size:11px;padding:4px 2px;text-align:center;border:1px solid var(--bg3);transition:all .12s;min-width:30px;height:30px}
+.hm td.mgr-td{text-align:left;font-size:12px;color:var(--text);font-weight:600;padding:6px 10px;background:var(--bg2);position:sticky;left:0;z-index:2;white-space:nowrap;border-right:2px solid var(--border-s)}
+.hm td:hover{opacity:.8;transform:scale(1.1);z-index:1;position:relative}
+.hm tr.hm-row:hover .mgr-td{color:var(--y)}
+.slot-0{background:var(--bg3);color:var(--dim);font-size:9px}
+.slot-red{background:rgba(240,60,60,0.45);color:#ff7070;border:1.5px solid rgba(240,60,60,0.7);font-weight:700}
+.slot-amber{background:rgba(245,150,0,0.45);color:#ffc040;border:1.5px solid rgba(245,150,0,0.7);font-weight:700}
+.slot-green{background:rgba(40,200,120,0.45);color:#50efaa;border:1.5px solid rgba(40,200,120,0.7);font-weight:700}
+.slot-red.day-col{background:rgba(240,60,60,0.65);border:2px solid rgba(240,60,60,0.9)}
+.slot-amber.day-col{background:rgba(245,150,0,0.65);border:2px solid rgba(245,150,0,0.9)}
+.slot-green.day-col{background:rgba(40,200,120,0.65);border:2px solid rgba(40,200,120,0.9)}
+.slot-0.day-col{background:rgba(245,200,66,0.07);border:1.5px solid rgba(245,200,66,0.2)}
+.slot-num{font-size:13px;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,0.4)}
+[data-theme="light"] .hm th{background:#f0efe8;color:#1a1a18}
+[data-theme="light"] .hm th.day-hdr{color:var(--y)}
+[data-theme="light"] .hm td.mgr-td{background:#fff}
+[data-theme="light"] .hm td{border-color:#e0dfd8}
+[data-theme="light"] .slot-0{background:#efefea;color:#b0b0a8}
+[data-theme="light"] .slot-red{background:rgba(220,40,40,0.22);color:#b02020;border:1.5px solid rgba(220,40,40,0.5)}
+[data-theme="light"] .slot-amber{background:rgba(200,120,0,0.22);color:#8a5000;border:1.5px solid rgba(200,120,0,0.5)}
+[data-theme="light"] .slot-green{background:rgba(20,160,80,0.22);color:#0a6030;border:1.5px solid rgba(20,160,80,0.5)}
+.hm-legend{display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap}
 .hm-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
-.hm-leg-dot{width:12px;height:12px;border-radius:3px}
+.hm-leg-dot{width:14px;height:14px;border-radius:4px}
 .hm-week{display:flex;gap:4px;margin-bottom:12px}
 .wbtn{font-size:11px;font-weight:600;padding:4px 14px;border-radius:var(--r6);border:1px solid var(--border-s);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans)}
 .wbtn.active{background:var(--y);color:#000;border-color:var(--y)}
@@ -382,9 +400,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
         <div class="hm-leg-item"><div class="hm-leg-dot" style="background:rgba(62,207,142,0.3)"></div>17–21 (прайм)</div>
       </div>
       <div class="hm-wrap" id="edit-grid"></div>
-      <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap">
-        <div style="font-size:12px;color:var(--muted)">Выбрано слотов: <strong style="color:var(--y)" id="sel-count">0</strong></div>
-        <button onclick="clearAllSlots()" class="nbtn" style="font-size:11px">✕ Очистить всё</button>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <div style="font-size:12px;color:var(--muted)">Выбрано: <strong style="color:var(--y)" id="sel-count">0</strong> слотов</div>
+        <button onclick="clearAllSlots()" class="nbtn" style="font-size:11px">✕ Очистить</button>
+        <div style="display:flex;gap:6px;margin-left:8px">
+          <button onclick="copyWeek(1,2)" class="nbtn" style="font-size:11px;color:var(--y);border-color:var(--y-bd)">📋 Нед 1 → Нед 2</button>
+          <button onclick="copyWeek(2,1)" class="nbtn" style="font-size:11px;color:var(--y);border-color:var(--y-bd)">📋 Нед 2 → Нед 1</button>
+        </div>
         <button onclick="submitSchedule()" id="submit-btn" style="background:var(--y);color:#000;font-family:var(--sans);font-size:12px;font-weight:700;padding:7px 20px;border-radius:var(--r6);border:none;cursor:pointer;margin-left:auto">Отправить расписание →</button>
       </div>
     </div>
@@ -920,7 +942,7 @@ function get14Days(weekOffset) {
   start.setDate(now.getDate()+weekOffset*7);
   for(var i=0;i<7;i++){
     var d=new Date(start);d.setDate(start.getDate()+i);
-    days.push(d);
+    days.push(d); // includes weekends
   }
   return days;
 }
@@ -935,40 +957,72 @@ function dayName(d){
 }
 
 // ─── VIEW: Heatmap ───
+var selectedHmDay = null;
+
 function renderSchedule() {
   var days=get14Days(hmWeek);
+  var now=new Date();
+  var todayStr=fmtDate(now);
 
   // Summary
   var summaryHtml=managers.map(m=>{
     var total=0;
     if(scheduleData[m])Object.values(scheduleData[m]).forEach(dSlots=>{total+=Object.keys(dSlots).length;});
-    return`<div class="hms-card"><div class="hms-name">${m}</div><div class="hms-val">${total}</div><div class="hms-sub">слотов на нед ${hmWeek+1}</div></div>`;
+    return`<div class="hms-card"><div class="hms-name">💼 ${m}</div><div class="hms-val">${total}</div><div class="hms-sub">слотов на нед ${hmWeek+1}</div></div>`;
   }).join('');
   document.getElementById('hm-summary').innerHTML=summaryHtml;
 
-  var html='<thead><tr><th class="mgr-h">Менеджер</th>';
-  days.forEach(d=>{
-    html+=`<th colspan="${HOURS.length}" style="text-align:center;padding:4px;border-left:1px solid var(--border)">${dayName(d)} ${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}</th>`;
+  var dn=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+  var html='<thead>';
+
+  // Row 1: day headers (clickable)
+  html+='<tr><th class="mgr-h">💼 Менеджер</th>';
+  days.forEach(function(d){
+    var ds=dateStr(d);
+    var isToday=ds===todayStr;
+    var isSel=ds===selectedHmDay;
+    var isWknd=d.getDay()===0||d.getDay()===6;
+    var label=(isToday?'★ ':isWknd?'🟡 ':'')+dn[d.getDay()]+' '+d.getDate()+'.'+String(d.getMonth()+1).padStart(2,'0');
+    var cls='day-hdr'+(isSel?' selected-day':'')+(isWknd?' weekend-hdr':'');
+    html+=`<th colspan="${HOURS.length}" class="${cls}" onclick="selectHmDay('${ds}')">${label}</th>`;
   });
-  html+='</tr><tr><th class="mgr-h"></th>';
-  days.forEach(()=>HOURS.forEach(h=>{html+=`<th>${h.split(':')[0]}</th>`;}));
+  html+='</tr>';
+
+  // Row 2: hour headers
+  html+='<tr><th class="mgr-h" style="font-size:9px;color:var(--muted);font-weight:400">Часы →</th>';
+  days.forEach(function(d){
+    var ds=dateStr(d);
+    HOURS.forEach(function(h){
+      var hr=parseInt(h);
+      var isSel=ds===selectedHmDay;
+      var colClass=HOUR_COLORS[hr];
+      html+=`<th class="hr-hdr" style="color:${isSel?'var(--text)':'var(--muted)'};background:${isSel?'rgba(245,200,66,0.06)':''}">${h.split(':')[0]}</th>`;
+    });
+  });
   html+='</tr></thead><tbody>';
 
-  managers.forEach(m=>{
-    html+=`<tr><td class="mgr-td">${m}</td>`;
-    days.forEach(d=>{
+  managers.forEach(function(m){
+    html+=`<tr class="hm-row"><td class="mgr-td">💼 ${m}</td>`;
+    days.forEach(function(d){
       var ds=dateStr(d);
-      HOURS.forEach(h=>{
+      var isSel=ds===selectedHmDay;
+      HOURS.forEach(function(h){
         var hr=parseInt(h);
         var hasSlot=scheduleData[m]&&scheduleData[m][ds]&&scheduleData[m][ds][hr];
-        var cc=hasSlot?`slot-${HOUR_COLORS[hr]}`:'slot-0';
-        html+=`<td class="${cc}">${hasSlot?`<span class="slot-num">✓</span>`:''}</td>`;
+        var colorCls=hasSlot?`slot-${HOUR_COLORS[hr]}`:'slot-0';
+        var dayCls=isSel?' day-col':'';
+        html+=`<td class="${colorCls}${dayCls}" title="${m} · ${ds} · ${h}">${hasSlot?'<span class="slot-num">💼</span>':''}</td>`;
       });
     });
     html+='</tr>';
   });
   html+='</tbody>';
   document.getElementById('hm-table').innerHTML=html;
+}
+
+function selectHmDay(ds) {
+  selectedHmDay = selectedHmDay === ds ? null : ds;
+  renderSchedule();
 }
 
 function setHmWeek(w,btn){
@@ -1033,14 +1087,14 @@ function renderEditGrid(){
     var ds=dateStr(d);
     var dn=dayName(d);
     var isWeekend=d.getDay()===0||d.getDay()===6;
-    html+=`<tr style="${isWeekend?'opacity:.4':''}">`;
+    html+=`<tr style="${isWeekend?'background:rgba(245,200,66,0.03)':''}">`;
     html+=`<td class="mgr-td" style="font-size:10px">${dn} ${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}</td>`;
     HOURS.forEach(h=>{
       var hr=parseInt(h);
       var sel=selectedSlots[ds]&&selectedSlots[ds][hr];
       var baseColor=HOUR_COLORS[hr];
       var bg=sel?`slot-${baseColor}`:'slot-0';
-      html+=`<td class="${bg}" onclick="toggleSlot('${ds}',${hr})" style="cursor:pointer;user-select:none" title="${h}">${sel?'<span class="slot-num">✓</span>':''}</td>`;
+      html+=`<td class="${bg}" onclick="toggleSlot('${ds}',${hr})" style="cursor:pointer;user-select:none;height:28px" title="${h}">${sel?'<span class="slot-num">💼</span>':''}</td>`;
     });
     html+='</tr>';
   });
@@ -1058,6 +1112,38 @@ function toggleSlot(ds,hr){
 }
 
 function clearAllSlots(){selectedSlots={};if(currentEditMgr)renderEditGrid();}
+
+function copyWeek(fromWeek, toWeek) {
+  // Get days for both weeks
+  var fromDays = get14Days(fromWeek - 1);
+  var toDays   = get14Days(toWeek - 1);
+
+  // Copy slots: same day-of-week index, same hours
+  var copied = 0;
+  fromDays.forEach(function(fd, idx) {
+    var fromDs = dateStr(fd);
+    var toDs   = dateStr(toDays[idx]);
+    if (!selectedSlots[fromDs]) return;
+    if (!selectedSlots[toDs]) selectedSlots[toDs] = {};
+    Object.keys(selectedSlots[fromDs]).forEach(function(h) {
+      selectedSlots[toDs][parseInt(h)] = true;
+      copied++;
+    });
+  });
+
+  if (copied === 0) {
+    alert('На неделе ' + fromWeek + ' нет выбранных слотов для копирования.');
+    return;
+  }
+
+  renderEditGrid();
+  // Show brief confirmation
+  var btn = event.target;
+  var orig = btn.textContent;
+  btn.textContent = '✅ Скопировано ' + copied + ' слотов';
+  btn.style.color = 'var(--g)';
+  setTimeout(function(){ btn.textContent = orig; btn.style.color = 'var(--y)'; }, 2000);
+}
 
 function updateSelCount(){
   var count=0;
@@ -1117,6 +1203,54 @@ function showPage(id) {
 }
 
 // ═══════════════════════════════════════
+// QUOTES
+// ═══════════════════════════════════════
+var QUOTES = [
+  {text: 'Успех — это не случайность. Это тяжёлый труд, настойчивость, обучение, жертвы и, прежде всего, любовь к тому, что ты делаешь или учишься делать.', author: '— Пеле'},
+  {text: 'Разница между успешными людьми и другими — не в отсутствии страха. В том, что они действуют несмотря на страх.', author: '— Джордж Аддейр'},
+  {text: 'Каждый слот — это шанс изменить чью-то жизнь. Ты не просто продаёшь курс — ты открываешь ребёнку дверь в будущее.', author: '— Eduson Kids'},
+  {text: 'Продавец-победитель не ждёт идеальных условий. Он создаёт их сам.', author: '— Брайан Трейси'},
+  {text: 'Ваше время ограничено. Не тратьте его, проживая чужую жизнь.', author: '— Стив Джобс'},
+  {text: 'Я не проигрываю. Я либо побеждаю, либо учусь.', author: '— Нельсон Мандела'},
+  {text: 'Лучший способ предсказать будущее — создать его.', author: '— Питер Друкер'},
+  {text: 'Возражение клиента — это не "нет". Это "расскажи мне больше, убеди меня".', author: '— Eduson Kids'},
+  {text: 'Каждое утро ты просыпаешься с выбором: двигаться вперёд или стоять на месте. Сделай правильный выбор.', author: '— Джордан Белфорт'},
+  {text: 'Я боялся каждый раз, когда выходил на площадку. Но я шёл. И это изменило всё.', author: '— Майкл Джордан'},
+  {text: 'Цена успеха — это посвящение, тяжёлая работа и неустанная преданность тому, чем ты занимаешься.', author: '— Вince Ломбарди'},
+  {text: 'Слот — это не строчка в таблице. Это встреча с семьёй, которая ищет лучшее для своего ребёнка.', author: '— Eduson Kids'},
+  {text: 'Чемпионы продолжают играть до тех пор, пока не научатся делать это правильно.', author: '— Билли Джин Кинг'},
+  {text: 'Не считай дни — заставь каждый день считаться.', author: '— Мухаммед Али'},
+];
+
+var currentQuoteIdx = Math.floor(Math.random() * QUOTES.length);
+
+function showQuote(idx, animate) {
+  var q = QUOTES[idx];
+  var txt = document.getElementById('quote-text');
+  var auth = document.getElementById('quote-author');
+  if (!txt || !auth) return;
+  if (animate) {
+    txt.style.opacity = '0'; auth.style.opacity = '0';
+    setTimeout(function() {
+      txt.textContent = q.text;
+      auth.textContent = q.author;
+      txt.style.opacity = '1'; auth.style.opacity = '1';
+    }, 300);
+  } else {
+    txt.textContent = q.text;
+    auth.textContent = q.author;
+  }
+}
+
+function nextQuote() {
+  currentQuoteIdx = (currentQuoteIdx + 1) % QUOTES.length;
+  showQuote(currentQuoteIdx, true);
+}
+
+// Auto-rotate every 30 seconds
+setInterval(function() { nextQuote(); }, 30000);
+
+// ═══════════════════════════════════════
 // THEME
 // ═══════════════════════════════════════
 var savedTheme=localStorage.getItem('eks-theme')||'dark';
@@ -1141,6 +1275,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var el=document.getElementById('sd-custom');
   if(el){var n=new Date();el.value=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
 })();
+showQuote(currentQuoteIdx, false);
 loadAll();
 setInterval(loadAll,60000);
 </script>
