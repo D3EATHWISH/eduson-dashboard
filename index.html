@@ -437,6 +437,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
     </div>
     <div id="submit-result" style="display:none"></div>
   </div>
+
+  <!-- QUOTE BLOCK -->
+  <div id="quote-block" onclick="nextQuote()" title="Нажми для следующей цитаты" style="margin-top:16px;border-radius:var(--r10);padding:20px 24px;background:linear-gradient(135deg,rgba(245,200,66,0.06),rgba(62,207,142,0.04));border:1px solid var(--y-bd);position:relative;overflow:hidden;cursor:pointer;transition:opacity .2s">
+    <div style="position:absolute;top:10px;right:14px;font-size:10px;color:var(--dim)">нажми для следующей ↻</div>
+    <div style="font-size:36px;color:var(--y);opacity:.2;font-family:Georgia,serif;line-height:1;margin-bottom:6px">"</div>
+    <div id="quote-text" style="font-size:14px;font-weight:500;color:var(--text);line-height:1.7;margin-bottom:10px;font-style:italic;transition:opacity .35s ease"></div>
+    <div id="quote-author" style="font-size:11px;color:var(--y);font-weight:600;letter-spacing:.03em;transition:opacity .35s ease"></div>
+    <div style="position:absolute;bottom:10px;right:22px;font-size:30px;color:var(--y);opacity:.12;font-family:Georgia,serif;transform:rotate(180deg)">"</div>
+  </div>
 </div>
 
 <script>
