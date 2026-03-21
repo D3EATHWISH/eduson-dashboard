@@ -469,8 +469,8 @@ const FALLBACK_MGRS = ['Перебейносов А.','Куюмджу Д.','Ни
 // ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
-let lessons=[], managers=[], targets={mk:52,rev:1885140,avg:36000,rpm:180000,conv:40}, slots=[], tomorrowSlots=[];
-let charts={}, curPer='week', curSlotDay=0, dfFrom=null, dfTo=null, dfMode='all', hmWeek=0;
+let lessons=[], managers=[], targets={mk:52,rev:1885140,avg:36000,rpm:180000,conv:40}, slots=[], tomorrowSlots=[], allSlots=[];
+let charts={}, curPer='week', curSlotDate=new Date(), curSlotDay=0, dfFrom=null, dfTo=null, dfMode='all', hmWeek=0;
 
 // ═══════════════════════════════════════
 // HELPERS
@@ -539,10 +539,9 @@ function parseDate(s) {
 // LOAD
 // ═══════════════════════════════════════
 async function loadAll() {
-  // Show loader
   var loader = document.getElementById('loader');
   if (loader) loader.classList.add('visible');
-
+  try {
   var [rawForm,rawMgrs,rawTar,rawSlots] = await Promise.all([
     fetchCSV('form'),fetchCSV('managers'),fetchCSV('targets'),fetchCSV('slots')
   ]);
@@ -633,9 +632,13 @@ async function loadAll() {
     n.toLocaleDateString('ru',{day:'2-digit',month:'short'})+' '+
     n.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
 
-  // Hide loader
-  var loader = document.getElementById('loader');
-  if (loader) loader.classList.remove('visible');
+  } catch(err) {
+    console.error('loadAll error:', err);
+    document.getElementById('alert-text').innerHTML = '<strong>Ошибка загрузки:</strong> ' + err.message + ' — попробуй обновить страницу';
+  } finally {
+    var loader = document.getElementById('loader');
+    if (loader) loader.classList.remove('visible');
+  }
 }
 
 // ═══════════════════════════════════════
@@ -1345,6 +1348,14 @@ document.addEventListener('DOMContentLoaded',function(){
   if(el){var n=new Date();el.value=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
 })();
 showQuote(currentQuoteIdx, false);
+// Failsafe: always hide loader after 8 seconds no matter what
+setTimeout(function(){
+  var l=document.getElementById('loader');
+  if(l&&l.classList.contains('visible')){
+    l.classList.remove('visible');
+    console.warn('Loader force-hidden after timeout');
+  }
+}, 8000);
 loadAll();
 setInterval(loadAll,60000);
 </script>
