@@ -8,403 +8,419 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 :root{
-  --bg:#0a0a0a;
-  --bg2:#111111;
-  --bg3:#1a1a1a;
-  --bg4:#222222;
-  --border:rgba(255,255,255,0.07);
-  --border-s:rgba(255,255,255,0.12);
-  --text:#f0f0f0;
-  --sub:#a0a0a0;
-  --muted:#606060;
-  --dim:#404040;
-  --yellow:#f5c842;
-  --yellow-bg:rgba(245,200,66,0.08);
-  --yellow-bd:rgba(245,200,66,0.2);
-  --green:#3ecf8e;
-  --green-bg:rgba(62,207,142,0.08);
-  --red:#f05252;
-  --red-bg:rgba(240,82,82,0.08);
-  --blue:#60a5fa;
-  --blue-bg:rgba(96,165,250,0.08);
+  --bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;
+  --border:rgba(255,255,255,0.07);--border-s:rgba(255,255,255,0.12);
+  --text:#f0f0f0;--sub:#a0a0a0;--muted:#606060;--dim:#404040;
+  --y:#f5c842;--y-bg:rgba(245,200,66,0.08);--y-bd:rgba(245,200,66,0.2);
+  --g:#3ecf8e;--g-bg:rgba(62,207,142,0.08);--g-bd:rgba(62,207,142,0.2);
+  --r:#f05252;--r-bg:rgba(240,82,82,0.08);--r-bd:rgba(240,82,82,0.2);
+  --b:#60a5fa;--b-bg:rgba(96,165,250,0.08);--b-bd:rgba(96,165,250,0.2);
   --shadow:0 1px 3px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.05);
-  --r:10px;--r-sm:6px;
-  --mono:'JetBrains Mono',monospace;
-  --sans:'Manrope',sans-serif;
-  --display:'Unbounded',sans-serif;
+  --r10:10px;--r6:6px;
+  --mono:'JetBrains Mono',monospace;--sans:'Manrope',sans-serif;--display:'Unbounded',sans-serif;
 }
-
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;line-height:1.5;min-height:100vh;overflow-x:hidden}
 
 /* NAV */
-.nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-.nav-brand{display:flex;align-items:center;gap:10px}
-.nav-logo{font-family:var(--display);font-size:13px;font-weight:700;color:var(--yellow);letter-spacing:-.02em}
-.nav-logo span{color:var(--text);font-weight:400;font-size:11px;margin-left:4px;opacity:.6}
-.nav-tabs{display:flex;gap:2px;background:var(--bg3);padding:3px;border-radius:var(--r-sm)}
-.tab-btn{font-family:var(--sans);font-size:11px;font-weight:600;padding:5px 14px;border-radius:4px;border:none;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s}
-.tab-btn.active{background:var(--yellow);color:#000}
-.tab-btn:hover:not(.active){color:var(--text)}
-.nav-right{display:flex;align-items:center;gap:8px}
-.live-badge{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--green);background:var(--green-bg);border:1px solid rgba(62,207,142,0.2);padding:3px 10px;border-radius:99px}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:50px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;gap:12px}
+.nav-logo{font-family:var(--display);font-size:12px;font-weight:700;color:var(--y);white-space:nowrap}
+.nav-tabs{display:flex;gap:2px;background:var(--bg3);padding:3px;border-radius:var(--r6);flex-shrink:0}
+.tab{font-family:var(--sans);font-size:11px;font-weight:600;padding:4px 12px;border-radius:4px;border:none;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s;white-space:nowrap}
+.tab.active{background:var(--y);color:#000}
+.tab:hover:not(.active){color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.live-b{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--g);background:var(--g-bg);border:1px solid var(--g-bd);padding:3px 10px;border-radius:99px}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
 .upd{font-size:10px;color:var(--muted);font-family:var(--mono)}
-.nav-btn{background:var(--bg3);border:1px solid var(--border-s);color:var(--sub);font-size:11px;font-weight:500;padding:5px 12px;border-radius:var(--r-sm);cursor:pointer;font-family:var(--sans);transition:all .15s}
-.nav-btn:hover{color:var(--text);border-color:var(--yellow)}
+.nbtn{background:var(--bg3);border:1px solid var(--border-s);color:var(--sub);font-size:11px;font-weight:500;padding:5px 11px;border-radius:var(--r6);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.nbtn:hover{color:var(--text);border-color:var(--y)}
 
 /* PAGES */
-.page{display:none;padding:20px 24px;animation:fadein .2s}
+.page{display:none;padding:16px 20px;animation:fi .2s}
 .page.active{display:block}
-@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
 /* ALERT */
-.alert{display:flex;align-items:flex-start;gap:10px;background:var(--yellow-bg);border:1px solid var(--yellow-bd);border-radius:var(--r);padding:10px 14px;margin-bottom:16px;font-size:12px;color:var(--yellow);line-height:1.5}
+.alert{display:flex;align-items:flex-start;gap:10px;background:var(--y-bg);border:1px solid var(--y-bd);border-radius:var(--r10);padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--y);line-height:1.5}
 .alert strong{font-weight:600}
 
-/* COUNTDOWN ROW */
-.countdown-row{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:12px;margin-bottom:16px;align-items:center}
-.day-ring{width:80px;height:80px;flex-shrink:0}
-.day-ring svg{width:80px;height:80px}
-.ring-bg{fill:none;stroke:var(--bg3);stroke-width:8}
-.ring-fg{fill:none;stroke:var(--yellow);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .8s;transform-origin:center;transform:rotate(-90deg)}
-.ring-text{font-family:var(--display);font-size:18px;font-weight:700;fill:var(--yellow)}
-.ring-sub{font-size:9px;fill:var(--muted)}
-.countdown-card{background:var(--bg2);border-radius:var(--r);padding:14px 16px;border:1px solid var(--border);box-shadow:var(--shadow)}
-.cc-label{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.cc-val{font-size:20px;font-weight:600;font-family:var(--mono);color:var(--text)}
-.cc-sub{font-size:10px;color:var(--muted);margin-top:2px}
+/* COUNTDOWN */
+.cdown{display:grid;grid-template-columns:76px 1fr 1fr 1fr;gap:10px;margin-bottom:14px;align-items:center}
+.ring-wrap{width:76px;height:76px}
+.ring-wrap svg{width:76px;height:76px}
+.rbg{fill:none;stroke:var(--bg3);stroke-width:7}
+.rfg{fill:none;stroke:var(--y);stroke-width:7;stroke-linecap:round;transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset .8s}
+.rnum{font-family:var(--display);font-size:16px;font-weight:700;fill:var(--y)}
+.rsub{font-size:8px;fill:var(--muted)}
+.cc{background:var(--bg2);border-radius:var(--r10);padding:12px 14px;border:1px solid var(--border)}
+.ccl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.ccv{font-size:19px;font-weight:600;font-family:var(--mono)}
+.ccs{font-size:10px;color:var(--muted);margin-top:2px}
 
-/* KPI GRID */
-.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:16px}
-.kpi{background:var(--bg2);border-radius:var(--r);padding:12px 14px;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;border-top:2px solid transparent;transition:border-top-color .3s}
-.kpi.ok{border-top-color:var(--green)}
-.kpi.warn{border-top-color:var(--yellow)}
-.kpi.bad{border-top-color:var(--red)}
-.kpi.info{border-top-color:var(--blue)}
-.kl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.kv{font-size:20px;font-weight:600;line-height:1;font-family:var(--mono)}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--bg2);border-radius:var(--r10);padding:12px 14px;border:1px solid var(--border);box-shadow:var(--shadow);position:relative;border-top:2px solid transparent}
+.kpi.ok{border-top-color:var(--g)}.kpi.warn{border-top-color:var(--y)}.kpi.bad{border-top-color:var(--r)}.kpi.info{border-top-color:var(--b)}
+.kl{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.kv{font-size:19px;font-weight:600;line-height:1;font-family:var(--mono)}
 .ks{font-size:10px;color:var(--muted);margin-top:3px}
-.ktag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:600;padding:2px 7px;border-radius:99px;font-family:var(--mono)}
-.ktag.ok{background:var(--green-bg);color:var(--green)}
-.ktag.warn{background:var(--yellow-bg);color:var(--yellow)}
-.ktag.bad{background:var(--red-bg);color:var(--red)}
-.ktag.info{background:var(--blue-bg);color:var(--blue)}
-.g{color:var(--green)}.a{color:var(--yellow)}.r{color:var(--red)}.b{color:var(--blue)}.m{color:var(--muted)}
+.ktag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:600;padding:2px 6px;border-radius:99px;font-family:var(--mono)}
+.ktag.ok{background:var(--g-bg);color:var(--g)}.ktag.warn{background:var(--y-bg);color:var(--y)}.ktag.bad{background:var(--r-bg);color:var(--r)}.ktag.info{background:var(--b-bg);color:var(--b)}
+.yc{color:var(--y)}.gc{color:var(--g)}.rc{color:var(--r)}.bc{color:var(--b)}.mc{color:var(--muted)}
 
-/* PANELS */
-.main-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:12px;margin-bottom:12px}
-.panel{background:var(--bg2);border-radius:var(--r);padding:14px 16px;border:1px solid var(--border);box-shadow:var(--shadow)}
-.pt{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
-.pt-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--yellow-bg);color:var(--yellow)}
+/* GRID */
+.mg{display:grid;grid-template-columns:1.5fr 1fr;gap:10px;margin-bottom:10px}
+.panel{background:var(--bg2);border-radius:var(--r10);padding:14px 16px;border:1px solid var(--border)}
+.pt{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ptb{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--y-bg);color:var(--y)}
 
 /* SEARCH */
-.search-wrap{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border-s);border-radius:var(--r-sm);padding:4px 10px;margin-bottom:10px}
-.search-wrap input{background:none;border:none;outline:none;font-size:12px;color:var(--text);font-family:var(--sans);width:160px}
-.search-wrap input::placeholder{color:var(--muted)}
-.search-icon{font-size:12px;color:var(--muted)}
+.sw{display:flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border-s);border-radius:var(--r6);padding:4px 9px}
+.sw input{background:none;border:none;outline:none;font-size:11px;color:var(--text);font-family:var(--sans);width:140px}
+.sw input::placeholder{color:var(--muted)}
 
-/* TEAM TABLE */
-.team-table{width:100%;border-collapse:collapse}
-.team-table th{font-size:10px;color:var(--muted);font-weight:500;text-align:left;padding:0 4px 8px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.05em}
-.team-table th:not(:first-child){text-align:right}
-.team-table td{font-size:12px;color:var(--sub);padding:6px 4px;border-bottom:1px solid var(--bg3);cursor:pointer;transition:background .1s}
-.team-table td:not(:first-child){text-align:right;font-family:var(--mono);font-size:11px}
-.team-table tr:hover td{background:var(--bg3)}
-.team-table tr:last-child td{border-bottom:none;font-weight:600;color:var(--text);background:rgba(245,200,66,0.04)}
-.tname{font-weight:500;color:var(--text)}
-.eb{font-size:15px;line-height:1}
+/* TABLE */
+.tt{width:100%;border-collapse:collapse}
+.tt th{font-size:10px;color:var(--muted);font-weight:500;text-align:left;padding:0 4px 7px;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em}
+.tt th:not(:first-child){text-align:right}
+.tt td{font-size:12px;color:var(--sub);padding:6px 4px;border-bottom:1px solid var(--bg3);cursor:pointer}
+.tt td:not(:first-child){text-align:right;font-family:var(--mono);font-size:11px}
+.tt tr:hover td{background:var(--bg3)}
+.tt tr.total td{font-weight:600;color:var(--text);background:rgba(245,200,66,0.04);cursor:default}
+.tt tr.total td:hover{background:rgba(245,200,66,0.04)}
+.tn{font-weight:500;color:var(--text)}
+.eb{font-size:14px}
 
 /* SLOTS */
-.slots-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.slot-group-title{font-size:11px;font-weight:600;padding-bottom:5px;margin-bottom:4px;border-bottom:1px solid var(--border)}
-.slot-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--bg3)}
-.slot-row:last-child{border-bottom:none}
+.slot-tabs{display:flex;gap:4px;margin-bottom:10px}
+.stab{font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r6);border:1px solid var(--border-s);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.stab.active{background:var(--y);color:#000;border-color:var(--y)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sgt{font-size:11px;font-weight:600;padding-bottom:4px;margin-bottom:4px;border-bottom:1px solid var(--border)}
+.srow{display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:1px solid var(--bg3)}
+.srow:last-child{border-bottom:none}
 .sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.stime{font-size:11px;color:var(--muted);width:38px;flex-shrink:0;font-family:var(--mono)}
-.sstatus{font-size:9px;font-weight:600;padding:2px 6px;border-radius:99px}
-.s-wait{background:var(--blue-bg);color:var(--blue)}
-.s-live{background:var(--green-bg);color:var(--green);animation:blink .9s infinite}
+.stm{font-size:11px;color:var(--muted);width:36px;flex-shrink:0;font-family:var(--mono)}
+.sst{font-size:9px;font-weight:600;padding:2px 6px;border-radius:99px}
+.sw2{background:var(--b-bg);color:var(--b)}.sl{background:var(--g-bg);color:var(--g);animation:blink .9s infinite}.sd{background:var(--bg3);color:var(--dim)}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
-.s-done{background:var(--bg3);color:var(--dim)}
-.slot-pot{font-size:10px;color:var(--muted);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);display:flex;justify-content:space-between}
-.slot-pot strong{color:var(--yellow)}
+.spot{font-size:10px;color:var(--muted);margin-top:8px;padding-top:6px;border-top:1px solid var(--border);display:flex;justify-content:space-between}
+.spot strong{color:var(--y)}
 
 /* PROGRESS */
-.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
-.prog-label{font-size:11px;color:var(--sub);width:72px;flex-shrink:0;font-weight:500}
-.prog-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;border-radius:3px;transition:width .9s}
-.prog-pct{font-size:11px;font-weight:600;width:36px;text-align:right;flex-shrink:0;font-family:var(--mono)}
+.pr{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.pl{font-size:11px;color:var(--sub);width:70px;flex-shrink:0;font-weight:500}
+.pt2{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .9s}
+.pp{font-size:11px;font-weight:600;width:34px;text-align:right;flex-shrink:0;font-family:var(--mono)}
 
-/* CHARTS ROW */
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.period-btns{display:flex;gap:4px}
-.period-btn{font-size:10px;font-weight:600;padding:3px 10px;border-radius:4px;border:1px solid var(--border-s);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans)}
-.period-btn.active{background:var(--yellow);color:#000;border-color:var(--yellow)}
+/* CHARTS */
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.pbts{display:flex;gap:4px}
+.pbtn{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;border:1px solid var(--border-s);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.pbtn.active{background:var(--y);color:#000;border-color:var(--y)}
+
+/* DATE FILTER */
+.dfilter{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.dfilter label{font-size:11px;color:var(--muted)}
+.dfinput{background:var(--bg3);border:1px solid var(--border-s);color:var(--text);font-size:11px;padding:5px 10px;border-radius:var(--r6);font-family:var(--mono);outline:none;cursor:pointer}
+.dfinput:focus{border-color:var(--y)}
+.dfbtn{font-size:11px;font-weight:600;padding:5px 14px;border-radius:var(--r6);border:1px solid var(--border-s);background:var(--bg3);color:var(--muted);cursor:pointer;font-family:var(--sans);transition:all .15s}
+.dfbtn.active{background:var(--y-bg);color:var(--y);border-color:var(--y-bd)}
 
 /* INSIGHT */
-.insight{background:var(--bg2);border-radius:var(--r);padding:12px 16px;border-left:3px solid var(--yellow);border:1px solid var(--border);border-left:3px solid var(--yellow);box-shadow:var(--shadow)}
-.insight-items{display:flex;flex-direction:column;gap:5px}
-.insight-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--sub);line-height:1.5}
+.insight{background:var(--bg2);border-radius:var(--r10);padding:12px 16px;border:1px solid var(--border);border-left:3px solid var(--y)}
+.ilist{display:flex;flex-direction:column;gap:5px}
+.iitem{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--sub);line-height:1.5}
 .itag{flex-shrink:0;font-size:9px;font-weight:600;padding:2px 7px;border-radius:99px;margin-top:1px}
-.itag.y{background:var(--yellow-bg);color:var(--yellow)}
-.itag.g{background:var(--green-bg);color:var(--green)}
-.itag.r{background:var(--red-bg);color:var(--red)}
+.itag.y{background:var(--y-bg);color:var(--y)}.itag.g{background:var(--g-bg);color:var(--g)}.itag.r{background:var(--r-bg);color:var(--r)}
 
-/* ANALYTICS PAGE */
-.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-.analytics-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+/* ANALYTICS */
+.ag2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.ag3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
 
-/* MANAGER PAGE */
-.mgr-back{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:16px;width:fit-content}
-.mgr-back:hover{color:var(--yellow)}
-.mgr-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
-.mgr-avatar{width:48px;height:48px;border-radius:12px;background:var(--yellow-bg);border:2px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:16px;color:var(--yellow)}
-.mgr-name{font-family:var(--display);font-size:20px;font-weight:700;color:var(--text)}
-.mgr-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
-.mgr-lessons{background:var(--bg2);border-radius:var(--r);border:1px solid var(--border);overflow:hidden}
-.mgr-lessons-header{display:grid;grid-template-columns:1fr 80px 80px 80px 120px;gap:8px;padding:8px 12px;font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border)}
-.mgr-lesson-row{display:grid;grid-template-columns:1fr 80px 80px 80px 120px;gap:8px;padding:8px 12px;font-size:12px;color:var(--sub);border-bottom:1px solid var(--bg3);align-items:center}
-.mgr-lesson-row:last-child{border-bottom:none}
-.mgr-lesson-row:hover{background:var(--bg3)}
-.crm-link{font-size:10px;color:var(--blue);text-decoration:none}
-.crm-link:hover{text-decoration:underline}
+/* MANAGERS */
+.mg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mback{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:14px;width:fit-content}
+.mback:hover{color:var(--y)}
+.mhdr{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.mav{width:46px;height:46px;border-radius:11px;background:var(--y-bg);border:2px solid var(--y-bd);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:15px;color:var(--y)}
+.ms4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.crml{font-size:10px;color:var(--b);text-decoration:none}.crml:hover{text-decoration:underline}
 
-/* EMPTY STATE */
-.empty{text-align:center;padding:40px 20px;color:var(--muted)}
-.empty-icon{font-size:32px;margin-bottom:8px}
-.empty-text{font-size:13px}
+/* SCHEDULE / HEATMAP */
+.hm-wrap{overflow-x:auto;margin-bottom:10px}
+.hm{border-collapse:collapse;min-width:900px;width:100%}
+.hm th{font-size:9px;color:var(--muted);font-weight:500;padding:4px 3px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap}
+.hm th.mgr-h{text-align:left;min-width:130px;padding-left:8px}
+.hm td{font-size:10px;padding:3px;text-align:center;border:1px solid var(--bg3);transition:background .15s;min-width:28px}
+.hm td.mgr-td{text-align:left;font-size:11px;color:var(--text);font-weight:500;padding:5px 8px;background:var(--bg2);position:sticky;left:0;z-index:2;white-space:nowrap}
+.hm td.date-hdr{background:var(--bg3);font-size:9px;color:var(--muted);font-weight:600}
+.hm td.empty{background:var(--bg3);color:var(--dim)}
+.slot-0{background:var(--bg3)}
+.slot-red{background:rgba(240,82,82,0.15);color:#f08080}
+.slot-amber{background:rgba(245,158,11,0.15);color:#d4a030}
+.slot-green{background:rgba(62,207,142,0.15);color:#3ecf8e}
+.slot-num{font-size:10px;font-weight:600}
+.hm-legend{display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.hm-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.hm-leg-dot{width:12px;height:12px;border-radius:3px}
+.hm-week{display:flex;gap:4px;margin-bottom:12px}
+.wbtn{font-size:11px;font-weight:600;padding:4px 14px;border-radius:var(--r6);border:1px solid var(--border-s);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans)}
+.wbtn.active{background:var(--y);color:#000;border-color:var(--y)}
+.hm-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px}
+.hms-card{background:var(--bg2);border-radius:var(--r10);padding:10px 12px;border:1px solid var(--border)}
+.hms-name{font-size:11px;color:var(--sub);margin-bottom:4px}
+.hms-val{font-size:17px;font-weight:600;font-family:var(--mono);color:var(--y)}
+.hms-sub{font-size:10px;color:var(--muted)}
+
+/* EMPTY */
+.empty{text-align:center;padding:30px 20px;color:var(--muted)}
+.empty-ic{font-size:28px;margin-bottom:6px}
 
 /* RESPONSIVE */
 @media(max-width:960px){
   .kpis{grid-template-columns:repeat(3,1fr)}
-  .main-grid,.charts-row,.analytics-grid{grid-template-columns:1fr}
-  .countdown-row{grid-template-columns:auto 1fr 1fr}
-  .analytics-grid-3{grid-template-columns:1fr 1fr}
+  .mg,.cr,.ag2,.mg3{grid-template-columns:1fr}
+  .cdown{grid-template-columns:auto 1fr 1fr}
+  .ag3{grid-template-columns:1fr 1fr}
 }
-@media(max-width:600px){
-  body{font-size:12px}
+@media(max-width:640px){
   .kpis{grid-template-columns:repeat(2,1fr)}
   .nav{padding:0 12px}
-  .page{padding:14px 12px}
-  .countdown-row{grid-template-columns:1fr 1fr}
-  .day-ring{display:none}
-  .mgr-stats{grid-template-columns:repeat(2,1fr)}
+  .page{padding:12px}
+  .cdown{grid-template-columns:1fr 1fr}
+  .ring-wrap{display:none}
+  .ms4{grid-template-columns:repeat(2,1fr)}
+  .nav-logo{font-size:10px}
 }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-brand">
-    <div class="nav-logo">EDUSON KIDS <span>· SALES OS</span></div>
-  </div>
+  <div class="nav-logo">EDUSON KIDS · OS</div>
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="showPage('main')">Главная</button>
-    <button class="tab-btn" onclick="showPage('analytics')">Аналитика</button>
-    <button class="tab-btn" onclick="showPage('managers')">Менеджеры</button>
+    <button class="tab active" onclick="showPage('main')">Главная</button>
+    <button class="tab" onclick="showPage('analytics')">Аналитика</button>
+    <button class="tab" onclick="showPage('managers')">Менеджеры</button>
+    <button class="tab" onclick="showPage('schedule')">Расписание</button>
   </div>
   <div class="nav-right">
-    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    <div class="live-b"><div class="ldot"></div>LIVE</div>
     <div class="upd" id="upd">—</div>
-    <button class="nav-btn" onclick="loadAll()">↻ Обновить</button>
+    <button class="nbtn" onclick="loadAll()">↻</button>
   </div>
 </nav>
 
-<!-- ══════════════ ГЛАВНАЯ ══════════════ -->
+<!-- ══ ГЛАВНАЯ ══ -->
 <div class="page active" id="page-main">
+  <div class="alert"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M8 1.5L14.5 13.5H1.5L8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="currentColor"/></svg><span id="alert-text">Загрузка...</span></div>
 
-  <div class="alert">
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M8 1.5L14.5 13.5H1.5L8 1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.5" r=".75" fill="currentColor"/></svg>
-    <span id="alert-text">Загрузка данных...</span>
-  </div>
-
-  <div class="countdown-row">
-    <div class="day-ring">
-      <svg viewBox="0 0 80 80">
-        <circle class="ring-bg" cx="40" cy="40" r="32"/>
-        <circle class="ring-fg" id="ring-fg" cx="40" cy="40" r="32" stroke-dasharray="201" stroke-dashoffset="201"/>
-        <text class="ring-text" x="40" y="44" text-anchor="middle" id="ring-days">—</text>
-        <text class="ring-sub" x="40" y="55" text-anchor="middle">ДНЕЙ</text>
+  <div class="cdown">
+    <div class="ring-wrap">
+      <svg viewBox="0 0 76 76">
+        <circle class="rbg" cx="38" cy="38" r="30"/>
+        <circle class="rfg" id="rfg" cx="38" cy="38" r="30" stroke-dasharray="188" stroke-dashoffset="188"/>
+        <text class="rnum" x="38" y="42" text-anchor="middle" id="rdays">—</text>
+        <text class="rsub" x="38" y="52" text-anchor="middle">ДНЕЙ</text>
       </svg>
     </div>
-    <div class="countdown-card">
-      <div class="cc-label">Осталось выручки</div>
-      <div class="cc-val a" id="cc-rev">—</div>
-      <div class="cc-sub" id="cc-rev-sub">до конца месяца</div>
-    </div>
-    <div class="countdown-card">
-      <div class="cc-label">Нужно в день</div>
-      <div class="cc-val g" id="cc-daily">—</div>
-      <div class="cc-sub">чтобы закрыть месяц</div>
-    </div>
-    <div class="countdown-card">
-      <div class="cc-label">МК осталось</div>
-      <div class="cc-val b" id="cc-mk">—</div>
-      <div class="cc-sub">до плана</div>
-    </div>
+    <div class="cc"><div class="ccl">Осталось выручки</div><div class="ccv yc" id="cc-rev">—</div><div class="ccs" id="cc-rev2">—</div></div>
+    <div class="cc"><div class="ccl">Нужно в день</div><div class="ccv gc" id="cc-day">—</div><div class="ccs">чтобы закрыть месяц</div></div>
+    <div class="cc"><div class="ccl">МК осталось</div><div class="ccv bc" id="cc-mk">—</div><div class="ccs">до плана</div></div>
   </div>
 
   <div class="kpis">
-    <div class="kpi bad"><div class="kl">Выручка факт</div><div class="kv r" id="kv-rev">—</div><div class="ks" id="ks-rev">—</div><span class="ktag bad" id="kt-rev">—</span></div>
-    <div class="kpi warn"><div class="kl">МК проведено</div><div class="kv a" id="kv-mk">—</div><div class="ks" id="ks-mk">—</div><span class="ktag warn" id="kt-mk">—</span></div>
-    <div class="kpi ok"><div class="kl">Конверсия</div><div class="kv g" id="kv-conv">—</div><div class="ks g" id="ks-conv">—</div><span class="ktag ok" id="kt-conv">—</span></div>
-    <div class="kpi ok"><div class="kl">Средний чек</div><div class="kv a" id="kv-avg">—</div><div class="ks" id="ks-avg">—</div><span class="ktag ok" id="kt-avg">—</span></div>
-    <div class="kpi info"><div class="kl">Выручка / МК</div><div class="kv b" id="kv-rpm">—</div><div class="ks" id="ks-rpm">—</div><span class="ktag info" id="kt-rpm">—</span></div>
+    <div class="kpi bad"><div class="kl">Выручка факт</div><div class="kv rc" id="kv-rev">—</div><div class="ks" id="ks-rev">—</div><span class="ktag bad" id="kt-rev">—</span></div>
+    <div class="kpi warn"><div class="kl">МК проведено</div><div class="kv yc" id="kv-mk">—</div><div class="ks" id="ks-mk">—</div><span class="ktag warn" id="kt-mk">—</span></div>
+    <div class="kpi ok"><div class="kl">Конверсия</div><div class="kv gc" id="kv-conv">—</div><div class="ks gc" id="ks-conv">—</div><span class="ktag ok" id="kt-conv">—</span></div>
+    <div class="kpi ok"><div class="kl">Средний чек</div><div class="kv yc" id="kv-avg">—</div><div class="ks" id="ks-avg">—</div><span class="ktag ok" id="kt-avg">—</span></div>
+    <div class="kpi info"><div class="kl">Выручка / МК</div><div class="kv bc" id="kv-rpm">—</div><div class="ks" id="ks-rpm">—</div><span class="ktag info" id="kt-rpm">—</span></div>
   </div>
 
-  <div class="main-grid">
+  <div class="mg">
     <div class="panel">
-      <div class="pt">
-        Рейтинг команды
-        <div class="search-wrap">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="search-input" placeholder="Поиск менеджера..." oninput="filterTeam(this.value)">
-        </div>
+      <div class="pt">Рейтинг команды
+        <div class="sw"><span style="font-size:11px;color:var(--muted)">🔍</span><input type="text" id="search" placeholder="Поиск..." oninput="filterTeam(this.value)"></div>
       </div>
-      <table class="team-table">
-        <thead><tr><th>Менеджер</th><th>МК</th><th>Оплат</th><th>Конв.</th><th>Выручка</th><th>₽/МК</th><th></th></tr></thead>
-        <tbody id="team-tbody"></tbody>
-      </table>
+      <table class="tt"><thead><tr><th>Менеджер</th><th>МК</th><th>Оплат</th><th>Конв.</th><th>Выручка</th><th>₽/МК</th><th></th></tr></thead><tbody id="tbody"></tbody></table>
     </div>
     <div class="panel">
-      <div class="pt">МК сегодня <span class="pt-badge" id="slots-count">0</span></div>
-      <div id="slots-container"><div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Загрузка слотов...</div></div></div>
+      <div class="pt">
+        <span id="slots-title">МК сегодня</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="ptb" id="slots-cnt">0</span>
+          <div class="slot-tabs" style="margin-bottom:0">
+            <button class="stab active" onclick="setSlotDay(0,this)">Сегодня</button>
+            <button class="stab" onclick="setSlotDay(1,this)">Завтра</button>
+          </div>
+        </div>
+      </div>
+      <div id="slots-box"><div class="empty"><div class="empty-ic">📅</div><div>Загрузка слотов...</div></div></div>
     </div>
   </div>
 
-  <div class="charts-row">
+  <div class="cr">
     <div class="panel">
-      <div class="pt">
-        Выполнение плана
-      </div>
-      <div id="prog-bars" style="margin-bottom:16px"></div>
-      <div class="pt">
-        Динамика выручки
-        <div class="period-btns">
-          <button class="period-btn active" onclick="setPeriod('week',this)">Нед</button>
-          <button class="period-btn" onclick="setPeriod('month',this)">Мес</button>
+      <div class="pt">Выполнение плана</div>
+      <div id="prog" style="margin-bottom:14px"></div>
+      <div class="pt">Динамика выручки
+        <div class="pbts">
+          <button class="pbtn active" onclick="setPer('week',this)">Нед</button>
+          <button class="pbtn" onclick="setPer('month',this)">Мес</button>
         </div>
       </div>
-      <div style="position:relative;height:100px"><canvas id="revChart"></canvas></div>
+      <div style="position:relative;height:90px"><canvas id="revC"></canvas></div>
     </div>
     <div class="panel">
       <div class="pt">Выручка по менеджерам</div>
-      <div style="position:relative;height:200px"><canvas id="teamChart"></canvas></div>
+      <div style="position:relative;height:200px"><canvas id="teamC"></canvas></div>
     </div>
   </div>
 
-  <div class="insight">
-    <div class="pt" style="margin-bottom:10px">Что делать сейчас</div>
-    <div class="insight-items" id="insight-items"></div>
-  </div>
+  <div class="insight"><div class="pt" style="margin-bottom:8px">Что делать сейчас</div><div class="ilist" id="insights"></div></div>
 </div>
 
-<!-- ══════════════ АНАЛИТИКА ══════════════ -->
+<!-- ══ АНАЛИТИКА ══ -->
 <div class="page" id="page-analytics">
-  <div class="analytics-grid">
-    <div class="panel">
-      <div class="pt">Топ возражений</div>
-      <div style="position:relative;height:200px"><canvas id="objChart"></canvas></div>
-    </div>
-    <div class="panel">
-      <div class="pt">Распределение по практикам</div>
-      <div style="position:relative;height:200px"><canvas id="practChart"></canvas></div>
-    </div>
-  </div>
-  <div class="analytics-grid">
-    <div class="panel">
-      <div class="pt">Пакетный микс</div>
-      <div style="position:relative;height:180px"><canvas id="packChart"></canvas></div>
-    </div>
-    <div class="panel">
-      <div class="pt">Конверсия по дням</div>
-      <div style="position:relative;height:180px"><canvas id="convChart"></canvas></div>
+  <div class="dfilter">
+    <span style="font-size:11px;color:var(--muted);font-weight:600">Период:</span>
+    <button class="dfbtn active" onclick="setDfPer('all',this)">Весь месяц</button>
+    <button class="dfbtn" onclick="setDfPer('week',this)">Эта неделя</button>
+    <button class="dfbtn" onclick="setDfPer('custom',this)">Произвольный</button>
+    <div id="custom-dates" style="display:none;align-items:center;gap:6px">
+      <label>с</label><input type="date" class="dfinput" id="df-from">
+      <label>по</label><input type="date" class="dfinput" id="df-to">
+      <button class="dfbtn active" onclick="applyCustom()">Применить</button>
     </div>
   </div>
-  <div class="panel">
-    <div class="pt">Все уроки — история</div>
-    <div id="all-lessons-table"></div>
+  <div class="ag2">
+    <div class="panel"><div class="pt">Топ возражений</div><div style="position:relative;height:200px"><canvas id="objC"></canvas></div></div>
+    <div class="panel"><div class="pt">Распределение по практикам</div><div style="position:relative;height:200px"><canvas id="practC"></canvas></div></div>
+  </div>
+  <div class="ag2">
+    <div class="panel"><div class="pt">Пакетный микс</div><div style="position:relative;height:170px"><canvas id="packC"></canvas></div></div>
+    <div class="panel"><div class="pt">Конверсия по дням</div><div style="position:relative;height:170px"><canvas id="convC"></canvas></div></div>
+  </div>
+  <div class="panel"><div class="pt">История уроков</div><div id="all-table"></div></div>
+</div>
+
+<!-- ══ МЕНЕДЖЕРЫ ══ -->
+<div class="page" id="page-managers">
+  <div id="mgr-list"><div class="mg3" id="mgr-cards"></div></div>
+  <div id="mgr-detail" style="display:none">
+    <div class="mback" onclick="backMgr()">← Назад</div>
+    <div class="mhdr"><div class="mav" id="mav">—</div><div><div style="font-family:var(--display);font-size:18px;font-weight:700" id="mname">—</div><div style="font-size:11px;color:var(--muted);margin-top:2px" id="msub">—</div></div></div>
+    <div class="ms4" id="mstats"></div>
+    <div class="panel" style="margin-bottom:10px"><div class="pt">Динамика по неделям</div><div style="position:relative;height:110px"><canvas id="mwC"></canvas></div></div>
+    <div class="panel" style="margin-bottom:10px"><div class="pt">Возражения</div><div style="position:relative;height:150px"><canvas id="moC"></canvas></div></div>
+    <div class="panel"><div class="pt">История уроков</div><div id="mlessons"></div></div>
   </div>
 </div>
 
-<!-- ══════════════ МЕНЕДЖЕРЫ ══════════════ -->
-<div class="page" id="page-managers">
-  <div id="mgr-list-view">
-    <div class="analytics-grid-3" id="mgr-cards"></div>
-  </div>
-  <div id="mgr-detail-view" style="display:none">
-    <div class="mgr-back" onclick="showMgrList()">← Назад к команде</div>
-    <div class="mgr-header">
-      <div class="mgr-avatar" id="mgr-avatar">—</div>
-      <div>
-        <div class="mgr-name" id="mgr-name">—</div>
-        <div style="font-size:12px;color:var(--muted)" id="mgr-sub">—</div>
+<!-- ══ РАСПИСАНИЕ ══ -->
+<div class="page" id="page-schedule">
+
+  <!-- TABS: view / edit -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+    <div>
+      <div style="font-family:var(--display);font-size:14px;font-weight:700;color:var(--y);margin-bottom:2px">Расписание МК</div>
+      <div style="font-size:11px;color:var(--muted)">Тепловая карта слотов на 14 дней вперёд</div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <div class="nav-tabs">
+        <button class="tab active" onclick="schedTab('view',this)" id="sched-view-btn">Просмотр</button>
+        <button class="tab" onclick="schedTab('edit',this)" id="sched-edit-btn">Заполнить слоты</button>
+      </div>
+      <div class="hm-week" style="margin-bottom:0" id="week-switcher">
+        <button class="wbtn active" onclick="setHmWeek(0,this)">Нед 1</button>
+        <button class="wbtn" onclick="setHmWeek(1,this)">Нед 2</button>
       </div>
     </div>
-    <div class="mgr-stats" id="mgr-stats"></div>
+  </div>
+
+  <!-- VIEW -->
+  <div id="sched-view">
+    <div class="hm-legend">
+      <div class="hm-leg-item"><div class="hm-leg-dot" style="background:rgba(240,82,82,0.3)"></div>10:00–13:00 (низкий спрос)</div>
+      <div class="hm-leg-item"><div class="hm-leg-dot" style="background:rgba(245,158,11,0.3)"></div>14:00–16:00 (средний спрос)</div>
+      <div class="hm-leg-item"><div class="hm-leg-dot" style="background:rgba(62,207,142,0.3)"></div>17:00–21:00 (прайм тайм)</div>
+    </div>
+    <div class="hm-summary" id="hm-summary"></div>
+    <div class="hm-wrap"><table class="hm" id="hm-table"></table></div>
+  </div>
+
+  <!-- EDIT FORM -->
+  <div id="sched-edit" style="display:none">
     <div class="panel" style="margin-bottom:12px">
-      <div class="pt">Динамика по неделям</div>
-      <div style="position:relative;height:120px"><canvas id="mgrWeekChart"></canvas></div>
+      <div class="pt">Шаг 1 — Выбери себя</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="mgr-picker"></div>
     </div>
-    <div class="panel" style="margin-bottom:12px">
-      <div class="pt">Возражения</div>
-      <div style="position:relative;height:160px"><canvas id="mgrObjChart"></canvas></div>
+    <div class="panel" style="margin-bottom:12px" id="slots-panel" style="display:none">
+      <div class="pt">
+        Шаг 2 — Кликай слоты на 14 дней
+        <span style="font-size:11px;font-weight:400;color:var(--muted)">Зелёный = выбран</span>
+      </div>
+      <div class="hm-legend" style="margin-bottom:10px">
+        <div class="hm-leg-item"><div class="hm-leg-dot" style="background:rgba(240,82,82,0.3)"></div>10–13 (мало записей)</div>
+        <div class="hm-leg-item"><div class="hm-leg-dot" style="background:rgba(245,158,11,0.3)"></div>14–16 (средне)</div>
+        <div class="hm-leg-item"><div class="hm-leg-dot" style="background:rgba(62,207,142,0.3)"></div>17–21 (прайм)</div>
+      </div>
+      <div class="hm-wrap" id="edit-grid"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap">
+        <div style="font-size:12px;color:var(--muted)">Выбрано слотов: <strong style="color:var(--y)" id="sel-count">0</strong></div>
+        <button onclick="clearAllSlots()" class="nbtn" style="font-size:11px">✕ Очистить всё</button>
+        <button onclick="submitSchedule()" id="submit-btn" style="background:var(--y);color:#000;font-family:var(--sans);font-size:12px;font-weight:700;padding:7px 20px;border-radius:var(--r6);border:none;cursor:pointer;margin-left:auto">Отправить расписание →</button>
+      </div>
     </div>
-    <div class="panel">
-      <div class="pt">История уроков</div>
-      <div id="mgr-lessons"></div>
-    </div>
+    <div id="submit-result" style="display:none"></div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // CONFIG
-// ══════════════════════════════════════════════════════
-const BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTWvSJXhLj4Vfbwvrm7QprGNfAqUxwNH0D4DHD-rpjNQRD1H5rLh_jA3hae_iFAq8FYwOm6tGIctTeV/pub';
-const SHEET_URLS = {
-  'Ответы на форму': BASE_URL + '?gid=1621541455&single=true&output=csv',
-  'Таргеты':         BASE_URL + '?gid=325926893&single=true&output=csv',
-  'Менеджеры':       BASE_URL + '?gid=1534781490&single=true&output=csv',
-  'Слоты':           BASE_URL + '?gid=1947250313&single=true&output=csv',
+// ═══════════════════════════════════════
+const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTWvSJXhLj4Vfbwvrm7QprGNfAqUxwNH0D4DHD-rpjNQRD1H5rLh_jA3hae_iFAq8FYwOm6tGIctTeV/pub';
+const URLS = {
+  form:    BASE + '?gid=1621541455&single=true&output=csv',
+  targets: BASE + '?gid=325926893&single=true&output=csv',
+  managers:BASE + '?gid=1534781490&single=true&output=csv',
+  slots:   BASE + '?gid=1947250313&single=true&output=csv',
 };
-const GVZ = (sheet) => SHEET_URLS[sheet] || '';
 
-// ══════════════════════════════════════════════════════
+// COLUMNS (0-indexed):
+// 0=timestamp,1=manager,2=date,3=time,4=crm,5=recording,
+// 6=practice,7=age,8=pack,9=paytype,10=notes,11=objection,12=revenue
+
+const FALLBACK_MGRS = ['Перебейносов А.','Куюмджу Д.','Николаев Г.','Папашвили Д.','Федяинов Е.','Масимова Р.'];
+
+// ═══════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════════════════
-let lessons = [];      // All form responses
-let managers = [];     // Active managers list
-let targets = {};      // Current month targets
-let slots = [];        // Today's MK slots
-let currentPeriod = 'week';
-let currentMgr = null;
+// ═══════════════════════════════════════
+let lessons=[], managers=[], targets={mk:52,rev:1885140,avg:36000,rpm:180000,conv:40}, slots=[], tomorrowSlots=[];
+let charts={}, curPer='week', curSlotDay=0, dfFrom=null, dfTo=null, dfMode='all', hmWeek=0;
 
-// Charts
-let charts = {};
-
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // HELPERS
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 const fmt = n => Math.round(n).toLocaleString('ru');
 const pct = (a,b) => b ? Math.round(a/b*100) : 0;
-const cc = s => s ? s.replace(/^"|"$/g,'').trim() : '';
+const cc = s => (s||'').replace(/^"|"$/g,'').trim();
+const gc = () => ({grid:'rgba(255,255,255,0.05)',tick:'#606060'});
 
 function parseCSV(txt) {
-  const rows = [];
-  const lines = txt.trim().split('\n');
-  for (let i = 0; i < lines.length; i++) {
-    const cols = [];
-    let cur = '', inQ = false;
-    for (let c = 0; c < lines[i].length; c++) {
-      const ch = lines[i][c];
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else { cur += ch; }
+  var rows=[], lines=txt.trim().split('\n');
+  for(var i=0;i<lines.length;i++){
+    var cols=[],cur='',inQ=false,ln=lines[i];
+    for(var j=0;j<ln.length;j++){
+      var c=ln[j];
+      if(c==='"'){inQ=!inQ;}
+      else if(c===','&&!inQ){cols.push(cur.trim());cur='';}
+      else{cur+=c;}
     }
     cols.push(cur.trim());
     rows.push(cols);
@@ -412,774 +428,653 @@ function parseCSV(txt) {
   return rows;
 }
 
-async function fetchCSV(sheetName) {
-  const url = GVZ(sheetName);
-  if (!url) { console.log('No URL for sheet:', sheetName); return []; }
-  try {
-    const r = await fetch(url, { cache: 'no-store' });
-    if (!r.ok) { console.log('HTTP error:', sheetName, r.status); return []; }
-    const txt = await r.text();
-    if (!txt || txt.includes('<!DOCTYPE')) { console.log('Bad response for:', sheetName); return []; }
+async function fetchCSV(key) {
+  var url=URLS[key];
+  if(!url)return[];
+  try{
+    var r=await fetch(url,{cache:'no-store'});
+    if(!r.ok)return[];
+    var txt=await r.text();
+    if(!txt||txt.includes('<!DOCTYPE'))return[];
     return parseCSV(txt);
-  } catch(e) { console.log('Fetch error:', sheetName, e); return []; }
+  }catch(e){console.log('Fetch error:',key,e);return[];}
 }
 
-function getWorkdaysLeft() {
-  const now = new Date();
-  const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0);
-  let days = 0;
-  for (let d = new Date(now); d <= lastDay; d.setDate(d.getDate()+1)) {
-    const wd = d.getDay();
-    if (wd !== 0 && wd !== 6) days++;
+function calDaysLeft() {
+  var now=new Date(), last=new Date(now.getFullYear(),now.getMonth()+1,0);
+  return last.getDate()-now.getDate();
+}
+
+function calDaysTotal() {
+  var now=new Date();
+  return new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+}
+
+function workDaysLeft() {
+  var now=new Date(), last=new Date(now.getFullYear(),now.getMonth()+1,0), days=0;
+  for(var d=new Date(now.getTime()+86400000);d<=last;d.setDate(d.getDate()+1)){
+    var wd=d.getDay();if(wd!==0&&wd!==6)days++;
   }
   return days;
 }
 
-function getTotalWorkdays() {
-  const now = new Date();
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDay = new Date(now.getFullYear(), now.getMonth()+1, 0);
-  let days = 0;
-  for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate()+1)) {
-    const wd = d.getDay();
-    if (wd !== 0 && wd !== 6) days++;
-  }
-  return days;
+function parseDate(s) {
+  if(!s)return null;
+  var p=s.replace(/\//g,'.').split(/[.\-]/);
+  if(p.length<3)return null;
+  if(p[0].length===4)return new Date(+p[0],+p[1]-1,+p[2]);
+  return new Date(+p[2],+p[1]-1,+p[0]);
 }
 
-function getChartColors() {
-  return { grid: 'rgba(255,255,255,0.05)', tick: '#606060', yellow: '#f5c842', green: '#3ecf8e', red: '#f05252', blue: '#60a5fa' };
-}
-
-// ══════════════════════════════════════════════════════
-// LOAD DATA
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// LOAD
+// ═══════════════════════════════════════
 async function loadAll() {
-  // Load all sheets in parallel
-  const [rawLessons, rawManagers, rawTargets, rawSlots] = await Promise.all([
-    fetchCSV('Ответы на форму'),
-    fetchCSV('Менеджеры'),
-    fetchCSV('Таргеты'),
-    fetchCSV('Слоты'),
+  var [rawForm,rawMgrs,rawTar,rawSlots] = await Promise.all([
+    fetchCSV('form'),fetchCSV('managers'),fetchCSV('targets'),fetchCSV('slots')
   ]);
 
-  // Parse lessons (skip header row)
-  lessons = [];
-  for (let i = 1; i < rawLessons.length; i++) {
-    const r = rawLessons[i];
-    if (!r[1]) continue; // skip empty rows
-    const rev = parseFloat(cc(r[10]).replace(/[^0-9.]/g,'')) || 0;
-    const isPaid = (cc(r[9]) !== 'Не оплатили') && rev > 0;
-    const isBron = cc(r[11]).toLowerCase() === 'да';
+  // Parse lessons
+  lessons=[];
+  for(var i=1;i<rawForm.length;i++){
+    var r=rawForm[i];
+    if(!r[1])continue;
+    var rev=parseFloat(cc(r[12]).replace(/[^0-9.]/g,''))||0;
+    var pt=cc(r[9])||'';
+    var paid=rev>0;
     lessons.push({
-      timestamp: cc(r[0]),
-      manager:   cc(r[1]),
-      date:      cc(r[2]),
-      time:      cc(r[3]),
-      crm:       cc(r[4]),
-      recording: cc(r[5]),
-      practice:  cc(r[6]),
-      age:       cc(r[7]),
-      pack:      cc(r[8]),
-      payType:   cc(r[9]),
-      rev:       rev,
-      paid:      isPaid,
-      bron:      isBron,
-      notes:     cc(r[12]),
-      objection: cc(r[13]),
+      ts:cc(r[0]),manager:cc(r[1]),date:cc(r[2]),time:cc(r[3]),
+      crm:cc(r[4]),rec:cc(r[5]),practice:cc(r[6]),age:cc(r[7]),
+      pack:cc(r[8]),paytype:pt,notes:cc(r[10]),objection:cc(r[11]),rev:rev,paid:paid
     });
   }
 
-  // Parse managers — with fallback list
-  const FALLBACK_MANAGERS = ['Перебейносов А.', 'Куюмджу Д.', 'Николаев Г.', 'Папашвили Д.', 'Федяинов Е.', 'Масимова Р.'];
-  managers = [];
-  for (let i = 1; i < rawManagers.length; i++) {
-    const r = rawManagers[i];
-    const name = cc(r[0]);
-    const active = cc(r[1]).toLowerCase();
-    if (name && (active === 'да' || active === 'yes' || active === 'true' || active === '1')) {
-      managers.push(name);
-    }
+  // Parse managers
+  managers=[];
+  for(var i=1;i<rawMgrs.length;i++){
+    var r=rawMgrs[i];
+    var name=cc(r[0]),act=(cc(r[1])||'').toLowerCase();
+    if(name&&(act==='да'||act==='yes'||act==='1'))managers.push(name);
   }
-  if (managers.length === 0) {
-    console.log('Managers sheet empty — using fallback');
-    managers = FALLBACK_MANAGERS;
-  }
+  if(!managers.length)managers=FALLBACK_MGRS;
 
-  // Parse targets — find current month
-  targets = { mk: 52, rev: 1885140, conv: 40, avg: 36000, rpm: 180000 };
-  const now = new Date();
-  const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-  const currentMonthStr = monthNames[now.getMonth()] + ' ' + now.getFullYear();
-  for (let i = 1; i < rawTargets.length; i++) {
-    const r = rawTargets[i];
-    if (!r[0]) continue;
-    const rowMonth = cc(r[0]);
-    if (rowMonth.includes(monthNames[now.getMonth()]) && rowMonth.includes(String(now.getFullYear()))) {
-      targets = {
-        mk:   parseInt(cc(r[1])) || 52,
-        rev:  parseInt(cc(r[2]).replace(/[^0-9]/g,'')) || 1885140,
-        avg:  parseInt(cc(r[3]).replace(/[^0-9]/g,'')) || 36000,
-        rpm:  parseInt(cc(r[4]).replace(/[^0-9]/g,'')) || 180000,
-        conv: 40,
-      };
-      break;
+  // Parse targets
+  var now=new Date();
+  var mnames=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  var cm=mnames[now.getMonth()];
+  for(var i=1;i<rawTar.length;i++){
+    var r=rawTar[i];
+    var rm=cc(r[0]);
+    if(rm.includes(cm)&&rm.includes(String(now.getFullYear()))){
+      targets={
+        mk:parseInt(cc(r[1]))||52,
+        rev:parseInt(cc(r[2]).replace(/[^0-9]/g,''))||1885140,
+        avg:parseInt(cc(r[3]).replace(/[^0-9]/g,''))||36000,
+        rpm:parseInt(cc(r[4]).replace(/[^0-9]/g,''))||180000,
+        conv:40
+      };break;
     }
   }
 
   // Parse slots
-  slots = [];
-  const nowT = new Date();
-  for (let i = 1; i < rawSlots.length; i++) {
-    const r = rawSlots[i];
-    const time = cc(r[0]);
-    const who = cc(r[1]);
-    if (!time || !who) continue;
-    let status = cc(r[2]) || 'wait';
-    // Auto-update status based on current time
-    const [hh,mm] = time.split(':').map(Number);
-    const slotTime = new Date(nowT);
-    slotTime.setHours(hh, mm, 0, 0);
-    const slotEnd = new Date(slotTime.getTime() + 60*60*1000);
-    if (slotEnd < nowT) status = 'done';
-    else if (slotTime <= nowT && nowT < slotEnd) status = 'live';
-    else status = 'wait';
-    slots.push({ time, who, status });
+  var nowT=new Date();
+  slots=[];tomorrowSlots=[];
+  var tomorrow=new Date(nowT.getTime()+86400000);
+  for(var i=1;i<rawSlots.length;i++){
+    var r=rawSlots[i];
+    var time=cc(r[0]),who=cc(r[1]);
+    if(!time||!who)continue;
+    var p=time.split(':');
+    var hh=parseInt(p[0]),mm=parseInt(p[1])||0;
+    var st=new Date(nowT);st.setHours(hh,mm,0,0);
+    var en=new Date(st.getTime()+3600000);
+    var status=en<nowT?'done':st<=nowT&&nowT<en?'live':'wait';
+    slots.push({time,who,status,date:'today'});
+    tomorrowSlots.push({time,who,status:'wait',date:'tomorrow'});
   }
 
-  // Render everything
   renderMain();
   renderAnalytics();
   renderManagers();
+  renderSchedule();
 
-  const n = new Date();
-  document.getElementById('upd').textContent =
-    n.toLocaleDateString('ru',{day:'2-digit',month:'short'}) + ' ' +
+  var n=new Date();
+  document.getElementById('upd').textContent=
+    n.toLocaleDateString('ru',{day:'2-digit',month:'short'})+' '+
     n.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
 }
 
-// ══════════════════════════════════════════════════════
-// CALC TOTALS
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// VISIBLE DATA
+// ═══════════════════════════════════════
+function visible() {
+  var data=lessons.filter(r=>managers.some(m=>r.manager&&r.manager.includes(m.split(' ')[0])));
+  if(dfMode==='week'){
+    var now=new Date(),mon=new Date(now);mon.setDate(now.getDate()-now.getDay()+1);mon.setHours(0,0,0,0);
+    var sun=new Date(mon.getTime()+6*86400000);sun.setHours(23,59,59,999);
+    data=data.filter(r=>{var d=parseDate(r.date);return d&&d>=mon&&d<=sun;});
+  } else if(dfMode==='custom'&&dfFrom&&dfTo){
+    data=data.filter(r=>{var d=parseDate(r.date);return d&&d>=dfFrom&&d<=dfTo;});
+  }
+  return data;
+}
+
 function calcTotals(data) {
-  const mk = data.length;
-  const paid = data.filter(r => r.paid).length;
-  const rev = data.reduce((s,r) => s+r.rev, 0);
-  const bron = data.filter(r => r.bron).length;
-  const conv = mk ? Math.round(paid/mk*1000)/10 : 0;
-  const avg = paid ? Math.round(rev/paid) : 0;
-  const rpm = mk ? Math.round(rev/mk) : 0;
-  return { mk, paid, rev, conv, avg, rpm, bron };
+  var mk=data.length,paid=data.filter(r=>r.paid).length,rev=data.reduce((s,r)=>s+r.rev,0);
+  return{mk,paid,rev,conv:mk?Math.round(paid/mk*1000)/10:0,avg:paid?Math.round(rev/paid):0,rpm:mk?Math.round(rev/mk):0};
 }
 
-function getVisibleLessons() {
-  if (!managers.length) return lessons;
-  return lessons.filter(r => managers.some(m => r.manager && r.manager.includes(m.split(' ')[0])));
-}
-
-// ══════════════════════════════════════════════════════
-// RENDER MAIN
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// MAIN PAGE
+// ═══════════════════════════════════════
 function renderMain() {
-  const data = getVisibleLessons();
-  const t = calcTotals(data);
+  var data=visible(),t=calcTotals(data);
+  var now=new Date();
 
-  // Countdown
-  const wdLeft = getWorkdaysLeft();
-  const wdTotal = getTotalWorkdays();
-  const revLeft = Math.max(0, targets.rev - t.rev);
-  const dailyNeed = wdLeft > 0 ? Math.round(revLeft / wdLeft) : 0;
-  const mkLeft = Math.max(0, targets.mk - t.mk);
-  const ringPct = (wdTotal - wdLeft) / wdTotal;
+  // Countdown — calendar days
+  var calLeft=calDaysLeft(),calTotal=calDaysTotal();
+  var wdLeft=workDaysLeft();
+  var revLeft=Math.max(0,targets.rev-t.rev);
+  var dailyNeed=wdLeft>0?Math.round(revLeft/wdLeft):0;
 
-  document.getElementById('ring-days').textContent = wdLeft;
-  const fg = document.getElementById('ring-fg');
-  const circ = 2 * Math.PI * 32;
-  fg.style.strokeDashoffset = circ * (1 - ringPct);
-
-  document.getElementById('cc-rev').textContent = fmt(revLeft) + ' ₽';
-  document.getElementById('cc-rev-sub').textContent = fmt(targets.rev) + ' ₽ план';
-  document.getElementById('cc-daily').textContent = fmt(dailyNeed) + ' ₽';
-  document.getElementById('cc-mk').textContent = mkLeft + ' МК';
+  document.getElementById('rdays').textContent=calLeft;
+  var circ=2*Math.PI*30;
+  document.getElementById('rfg').style.strokeDashoffset=circ*(1-(calTotal-calLeft)/calTotal);
+  document.getElementById('cc-rev').textContent=fmt(revLeft)+' ₽';
+  document.getElementById('cc-rev2').textContent='план '+fmt(targets.rev)+' ₽';
+  document.getElementById('cc-day').textContent=fmt(dailyNeed)+' ₽';
+  document.getElementById('cc-mk').textContent=Math.max(0,targets.mk-t.mk)+' МК';
 
   // KPIs
-  const rp = pct(t.rev, targets.rev);
-  const mp = pct(t.mk, targets.mk);
-  document.getElementById('kv-rev').textContent = fmt(t.rev) + ' ₽';
-  document.getElementById('ks-rev').textContent = rp + '% от плана (' + fmt(targets.rev) + ' ₽)';
-  document.getElementById('kt-rev').textContent = rp + '%';
-  document.getElementById('kv-mk').textContent = t.mk + ' / ' + targets.mk;
-  document.getElementById('ks-mk').textContent = mp + '% от плана';
-  document.getElementById('kt-mk').textContent = (t.mk - targets.mk) + ' МК';
-  document.getElementById('kv-conv').textContent = t.conv + '%';
-  document.getElementById('ks-conv').textContent = 'план ' + targets.conv + '% · +' + (t.conv - targets.conv).toFixed(1) + '%';
-  document.getElementById('kt-conv').textContent = '↑' + pct(t.conv, targets.conv) + '%';
-  document.getElementById('kv-avg').textContent = fmt(t.avg) + ' ₽';
-  document.getElementById('ks-avg').textContent = 'цель ' + fmt(targets.avg) + ' ₽';
-  document.getElementById('kt-avg').textContent = pct(t.avg, targets.avg) + '%';
-  document.getElementById('kv-rpm').textContent = fmt(t.rpm) + ' ₽';
-  document.getElementById('ks-rpm').textContent = 'цель ' + fmt(targets.rpm) + ' ₽';
-  document.getElementById('kt-rpm').textContent = '↑ растём';
+  var rp=pct(t.rev,targets.rev),mp=pct(t.mk,targets.mk);
+  document.getElementById('kv-rev').textContent=fmt(t.rev)+' ₽';
+  document.getElementById('ks-rev').textContent=rp+'% от плана';
+  document.getElementById('kt-rev').textContent=rp+'%';
+  document.getElementById('kv-mk').textContent=t.mk+' / '+targets.mk;
+  document.getElementById('ks-mk').textContent=mp+'% от плана';
+  document.getElementById('kt-mk').textContent=(t.mk-targets.mk)+' МК';
+  document.getElementById('kv-conv').textContent=t.conv+'%';
+  document.getElementById('ks-conv').textContent='план '+targets.conv+'% · +'+(t.conv-targets.conv).toFixed(1)+'%';
+  document.getElementById('kt-conv').textContent='↑'+pct(t.conv,targets.conv)+'%';
+  document.getElementById('kv-avg').textContent=fmt(t.avg)+' ₽';
+  document.getElementById('ks-avg').textContent='цель '+fmt(targets.avg)+' ₽';
+  document.getElementById('kt-avg').textContent=pct(t.avg,targets.avg)+'%';
+  document.getElementById('kv-rpm').textContent=fmt(t.rpm)+' ₽';
+  document.getElementById('ks-rpm').textContent='цель '+fmt(targets.rpm)+' ₽';
+  document.getElementById('kt-rpm').textContent='↑ растём';
 
-  // Fix KPI borders
-  document.querySelector('#kv-rev').closest('.kpi').className = 'kpi ' + (rp >= 80 ? 'ok' : rp >= 40 ? 'warn' : 'bad');
-  document.querySelector('#kv-mk').closest('.kpi').className = 'kpi ' + (mp >= 80 ? 'ok' : 'warn');
-  document.querySelector('#kv-conv').closest('.kpi').className = 'kpi ' + (t.conv >= targets.conv ? 'ok' : 'warn');
+  document.getElementById('alert-text').innerHTML=
+    '<strong>Узкое место:</strong> нужно ещё <strong>+'+Math.max(0,targets.mk-t.mk)+' МК</strong>. '+
+    'Конверсия '+t.conv+'% '+(t.conv>=targets.conv?'✓ выше':'↓ ниже')+' плана · '+
+    'Осталось: <strong>'+fmt(revLeft)+' ₽</strong> · '+calLeft+' кал. дней';
 
-  // Alert
-  document.getElementById('alert-text').innerHTML =
-    '<strong>Узкое место:</strong> нужно ещё <strong>+' + mkLeft + ' МК</strong> до конца месяца. ' +
-    'Конверсия ' + t.conv + '% — ' + (t.conv >= targets.conv ? '✓ выше плана' : '↓ ниже плана') + ' · ' +
-    'Осталось: <strong>' + fmt(revLeft) + ' ₽</strong>';
-
-  // Team table
-  renderTeamTable(data, '');
-
-  // Slots
+  renderTeamTable(data,'');
   renderSlots();
-
-  // Progress bars
-  const bars = [
-    {l:'МК', v:mp, c:mp>=80?'var(--green)':'var(--yellow)'},
-    {l:'Выручка', v:rp, c:rp<40?'var(--red)':'var(--yellow)'},
-    {l:'Конверсия', v:Math.min(100,pct(t.conv,targets.conv)), c:'var(--green)'},
-    {l:'Ср. чек', v:pct(t.avg,targets.avg), c:'var(--green)'},
-  ];
-  document.getElementById('prog-bars').innerHTML = bars.map(b =>
-    `<div class="prog-row"><span class="prog-label">${b.l}</span><div class="prog-track"><div class="prog-fill" style="width:${b.v}%;background:${b.c}"></div></div><span class="prog-pct" style="color:${b.c}">${b.v}%</span></div>`
-  ).join('');
-
-  // Charts
+  renderProg(t);
   renderRevChart(data);
   renderTeamChart(data);
-
-  // Insights
-  renderInsights(data, t);
+  renderInsights(data,t);
 }
 
-function renderTeamTable(data, filter) {
-  const tbody = document.getElementById('team-tbody');
-  // Group by manager
-  const mgrs = {};
-  data.forEach(r => {
-    const name = r.manager;
-    if (!mgrs[name]) mgrs[name] = [];
-    mgrs[name].push(r);
+function renderTeamTable(data,filter) {
+  var mgrs={};
+  data.forEach(r=>{if(!mgrs[r.manager])mgrs[r.manager]=[];mgrs[r.manager].push(r);});
+  var sorted=Object.entries(mgrs).map(([name,rows])=>{var t=calcTotals(rows);return{name,...t};}).sort((a,b)=>b.rev-a.rev);
+  if(filter)sorted=sorted.filter(r=>r.name.toLowerCase().includes(filter.toLowerCase()));
+  var t=calcTotals(data);
+  var tbody=document.getElementById('tbody');
+  tbody.innerHTML='';
+  sorted.forEach((r,i)=>{
+    var conv=r.mk?(r.paid/r.mk*100).toFixed(1):'—';
+    var cn=parseFloat(conv);
+    var badge=i===0?'👑':cn>=50?'⭐':cn>=35?'😊':r.mk>0?'⚠️':'🔴';
+    var cc2=cn>=40?'var(--g)':cn>=30?'var(--y)':'var(--r)';
+    tbody.innerHTML+=`<tr onclick="openMgr('${r.name}')">
+      <td class="tn">${r.name}</td><td>${r.mk}</td><td>${r.paid}</td>
+      <td style="color:${r.mk?cc2:'var(--muted)'}">${conv!=='—'?conv+'%':'—'}</td>
+      <td style="color:${r.rev>100000?'var(--g)':'var(--sub)'}">${fmt(r.rev)}</td>
+      <td style="color:var(--b)">${r.rpm?fmt(r.rpm):'—'}</td>
+      <td><span class="eb">${badge}</span></td></tr>`;
   });
-  // Sort by revenue
-  const sorted = Object.entries(mgrs).map(([name, rows]) => {
-    const t = calcTotals(rows);
-    return { name, ...t };
-  }).sort((a,b) => b.rev - a.rev);
-
-  const filtered = filter ? sorted.filter(r => r.name.toLowerCase().includes(filter.toLowerCase())) : sorted;
-  const totals = calcTotals(data);
-
-  tbody.innerHTML = '';
-  filtered.forEach((r, i) => {
-    const conv = r.mk ? (r.paid/r.mk*100).toFixed(1) : '—';
-    const cn = parseFloat(conv);
-    const badge = i === 0 ? '👑' : cn >= 50 ? '⭐' : cn >= 35 ? '😊' : r.mk > 0 ? '⚠️' : '🔴';
-    const cc2 = cn >= 40 ? 'var(--green)' : cn >= 30 ? 'var(--yellow)' : 'var(--red)';
-    tbody.innerHTML += `<tr onclick="openManager('${r.name}')">
-      <td class="tname">${r.name}</td>
-      <td>${r.mk}</td>
-      <td>${r.paid}</td>
-      <td style="color:${r.mk?cc2:'var(--muted)'}">${conv !== '—' ? conv+'%' : '—'}</td>
-      <td style="color:${r.rev>100000?'var(--green)':'var(--sub)'}">${fmt(r.rev)}</td>
-      <td style="color:var(--blue)">${r.rpm ? fmt(r.rpm) : '—'}</td>
-      <td><span class="eb">${badge}</span></td>
-    </tr>`;
-  });
-  // Total row
-  tbody.innerHTML += `<tr>
-    <td>Итого</td>
-    <td class="g">${totals.mk}</td>
-    <td class="g">${totals.paid}</td>
-    <td class="g">${totals.conv}%</td>
-    <td class="g">${fmt(totals.rev)} ₽</td>
-    <td class="b">${fmt(totals.rpm)}</td>
-    <td></td>
-  </tr>`;
+  tbody.innerHTML+=`<tr class="total"><td>Итого</td><td class="gc">${t.mk}</td><td class="gc">${t.paid}</td><td class="gc">${t.conv}%</td><td class="gc">${fmt(t.rev)} ₽</td><td class="bc">${fmt(t.rpm)}</td><td></td></tr>`;
 }
 
-function filterTeam(val) {
-  renderTeamTable(getVisibleLessons(), val);
-}
+function filterTeam(v){renderTeamTable(visible(),v);}
 
 function renderSlots() {
-  const el = document.getElementById('slots-container');
-  document.getElementById('slots-count').textContent = slots.length;
+  var slotData=curSlotDay===0?slots:tomorrowSlots;
+  var el=document.getElementById('slots-box');
+  document.getElementById('slots-cnt').textContent=slotData.length;
+  document.getElementById('slots-title').textContent=curSlotDay===0?'МК сегодня':'МК завтра';
 
-  if (!slots.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Нет МК на сегодня</div></div>';
+  if(!slotData.length){
+    el.innerHTML='<div class="empty"><div class="empty-ic">📅</div><div>Нет МК '+(curSlotDay===0?'сегодня':'завтра')+'</div></div>';
     return;
   }
-
-  const groups = {};
-  slots.forEach(s => {
-    if (!groups[s.who]) groups[s.who] = [];
-    groups[s.who].push(s);
-  });
-
-  const colors = { '@lucky_8_8':'var(--green)', '@GeorgiPC':'var(--yellow)', '@Daria_K53':'var(--blue)', '@orlean40':'#a78bfa' };
-  const dotC = { done:'var(--dim)', live:'var(--green)', wait:'var(--blue)' };
-  const stMap = { done:['s-done','завершён'], live:['s-live','Live ●'], wait:['s-wait','ожидает'] };
-
-  let html = '<div class="slots-grid">';
-  Object.entries(groups).forEach(([who, ss]) => {
-    const c = colors[who] || 'var(--sub)';
-    html += `<div><div class="slot-group-title" style="color:${c}">${who}</div>`;
-    ss.forEach(s => {
-      const [cls, lbl] = stMap[s.status] || stMap.wait;
-      html += `<div class="slot-row"><div class="sdot" style="background:${dotC[s.status]}"></div><span class="stime">${s.time}</span><span class="sstatus ${cls}">${lbl}</span></div>`;
+  var groups={};
+  slotData.forEach(s=>{if(!groups[s.who])groups[s.who]=[];groups[s.who].push(s);});
+  var colors={'@lucky_8_8':'var(--g)','@GeorgiPC':'var(--y)','@Daria_K53':'var(--b)','@orlean40':'#a78bfa'};
+  var dotC={done:'var(--dim)',live:'var(--g)',wait:'var(--b)'};
+  var stM={done:['sd','завершён'],live:['sl','Live ●'],wait:['sw2','ожидает']};
+  var html='<div class="sgrid">';
+  Object.entries(groups).forEach(([who,ss])=>{
+    var c=colors[who]||'var(--sub)';
+    html+=`<div><div class="sgt" style="color:${c}">${who}</div>`;
+    ss.forEach(s=>{
+      var[cls,lbl]=stM[s.status]||stM.wait;
+      html+=`<div class="srow"><div class="sdot" style="background:${dotC[s.status]}"></div><span class="stm">${s.time}</span><span class="sst ${cls}">${lbl}</span></div>`;
     });
-    html += '</div>';
+    html+='</div>';
   });
-  html += '</div>';
-
-  const pot = Math.round(slots.length * 0.45);
-  html += `<div class="slot-pot"><span>Всего: <strong>${slots.length}</strong></span><span>Потенциал: <strong>+${pot} · ~${fmt(pot*35000)} ₽</strong></span></div>`;
-  el.innerHTML = html;
+  html+='</div>';
+  var pot=Math.round(slotData.length*.45);
+  html+=`<div class="spot"><span>Всего: <strong>${slotData.length}</strong></span><span>Потенциал: <strong>+${pot} · ~${fmt(pot*35000)} ₽</strong></span></div>`;
+  el.innerHTML=html;
 }
 
-function renderInsights(data, t) {
-  const items = [];
-  const sorted = (() => {
-    const mgrs = {};
-    data.forEach(r => { if (!mgrs[r.manager]) mgrs[r.manager] = []; mgrs[r.manager].push(r); });
-    return Object.entries(mgrs).map(([name, rows]) => { const tt = calcTotals(rows); return {name, ...tt}; }).sort((a,b) => b.rev-a.rev);
-  })();
+function setSlotDay(day,btn){
+  curSlotDay=day;
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSlots();
+}
 
-  const atRisk = sorted.filter(r => r.mk === 0);
-  const lowConv = sorted.filter(r => r.mk > 3 && r.paid/r.mk < 0.35);
-  const wdLeft = getWorkdaysLeft();
-  const revLeft = Math.max(0, targets.rev - t.rev);
-
-  items.push({ tag:'Фокус', tc:'y', text:`Нужно +${targets.mk - t.mk} МК до конца месяца (${wdLeft} раб. дней). Нужно в день: ${fmt(wdLeft > 0 ? revLeft/wdLeft : 0)} ₽.` });
-  if (lowConv.length) items.push({ tag:'Внимание', tc:'y', text:`${lowConv.map(r=>r.name.split(' ')[0]).join(', ')} — низкая конверсия при большом кол-ве МК. Разобрать звонок сегодня.` });
-  if (atRisk.length) items.push({ tag:'Риск', tc:'r', text:`${atRisk.map(r=>r.name.split(' ')[0]).join(', ')} — 0 МК. Поставить первый слот сегодня.` });
-  if (sorted.length && sorted[0].mk > 0) items.push({ tag:'Лидер', tc:'g', text:`${sorted[0].name.split(' ')[0]} — ${sorted[0].mk} МК, ${(sorted[0].paid/sorted[0].mk*100).toFixed(1)}% конв., ${fmt(sorted[0].rev)} ₽. Снять лучшие практики.` });
-
-  document.getElementById('insight-items').innerHTML = items.map(i =>
-    `<div class="insight-item"><span class="itag ${i.tc}">${i.tag}</span><span>${i.text}</span></div>`
+function renderProg(t) {
+  var bars=[
+    {l:'МК',v:pct(t.mk,targets.mk),c:pct(t.mk,targets.mk)>=80?'var(--g)':'var(--y)'},
+    {l:'Выручка',v:pct(t.rev,targets.rev),c:pct(t.rev,targets.rev)<40?'var(--r)':'var(--y)'},
+    {l:'Конверсия',v:Math.min(100,pct(t.conv,targets.conv)),c:'var(--g)'},
+    {l:'Ср. чек',v:pct(t.avg,targets.avg),c:'var(--g)'},
+  ];
+  document.getElementById('prog').innerHTML=bars.map(b=>
+    `<div class="pr"><span class="pl">${b.l}</span><div class="pt2"><div class="pf" style="width:${b.v}%;background:${b.c}"></div></div><span class="pp" style="color:${b.c}">${b.v}%</span></div>`
   ).join('');
 }
 
-// ══════════════════════════════════════════════════════
-// CHARTS
-// ══════════════════════════════════════════════════════
-function destroyChart(id) {
-  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+function renderInsights(data,t) {
+  var mgrs={};data.forEach(r=>{if(!mgrs[r.manager])mgrs[r.manager]=[];mgrs[r.manager].push(r);});
+  var sorted=Object.entries(mgrs).map(([name,rows])=>{var t=calcTotals(rows);return{name,...t};}).sort((a,b)=>b.rev-a.rev);
+  var items=[];
+  var wdLeft=workDaysLeft(),revLeft=Math.max(0,targets.rev-t.rev);
+  items.push({tag:'Фокус',tc:'y',text:`Нужно +${Math.max(0,targets.mk-t.mk)} МК (${wdLeft} раб. дней). В день: ${fmt(wdLeft>0?revLeft/wdLeft:0)} ₽.`});
+  var low=sorted.filter(r=>r.mk>3&&r.paid/r.mk<.35);
+  if(low.length)items.push({tag:'Внимание',tc:'y',text:`${low.map(r=>r.name.split(' ')[0]).join(', ')} — низкая конверсия. Разобрать звонок сегодня.`});
+  var risk=sorted.filter(r=>r.mk===0);
+  if(risk.length)items.push({tag:'Риск',tc:'r',text:`${risk.map(r=>r.name.split(' ')[0]).join(', ')} — 0 МК. Поставить слот сегодня.`});
+  if(sorted.length&&sorted[0].mk>0)items.push({tag:'Лидер',tc:'g',text:`${sorted[0].name.split(' ')[0]} — ${sorted[0].mk} МК, ${(sorted[0].paid/sorted[0].mk*100).toFixed(1)}% конв., ${fmt(sorted[0].rev)} ₽.`});
+  document.getElementById('insights').innerHTML=items.map(i=>`<div class="iitem"><span class="itag ${i.tc}">${i.tag}</span><span>${i.text}</span></div>`).join('');
 }
 
-function renderRevChart(data) {
-  destroyChart('rev');
-  const c = getChartColors();
-  const now = new Date();
+// ═══════════════════════════════════════
+// CHARTS
+// ═══════════════════════════════════════
+function dc(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
 
-  let labels, values;
-  if (currentPeriod === 'week') {
-    // Last 7 days
-    labels = [];
-    values = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date(now);
-      d.setDate(d.getDate() - i);
-      const ds = d.toLocaleDateString('ru', {day:'2-digit', month:'2-digit'});
-      const dateStr = d.toISOString().split('T')[0].split('-').reverse().join('.');
-      const dayRev = data.filter(r => r.date && r.date.startsWith(dateStr.split('.')[2]+'-'+dateStr.split('.')[1]+'-'+dateStr.split('.')[0])).reduce((s,r) => s+r.rev, 0);
-      // Also try DD.MM.YYYY format
-      const dayRev2 = data.filter(r => {
-        if (!r.date) return false;
-        const rdate = r.date.replace(/\//g,'.').replace(/-/g,'.');
-        return rdate.startsWith(dateStr) || rdate === dateStr;
-      }).reduce((s,r) => s+r.rev, 0);
-      labels.push(ds);
-      values.push(dayRev || dayRev2);
+function renderRevChart(data) {
+  dc('rev');var c=gc(),now=new Date(),labels=[],values=[];
+  if(curPer==='week'){
+    for(var i=6;i>=0;i--){
+      var d=new Date(now);d.setDate(d.getDate()-i);
+      labels.push(d.toLocaleDateString('ru',{day:'2-digit',month:'2-digit'}));
+      var ds=d.toISOString().split('T')[0];
+      values.push(data.filter(r=>{
+        var pd=parseDate(r.date);
+        return pd&&pd.toISOString().split('T')[0]===ds;
+      }).reduce((s,r)=>s+r.rev,0));
     }
   } else {
-    // Last 4 weeks
-    labels = ['Нд 1','Нд 2','Нд 3','Нд 4'];
-    values = [0,0,0,0];
-    data.forEach(r => {
-      if (!r.date) return;
-      const parts = r.date.split(/[-/.]/);
-      if (parts.length < 3) return;
-      let d;
-      // Try YYYY-MM-DD first, then DD.MM.YYYY
-      if (parts[0].length === 4) d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-      else d = new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]));
-      if (isNaN(d)) return;
-      const diff = Math.floor((now - d) / (7*24*60*60*1000));
-      if (diff >= 0 && diff < 4) values[3-diff] += r.rev;
+    labels=['Нд 1','Нд 2','Нд 3','Нд 4'];values=[0,0,0,0];
+    data.forEach(r=>{
+      var d=parseDate(r.date);if(!d)return;
+      var diff=Math.floor((now-d)/(7*86400000));
+      if(diff>=0&&diff<4)values[3-diff]+=r.rev;
     });
   }
-
-  charts.rev = new Chart(document.getElementById('revChart'), {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data: values,
-        backgroundColor: values.map((v,i) => i === values.length-1 ? '#f5c842' : 'rgba(245,200,66,0.3)'),
-        borderRadius: 4, borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => fmt(v.raw) + ' ₽' } } },
-      scales: {
-        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
-        y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => Math.round(v/1000)+'к' }, grid: { color: c.grid } }
-      }
-    }
-  });
+  charts.rev=new Chart(document.getElementById('revC'),{type:'bar',data:{labels,datasets:[{data:values,backgroundColor:values.map((_,i)=>i===values.length-1?'#f5c842':'rgba(245,200,66,0.3)'),borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>fmt(v.raw)+' ₽'}}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>Math.round(v/1000)+'к'},grid:{color:c.grid}}}}});
 }
 
 function renderTeamChart(data) {
-  destroyChart('team');
-  const c = getChartColors();
-  const mgrs = {};
-  data.forEach(r => { if (!mgrs[r.manager]) mgrs[r.manager] = 0; mgrs[r.manager] += r.rev; });
-  const sorted = Object.entries(mgrs).sort((a,b) => b[1]-a[1]);
-  const bgColors = ['#f5c842','#3ecf8e','#60a5fa','#f05252','#a78bfa','#fb923c'];
-
-  charts.team = new Chart(document.getElementById('teamChart'), {
-    type: 'bar',
-    data: {
-      labels: sorted.map(([name]) => name.split(' ')[0]),
-      datasets: [{ data: sorted.map(([,v]) => v), backgroundColor: sorted.map((_,i) => bgColors[i % bgColors.length] + '99'), borderRadius: 4, borderSkipped: false }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => fmt(v.raw) + ' ₽' } } },
-      scales: {
-        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
-        y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => Math.round(v/1000)+'к' }, grid: { color: c.grid } }
-      }
-    }
-  });
+  dc('team');var c=gc(),mgrs={};
+  data.forEach(r=>{if(!mgrs[r.manager])mgrs[r.manager]=0;mgrs[r.manager]+=r.rev;});
+  var sorted=Object.entries(mgrs).sort((a,b)=>b[1]-a[1]);
+  var bgs=['#f5c842','#3ecf8e','#60a5fa','#f05252','#a78bfa','#fb923c'];
+  charts.team=new Chart(document.getElementById('teamC'),{type:'bar',data:{labels:sorted.map(([n])=>n.split(' ')[0]),datasets:[{data:sorted.map(([,v])=>v),backgroundColor:sorted.map((_,i)=>bgs[i%bgs.length]+'99'),borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>fmt(v.raw)+' ₽'}}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>Math.round(v/1000)+'к'},grid:{color:c.grid}}}}});
 }
 
-function setPeriod(p, btn) {
-  currentPeriod = p;
-  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+function setPer(p,btn){curPer=p;document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRevChart(visible());}
+
+// ═══════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════
+function setDfPer(mode,btn) {
+  dfMode=mode;
+  document.querySelectorAll('.dfbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderRevChart(getVisibleLessons());
+  document.getElementById('custom-dates').style.display=mode==='custom'?'flex':'none';
+  if(mode!=='custom'){renderMain();renderAnalytics();}
 }
 
-// ══════════════════════════════════════════════════════
-// ANALYTICS PAGE
-// ══════════════════════════════════════════════════════
+function applyCustom() {
+  var f=document.getElementById('df-from').value,t=document.getElementById('df-to').value;
+  if(!f||!t)return;
+  dfFrom=new Date(f);dfFrom.setHours(0,0,0,0);
+  dfTo=new Date(t);dfTo.setHours(23,59,59,999);
+  renderMain();renderAnalytics();
+}
+
 function renderAnalytics() {
-  const data = getVisibleLessons();
-  const c = getChartColors();
+  var data=visible(),c=gc();
 
   // Objections
-  const objMap = {};
-  data.forEach(r => { if (r.objection) { objMap[r.objection] = (objMap[r.objection]||0)+1; } });
-  const objSorted = Object.entries(objMap).sort((a,b) => b[1]-a[1]);
-  destroyChart('obj');
-  if (document.getElementById('objChart')) {
-    charts.obj = new Chart(document.getElementById('objChart'), {
-      type: 'bar',
-      data: {
-        labels: objSorted.map(([k]) => k),
-        datasets: [{ data: objSorted.map(([,v]) => v), backgroundColor: '#f5c842aa', borderRadius: 4, borderSkipped: false }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { color: c.grid } },
-          y: { ticks: { color: c.tick, font: { size: 10 } }, grid: { display: false } }
-        }
-      }
-    });
-  }
+  dc('obj');
+  var om={};data.forEach(r=>{if(r.objection)om[r.objection]=(om[r.objection]||0)+1;});
+  var os=Object.entries(om).sort((a,b)=>b[1]-a[1]);
+  if(document.getElementById('objC')&&os.length)
+    charts.obj=new Chart(document.getElementById('objC'),{type:'bar',data:{labels:os.map(([k])=>k),datasets:[{data:os.map(([,v])=>v),backgroundColor:'#f5c84288',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{color:c.grid}},y:{ticks:{color:c.tick,font:{size:10}},grid:{display:false}}}}});
 
-  // Practices (donut)
-  const practMap = {};
-  data.forEach(r => { if (r.practice) { practMap[r.practice] = (practMap[r.practice]||0)+1; } });
-  destroyChart('pract');
-  if (document.getElementById('practChart')) {
-    const pKeys = Object.keys(practMap);
-    charts.pract = new Chart(document.getElementById('practChart'), {
-      type: 'doughnut',
-      data: {
-        labels: pKeys,
-        datasets: [{ data: pKeys.map(k => practMap[k]), backgroundColor: ['#f5c842','#3ecf8e','#60a5fa'], borderColor: '#111', borderWidth: 2 }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'right', labels: { color: c.tick, font: { size: 10 }, boxWidth: 12 } },
-          tooltip: { callbacks: { label: v => v.label + ': ' + v.raw + ' МК' } }
-        }
-      }
-    });
-  }
+  // Practices
+  dc('pract');
+  var pm={};data.forEach(r=>{if(r.practice)pm[r.practice]=(pm[r.practice]||0)+1;});
+  var pk=Object.keys(pm);
+  if(document.getElementById('practC')&&pk.length)
+    charts.pract=new Chart(document.getElementById('practC'),{type:'doughnut',data:{labels:pk,datasets:[{data:pk.map(k=>pm[k]),backgroundColor:['#f5c842','#3ecf8e','#60a5fa'],borderColor:'#111',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:c.tick,font:{size:10},boxWidth:12}}}}});
 
   // Packs
-  const packMap = {};
-  data.forEach(r => { if (r.pack) { packMap[r.pack] = (packMap[r.pack]||0)+1; } });
-  destroyChart('pack');
-  if (document.getElementById('packChart')) {
-    const pKeys = ['1 месяц','3 месяца','6 месяцев','12 месяцев'];
-    charts.pack = new Chart(document.getElementById('packChart'), {
-      type: 'bar',
-      data: {
-        labels: pKeys,
-        datasets: [{ data: pKeys.map(k => packMap[k]||0), backgroundColor: ['#f5c84244','#f5c84266','#f5c84288','#f5c842'], borderRadius: 4, borderSkipped: false }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
-          y: { ticks: { color: c.tick, font: { size: 9 } }, grid: { color: c.grid } }
-        }
-      }
-    });
-  }
+  dc('pack');
+  var packK=['1 месяц','3 месяца','6 месяцев','12 месяцев'],packD={};
+  data.forEach(r=>{if(r.pack)packD[r.pack]=(packD[r.pack]||0)+1;});
+  if(document.getElementById('packC'))
+    charts.pack=new Chart(document.getElementById('packC'),{type:'bar',data:{labels:packK,datasets:[{data:packK.map(k=>packD[k]||0),backgroundColor:['#f5c84233','#f5c84266','#f5c84299','#f5c842'],borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9}},grid:{color:c.grid}}}}});
 
-  // Conversion by day
-  const dayConv = {};
-  data.forEach(r => {
-    const d = r.date || '';
-    if (!d) return;
-    if (!dayConv[d]) dayConv[d] = { mk:0, paid:0 };
-    dayConv[d].mk++;
-    if (r.paid) dayConv[d].paid++;
-  });
-  const dayEntries = Object.entries(dayConv).sort((a,b) => a[0].localeCompare(b[0])).slice(-14);
-  destroyChart('conv');
-  if (document.getElementById('convChart')) {
-    charts.conv = new Chart(document.getElementById('convChart'), {
-      type: 'line',
-      data: {
-        labels: dayEntries.map(([d]) => d),
-        datasets: [{
-          data: dayEntries.map(([,v]) => v.mk ? Math.round(v.paid/v.mk*100) : 0),
-          borderColor: '#3ecf8e', backgroundColor: 'rgba(62,207,142,0.1)',
-          borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#3ecf8e', fill: true, tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => v.raw + '%' } } },
-        scales: {
-          x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
-          y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => v+'%' }, grid: { color: c.grid }, min: 0, max: 100 }
-        }
-      }
-    });
-  }
+  // Conv by day
+  dc('conv');
+  var dc2={};
+  data.forEach(r=>{var d=r.date||'';if(!d)return;if(!dc2[d])dc2[d]={mk:0,paid:0};dc2[d].mk++;if(r.paid)dc2[d].paid++;});
+  var de=Object.entries(dc2).sort((a,b)=>a[0].localeCompare(b[0])).slice(-14);
+  if(document.getElementById('convC')&&de.length)
+    charts.conv=new Chart(document.getElementById('convC'),{type:'line',data:{labels:de.map(([d])=>d),datasets:[{data:de.map(([,v])=>v.mk?Math.round(v.paid/v.mk*100):0),borderColor:'#3ecf8e',backgroundColor:'rgba(62,207,142,0.1)',borderWidth:2,pointRadius:3,pointBackgroundColor:'#3ecf8e',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>v.raw+'%'}}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>v+'%'},grid:{color:c.grid},min:0,max:100}}}});
 
   // All lessons table
-  const recentLessons = [...data].sort((a,b) => (b.date||'').localeCompare(a.date||'')).slice(0,50);
-  const tableHtml = recentLessons.length ? `
-    <div style="overflow-x:auto">
-      <table class="team-table" style="min-width:600px">
-        <thead><tr><th>Дата</th><th>Менеджер</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Возражение</th><th>CRM</th></tr></thead>
-        <tbody>
-          ${recentLessons.map(r => `<tr>
-            <td style="font-family:var(--mono);font-size:10px">${r.date}</td>
-            <td class="tname">${r.manager}</td>
-            <td>${r.practice}</td>
-            <td>${r.pack}</td>
-            <td style="color:${r.paid?'var(--green)':'var(--red)'}">${r.paid?'Оплачен':'—'}</td>
-            <td style="font-family:var(--mono);color:${r.rev?'var(--yellow)':'var(--muted)'}">${r.rev?fmt(r.rev)+' ₽':'—'}</td>
-            <td style="font-size:11px">${r.objection||'—'}</td>
-            <td>${r.crm?`<a href="${r.crm}" target="_blank" class="crm-link">→ CRM</a>`:'—'}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>` : '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Нет данных</div></div>';
-  document.getElementById('all-lessons-table').innerHTML = tableHtml;
+  var recent=[...data].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,100);
+  document.getElementById('all-table').innerHTML=recent.length?`<div style="overflow-x:auto"><table class="tt" style="min-width:600px"><thead><tr><th>Дата</th><th>Менеджер</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Возражение</th><th>CRM</th></tr></thead><tbody>${recent.map(r=>`<tr><td style="font-family:var(--mono);font-size:10px">${r.date}</td><td class="tn">${r.manager}</td><td>${r.practice}</td><td>${r.pack}</td><td style="color:${r.paid?'var(--g)':'var(--r)'}">${r.paid?'✓':'—'}</td><td style="font-family:var(--mono);color:${r.rev?'var(--y)':'var(--muted)'}">${r.rev?fmt(r.rev)+' ₽':'—'}</td><td style="font-size:11px">${r.objection||'—'}</td><td>${r.crm?`<a href="${r.crm}" target="_blank" class="crml">→ CRM</a>`:'—'}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty"><div class="empty-ic">📊</div><div>Нет данных</div></div>';
 }
 
-// ══════════════════════════════════════════════════════
-// MANAGERS PAGE
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
+// MANAGERS
+// ═══════════════════════════════════════
 function renderManagers() {
-  const data = getVisibleLessons();
-  const mgrs = {};
-  data.forEach(r => {
-    if (!mgrs[r.manager]) mgrs[r.manager] = [];
-    mgrs[r.manager].push(r);
-  });
-
-  // Add managers with 0 lessons
-  managers.forEach(m => {
-    const key = Object.keys(mgrs).find(k => k.includes(m.split(' ')[0])) || m;
-    if (!mgrs[key]) mgrs[key] = [];
-  });
-
-  const sorted = Object.entries(mgrs).map(([name, rows]) => {
-    const t = calcTotals(rows);
-    return { name, rows, ...t };
-  }).sort((a,b) => b.rev - a.rev);
-
-  const el = document.getElementById('mgr-cards');
-  const bgColors = ['#f5c842','#3ecf8e','#60a5fa','#f05252','#a78bfa','#fb923c'];
-  el.innerHTML = sorted.map((m, i) => {
-    const conv = m.mk ? (m.paid/m.mk*100).toFixed(1) : '0';
-    const initial = m.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-    return `<div class="panel" style="cursor:pointer" onclick="openManager('${m.name}')">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <div style="width:40px;height:40px;border-radius:10px;background:${bgColors[i%bgColors.length]}22;border:2px solid ${bgColors[i%bgColors.length]}55;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:${bgColors[i%bgColors.length]};font-family:var(--display)">${initial}</div>
-        <div>
-          <div style="font-weight:600;font-size:13px;color:var(--text)">${m.name}</div>
-          <div style="font-size:10px;color:var(--muted)">${m.mk} МК · ${conv}% конв.</div>
-        </div>
+  var data=visible(),mgrs={};
+  data.forEach(r=>{if(!mgrs[r.manager])mgrs[r.manager]=[];mgrs[r.manager].push(r);});
+  managers.forEach(m=>{var k=Object.keys(mgrs).find(k=>k.includes(m.split(' ')[0]))||m;if(!mgrs[k])mgrs[k]=[];});
+  var sorted=Object.entries(mgrs).map(([name,rows])=>{var t=calcTotals(rows);return{name,rows,...t};}).sort((a,b)=>b.rev-a.rev);
+  var bgs=['#f5c842','#3ecf8e','#60a5fa','#f05252','#a78bfa','#fb923c'];
+  document.getElementById('mgr-cards').innerHTML=sorted.map((m,i)=>{
+    var conv=m.mk?(m.paid/m.mk*100).toFixed(1):'0';
+    var ini=m.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    var col=bgs[i%bgs.length];
+    return`<div class="panel" style="cursor:pointer" onclick="openMgr('${m.name}')">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="width:38px;height:38px;border-radius:9px;background:${col}22;border:2px solid ${col}55;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:${col};font-family:var(--display)">${ini}</div>
+        <div><div style="font-weight:600;font-size:13px;color:var(--text)">${m.name}</div><div style="font-size:10px;color:var(--muted)">${m.mk} МК · ${conv}% конв.</div></div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div style="background:var(--bg3);border-radius:6px;padding:8px 10px">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Выручка</div>
-          <div style="font-size:14px;font-weight:600;color:${m.rev>0?'var(--yellow)':'var(--muted)'};">${fmt(m.rev)} ₽</div>
-        </div>
-        <div style="background:var(--bg3);border-radius:6px;padding:8px 10px">
-          <div style="font-size:9px;color:var(--muted);margin-bottom:2px">Оплат</div>
-          <div style="font-size:14px;font-weight:600;color:var(--green)">${m.paid}</div>
-        </div>
-      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+        <div style="background:var(--bg3);border-radius:6px;padding:8px 10px"><div style="font-size:9px;color:var(--muted);margin-bottom:2px">Выручка</div><div style="font-size:14px;font-weight:600;color:${m.rev>0?'var(--y)':'var(--muted)'}">${fmt(m.rev)} ₽</div></div>
+        <div style="background:var(--bg3);border-radius:6px;padding:8px 10px"><div style="font-size:9px;color:var(--muted);margin-bottom:2px">Оплат</div><div style="font-size:14px;font-weight:600;color:var(--g)">${m.paid}</div></div>
+      </div></div>`;
+  }).join('');
+}
+
+function openMgr(name) {
+  var data=visible().filter(r=>r.manager===name),t=calcTotals(data);
+  var ini=name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('mav').textContent=ini;
+  document.getElementById('mname').textContent=name;
+  document.getElementById('msub').textContent=t.mk+' МК · '+t.conv+'% конв. · '+fmt(t.rev)+' ₽';
+  document.getElementById('mstats').innerHTML=[
+    {l:'МК',v:t.mk,c:'var(--text)'},{l:'Оплат',v:t.paid,c:'var(--g)'},{l:'Выручка',v:fmt(t.rev)+' ₽',c:'var(--y)'},{l:'Конверсия',v:t.conv+'%',c:'var(--g)'},
+    {l:'Ср. чек',v:fmt(t.avg)+' ₽',c:'var(--b)'},{l:'₽/МК',v:fmt(t.rpm),c:'var(--b)'},
+    {l:'Ср. возраст',v:(()=>{var a=data.map(r=>parseInt(r.age)).filter(a=>!isNaN(a)&&a>0);return a.length?Math.round(a.reduce((s,v)=>s+v,0)/a.length):'—';})(),c:'var(--sub)'},
+    {l:'Практики',v:(()=>{var p={};data.forEach(r=>{if(r.practice)p[r.practice]=(p[r.practice]||0)+1;});return Object.entries(p).sort((a,b)=>b[1]-a[1]).map(([k])=>k).join(', ')||'—';})(),c:'var(--sub)'},
+  ].map(s=>`<div class="kpi"><div class="kl">${s.l}</div><div class="kv" style="color:${s.c};font-size:16px">${s.v}</div></div>`).join('');
+
+  var c=gc(),now=new Date();
+  dc('mw');dc('mo');
+  var wl=['Нд 1','Нд 2','Нд 3','Нд 4'],wv=[0,0,0,0];
+  data.forEach(r=>{var d=parseDate(r.date);if(!d)return;var diff=Math.floor((now-d)/(7*86400000));if(diff>=0&&diff<4)wv[3-diff]+=r.rev;});
+  charts.mw=new Chart(document.getElementById('mwC'),{type:'line',data:{labels:wl,datasets:[{data:wv,borderColor:'#f5c842',backgroundColor:'rgba(245,200,66,0.1)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#f5c842',fill:true,tension:0.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>fmt(v.raw)+' ₽'}}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{display:false}},y:{ticks:{color:c.tick,font:{size:9},callback:v=>Math.round(v/1000)+'к'},grid:{color:c.grid}}}}});
+  var om={};data.forEach(r=>{if(r.objection)om[r.objection]=(om[r.objection]||0)+1;});
+  var os=Object.entries(om).sort((a,b)=>b[1]-a[1]);
+  if(os.length)charts.mo=new Chart(document.getElementById('moC'),{type:'bar',data:{labels:os.map(([k])=>k),datasets:[{data:os.map(([,v])=>v),backgroundColor:'#f5c84288',borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{color:c.tick,font:{size:9}},grid:{color:c.grid}},y:{ticks:{color:c.tick,font:{size:10}},grid:{display:false}}}}});
+
+  document.getElementById('mlessons').innerHTML=[...data].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).length?
+    `<div style="overflow-x:auto"><table class="tt" style="min-width:480px"><thead><tr><th>Дата</th><th>Время</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Возражение</th><th>CRM</th></tr></thead><tbody>
+    ${[...data].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(r=>`<tr><td style="font-family:var(--mono);font-size:10px">${r.date}</td><td style="font-family:var(--mono);font-size:10px">${r.time}</td><td>${r.practice}</td><td>${r.pack}</td><td style="color:${r.paid?'var(--g)':'var(--r)'}">${r.paid?'✓':'—'}</td><td style="font-family:var(--mono);color:${r.rev?'var(--y)':'var(--muted)'}">${r.rev?fmt(r.rev)+' ₽':'—'}</td><td style="font-size:11px">${r.objection||'—'}</td><td>${r.crm?`<a href="${r.crm}" target="_blank" class="crml">→ CRM</a>`:'—'}</td></tr>`).join('')}
+    </tbody></table></div>`:'<div class="empty"><div class="empty-ic">📋</div><div>Нет уроков</div></div>';
+
+  document.getElementById('mgr-list').style.display='none';
+  document.getElementById('mgr-detail').style.display='block';
+  showPage('managers');
+}
+
+function backMgr(){document.getElementById('mgr-list').style.display='block';document.getElementById('mgr-detail').style.display='none';}
+
+// ═══════════════════════════════════════
+// SCHEDULE / HEATMAP
+// ═══════════════════════════════════════
+var HOURS=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+var HOUR_COLORS={10:'red',11:'red',12:'red',13:'red',14:'amber',15:'amber',16:'amber',17:'green',18:'green',19:'green',20:'green',21:'green'};
+var WEB_APP_URL='https://script.google.com/macros/s/AKfycbwDgt1qk9wK7WfESWvBwY1_ni4ZKoRc4L9g5JxAbBYAUQNgWrAKzr8fPQoCkElBA85HmQ/exec';
+
+// Schedule data from sheet
+var scheduleData={}; // scheduleData[manager][dateStr][hour]=true
+
+function get14Days(weekOffset) {
+  var days=[],now=new Date();
+  var start=new Date(now);
+  start.setDate(now.getDate()+weekOffset*7);
+  for(var i=0;i<7;i++){
+    var d=new Date(start);d.setDate(start.getDate()+i);
+    days.push(d);
+  }
+  return days;
+}
+
+function dateStr(d){
+  var y=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');
+  return dd+'.'+mo+'.'+y;
+}
+
+function dayName(d){
+  return ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][d.getDay()];
+}
+
+// ─── VIEW: Heatmap ───
+function renderSchedule() {
+  var days=get14Days(hmWeek);
+
+  // Summary
+  var summaryHtml=managers.map(m=>{
+    var total=0;
+    if(scheduleData[m])Object.values(scheduleData[m]).forEach(dSlots=>{total+=Object.keys(dSlots).length;});
+    return`<div class="hms-card"><div class="hms-name">${m}</div><div class="hms-val">${total}</div><div class="hms-sub">слотов на нед ${hmWeek+1}</div></div>`;
+  }).join('');
+  document.getElementById('hm-summary').innerHTML=summaryHtml;
+
+  var html='<thead><tr><th class="mgr-h">Менеджер</th>';
+  days.forEach(d=>{
+    html+=`<th colspan="${HOURS.length}" style="text-align:center;padding:4px;border-left:1px solid var(--border)">${dayName(d)} ${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}</th>`;
+  });
+  html+='</tr><tr><th class="mgr-h"></th>';
+  days.forEach(()=>HOURS.forEach(h=>{html+=`<th>${h.split(':')[0]}</th>`;}));
+  html+='</tr></thead><tbody>';
+
+  managers.forEach(m=>{
+    html+=`<tr><td class="mgr-td">${m}</td>`;
+    days.forEach(d=>{
+      var ds=dateStr(d);
+      HOURS.forEach(h=>{
+        var hr=parseInt(h);
+        var hasSlot=scheduleData[m]&&scheduleData[m][ds]&&scheduleData[m][ds][hr];
+        var cc=hasSlot?`slot-${HOUR_COLORS[hr]}`:'slot-0';
+        html+=`<td class="${cc}">${hasSlot?`<span class="slot-num">✓</span>`:''}</td>`;
+      });
+    });
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('hm-table').innerHTML=html;
+}
+
+function setHmWeek(w,btn){
+  hmWeek=w;
+  document.querySelectorAll('.wbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSchedule();
+  if(currentEditMgr)renderEditGrid();
+}
+
+// ─── EDIT: Interactive grid ───
+var currentEditMgr=null;
+var selectedSlots={}; // selectedSlots[dateStr][hour]=true
+
+function schedTab(tab,btn){
+  document.getElementById('sched-view').style.display=tab==='view'?'block':'none';
+  document.getElementById('sched-edit').style.display=tab==='edit'?'block':'none';
+  document.getElementById('week-switcher').style.display=tab==='view'?'flex':'none';
+  document.querySelectorAll('#page-schedule .nav-tabs .tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(tab==='edit')renderMgrPicker();
+}
+
+function renderMgrPicker(){
+  var el=document.getElementById('mgr-picker');
+  el.innerHTML=managers.map(m=>{
+    var ini=m.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    var active=currentEditMgr===m;
+    return`<div onclick="selectEditMgr('${m}')" style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;border:2px solid ${active?'var(--y)':'var(--border-s)'};background:${active?'var(--y-bg)':'var(--bg3)'};cursor:pointer;transition:all .15s">
+      <div style="width:30px;height:30px;border-radius:6px;background:var(--y-bg);border:1.5px solid var(--y-bd);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:var(--y);font-family:var(--display)">${ini}</div>
+      <span style="font-size:12px;font-weight:${active?'700':'500'};color:${active?'var(--y)':'var(--text)'}">${m}</span>
     </div>`;
   }).join('');
 }
 
-function openManager(name) {
-  const data = getVisibleLessons().filter(r => r.manager === name);
-  const t = calcTotals(data);
-  currentMgr = name;
-
-  document.getElementById('mgr-list-view').style.display = 'none';
-  document.getElementById('mgr-detail-view').style.display = 'block';
-
-  const initials = name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('mgr-avatar').textContent = initials;
-  document.getElementById('mgr-name').textContent = name;
-  document.getElementById('mgr-sub').textContent = t.mk + ' МК · ' + t.conv + '% конверсия · ' + fmt(t.rev) + ' ₽';
-
-  // Stats
-  document.getElementById('mgr-stats').innerHTML = [
-    {l:'МК', v:t.mk, c:'var(--text)'},
-    {l:'Оплат', v:t.paid, c:'var(--green)'},
-    {l:'Выручка', v:fmt(t.rev)+' ₽', c:'var(--yellow)'},
-    {l:'Конверсия', v:t.conv+'%', c:'var(--green)'},
-    {l:'Средний чек', v:fmt(t.avg)+' ₽', c:'var(--blue)'},
-    {l:'₽/МК', v:fmt(t.rpm), c:'var(--blue)'},
-    {l:'Броней', v:t.bron, c:'var(--yellow)'},
-    {l:'Ср. возраст', v:(() => { const ages = data.map(r=>parseInt(r.age)).filter(a=>!isNaN(a)&&a>0); return ages.length ? Math.round(ages.reduce((s,a)=>s+a,0)/ages.length) : '—'; })(), c:'var(--sub)'},
-  ].map(s => `<div class="kpi"><div class="kl">${s.l}</div><div class="kv" style="color:${s.c};font-size:18px">${s.v}</div></div>`).join('');
-
-  // Weekly chart
-  destroyChart('mgrWeek');
-  const c = getChartColors();
-  const now = new Date();
-  const weekLabels = ['Нд 1','Нд 2','Нд 3','Нд 4'];
-  const weekData = [0,0,0,0];
-  data.forEach(r => {
-    if (!r.date) return;
-    const parts = r.date.split(/[-/.]/);
-    if (parts.length < 3) return;
-    let d;
-    if (parts[0].length === 4) d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-    else d = new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]));
-    if (isNaN(d)) return;
-    const diff = Math.floor((now - d) / (7*24*60*60*1000));
-    if (diff >= 0 && diff < 4) weekData[3-diff] += r.rev;
-  });
-  charts.mgrWeek = new Chart(document.getElementById('mgrWeekChart'), {
-    type: 'line',
-    data: {
-      labels: weekLabels,
-      datasets: [{
-        data: weekData,
-        borderColor: '#f5c842', backgroundColor: 'rgba(245,200,66,0.1)',
-        borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#f5c842', fill: true, tension: 0.3
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => fmt(v.raw) + ' ₽' } } },
-      scales: {
-        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { display: false } },
-        y: { ticks: { color: c.tick, font: { size: 9 }, callback: v => Math.round(v/1000)+'к' }, grid: { color: c.grid } }
-      }
-    }
-  });
-
-  // Objections chart
-  destroyChart('mgrObj');
-  const objMap = {};
-  data.forEach(r => { if (r.objection) objMap[r.objection] = (objMap[r.objection]||0)+1; });
-  const objSorted = Object.entries(objMap).sort((a,b) => b[1]-a[1]);
-  charts.mgrObj = new Chart(document.getElementById('mgrObjChart'), {
-    type: 'bar',
-    data: {
-      labels: objSorted.map(([k]) => k),
-      datasets: [{ data: objSorted.map(([,v]) => v), backgroundColor: '#f5c84288', borderRadius: 4, borderSkipped: false }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: c.tick, font: { size: 9 } }, grid: { color: c.grid } },
-        y: { ticks: { color: c.tick, font: { size: 10 } }, grid: { display: false } }
-      }
-    }
-  });
-
-  // Lessons table
-  const lessonsHtml = data.length ? `
-    <div style="overflow-x:auto">
-      <table class="team-table" style="min-width:500px">
-        <thead><tr><th>Дата</th><th>Время</th><th>Практика</th><th>Пакет</th><th>Оплата</th><th>Сумма</th><th>Возражение</th><th>CRM</th></tr></thead>
-        <tbody>
-          ${[...data].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(r => `<tr>
-            <td style="font-family:var(--mono);font-size:10px">${r.date}</td>
-            <td style="font-family:var(--mono);font-size:10px">${r.time}</td>
-            <td>${r.practice}</td>
-            <td>${r.pack}</td>
-            <td style="color:${r.paid?'var(--green)':'var(--red)'}">${r.paid?'✓':'—'}</td>
-            <td style="font-family:var(--mono);color:${r.rev?'var(--yellow)':'var(--muted)'}">${r.rev?fmt(r.rev)+' ₽':'—'}</td>
-            <td style="font-size:11px">${r.objection||'—'}</td>
-            <td>${r.crm?`<a href="${r.crm}" target="_blank" class="crm-link">→ CRM</a>`:'—'}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>` : '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Нет уроков</div></div>';
-  document.getElementById('mgr-lessons').innerHTML = lessonsHtml;
-
-  showPage('managers');
+function selectEditMgr(name){
+  currentEditMgr=name;
+  // Load existing schedule for this manager
+  selectedSlots={};
+  if(scheduleData[name]){
+    Object.entries(scheduleData[name]).forEach(([ds,hrs])=>{
+      selectedSlots[ds]={};
+      Object.keys(hrs).forEach(h=>{selectedSlots[ds][parseInt(h)]=true;});
+    });
+  }
+  renderMgrPicker();
+  document.getElementById('slots-panel').style.display='block';
+  renderEditGrid();
 }
 
-function showMgrList() {
-  currentMgr = null;
-  document.getElementById('mgr-list-view').style.display = 'block';
-  document.getElementById('mgr-detail-view').style.display = 'none';
+function renderEditGrid(){
+  if(!currentEditMgr)return;
+  // Show both weeks (14 days)
+  var allDays=[];
+  for(var w=0;w<2;w++){get14Days(w).forEach(d=>allDays.push(d));}
+
+  var html='<table class="hm"><thead><tr><th style="min-width:60px;text-align:left;padding-left:4px">Дата</th>';
+  HOURS.forEach(h=>{html+=`<th>${h.split(':')[0]}</th>`;});
+  html+='</tr></thead><tbody>';
+
+  allDays.forEach(d=>{
+    var ds=dateStr(d);
+    var dn=dayName(d);
+    var isWeekend=d.getDay()===0||d.getDay()===6;
+    html+=`<tr style="${isWeekend?'opacity:.4':''}">`;
+    html+=`<td class="mgr-td" style="font-size:10px">${dn} ${d.getDate()}.${String(d.getMonth()+1).padStart(2,'0')}</td>`;
+    HOURS.forEach(h=>{
+      var hr=parseInt(h);
+      var sel=selectedSlots[ds]&&selectedSlots[ds][hr];
+      var baseColor=HOUR_COLORS[hr];
+      var bg=sel?`slot-${baseColor}`:'slot-0';
+      html+=`<td class="${bg}" onclick="toggleSlot('${ds}',${hr})" style="cursor:pointer;user-select:none" title="${h}">${sel?'<span class="slot-num">✓</span>':''}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('edit-grid').innerHTML=html;
+  updateSelCount();
 }
 
-// ══════════════════════════════════════════════════════
-// PAGE NAVIGATION
-// ══════════════════════════════════════════════════════
+function toggleSlot(ds,hr){
+  if(!selectedSlots[ds])selectedSlots[ds]={};
+  if(selectedSlots[ds][hr])delete selectedSlots[ds][hr];
+  else selectedSlots[ds][hr]=true;
+  if(!Object.keys(selectedSlots[ds]).length)delete selectedSlots[ds];
+  renderEditGrid();
+}
+
+function clearAllSlots(){selectedSlots={};if(currentEditMgr)renderEditGrid();}
+
+function updateSelCount(){
+  var count=0;
+  Object.values(selectedSlots).forEach(d=>count+=Object.keys(d).length);
+  document.getElementById('sel-count').textContent=count;
+}
+
+async function submitSchedule(){
+  if(!currentEditMgr){alert('Выбери менеджера!');return;}
+  var slots_arr=[];
+  Object.entries(selectedSlots).forEach(([ds,hrs])=>{
+    Object.keys(hrs).forEach(h=>{
+      slots_arr.push({date:ds,time:String(h).padStart(2,'0')+':00'});
+    });
+  });
+
+  var btn=document.getElementById('submit-btn');
+  btn.textContent='Отправка...';btn.disabled=true;
+
+  try{
+    var resp=await fetch(WEB_APP_URL,{
+      method:'POST',
+      body:JSON.stringify({manager:currentEditMgr,slots:slots_arr}),
+    });
+    var data=await resp.json();
+    if(data.status==='ok'){
+      // Update local scheduleData
+      if(!scheduleData[currentEditMgr])scheduleData[currentEditMgr]={};
+      Object.keys(scheduleData[currentEditMgr]).forEach(k=>delete scheduleData[currentEditMgr][k]);
+      Object.entries(selectedSlots).forEach(([ds,hrs])=>{
+        scheduleData[currentEditMgr][ds]={};
+        Object.keys(hrs).forEach(h=>{scheduleData[currentEditMgr][ds][parseInt(h)]=true;});
+      });
+      document.getElementById('submit-result').style.display='block';
+      document.getElementById('submit-result').innerHTML=`<div style="background:var(--g-bg);border:1px solid var(--g-bd);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--g);margin-top:10px">✅ Готово! Отправлено <strong>${slots_arr.length} слотов</strong> для ${currentEditMgr}. Расписание обновлено.</div>`;
+      renderSchedule();
+    } else {
+      throw new Error(data.message||'Ошибка');
+    }
+  }catch(e){
+    document.getElementById('submit-result').style.display='block';
+    document.getElementById('submit-result').innerHTML=`<div style="background:var(--r-bg);border:1px solid var(--r-bd);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--r);margin-top:10px">❌ Ошибка отправки: ${e.message}</div>`;
+  }
+  btn.textContent='Отправить расписание →';btn.disabled=false;
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
 function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    if (b.textContent.toLowerCase().includes(id === 'main' ? 'глав' : id === 'analytics' ? 'аналит' : 'менедж')) b.classList.add('active');
-  });
-  if (id !== 'managers') showMgrList();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  var labels={main:'Главная',analytics:'Аналитика',managers:'Менеджеры',schedule:'Расписание'};
+  document.querySelectorAll('.tab').forEach(b=>{if(b.textContent.trim()===labels[id])b.classList.add('active');});
+  if(id!=='managers'){backMgr();}
 }
 
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 // INIT
-// ══════════════════════════════════════════════════════
+// ═══════════════════════════════════════
 loadAll();
-setInterval(loadAll, 60000);
+setInterval(loadAll,60000);
 </script>
 </body>
 </html>
