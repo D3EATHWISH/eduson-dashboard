@@ -420,6 +420,7 @@ let charts={}, curPer='week', curSlotDay=0, dfFrom=null, dfTo=null, dfMode='all'
 // HELPERS
 // ═══════════════════════════════════════
 const fmt = n => Math.round(n).toLocaleString('ru');
+function fmtDate(d){var dd=String(d.getDate()).padStart(2,'0'),mo=String(d.getMonth()+1).padStart(2,'0'),y=d.getFullYear();return dd+'.'+mo+'.'+y;}
 const pct = (a,b) => b ? Math.round(a/b*100) : 0;
 const cc = s => (s||'').replace(/^"|"$/g,'').trim();
 const gc = () => ({grid:'rgba(255,255,255,0.05)',tick:'#606060'});
@@ -528,22 +529,39 @@ async function loadAll() {
     }
   }
 
-  // Parse slots
+  // Parse slots — new format: Date, Time, Manager, Status
   var nowT=new Date();
-  slots=[];tomorrowSlots=[];
-  var tomorrow=new Date(nowT.getTime()+86400000);
+  allSlots=[];slots=[];tomorrowSlots=[];
+
   for(var i=1;i<rawSlots.length;i++){
     var r=rawSlots[i];
-    var time=cc(r[0]),who=cc(r[1]);
+    // Support both old format (Time,Manager,Status) and new (Date,Time,Manager,Status)
+    var hasDate = r.length >= 4 && cc(r[0]).match(/\d{2}\.\d{2}\.\d{4}/);
+    var slotDate = hasDate ? cc(r[0]) : null;
+    var time = hasDate ? cc(r[1]) : cc(r[0]);
+    var who  = hasDate ? cc(r[2]) : cc(r[1]);
+    var rawStatus = hasDate ? cc(r[3]) : cc(r[2]);
     if(!time||!who)continue;
+
+    // Auto-update status based on time if today
     var p=time.split(':');
     var hh=parseInt(p[0]),mm=parseInt(p[1])||0;
     var st=new Date(nowT);st.setHours(hh,mm,0,0);
     var en=new Date(st.getTime()+3600000);
-    var status=en<nowT?'done':st<=nowT&&nowT<en?'live':'wait';
-    slots.push({time,who,status,date:'today'});
-    tomorrowSlots.push({time,who,status:'wait',date:'tomorrow'});
+    var todayStr=fmtDate(nowT);
+    var status=rawStatus||'wait';
+    if(!slotDate||slotDate===todayStr){
+      status=en<nowT?'done':st<=nowT&&nowT<en?'live':'wait';
+    }
+
+    allSlots.push({date:slotDate||todayStr, time, who, status});
   }
+
+  // Build today/tomorrow for backward compat
+  var todayStr=fmtDate(nowT);
+  var tomorrowStr=fmtDate(new Date(nowT.getTime()+86400000));
+  slots=allSlots.filter(s=>s.date===todayStr);
+  tomorrowSlots=allSlots.filter(s=>s.date===tomorrowStr);
 
   renderMain();
   renderAnalytics();
@@ -654,12 +672,8 @@ function renderTeamTable(data,filter) {
 function filterTeam(v){renderTeamTable(visible(),v);}
 
 function renderSlots() {
-  // For slots from Rubitime we only have today/tomorrow data
-  // Future dates show empty (will be filled when Rubitime has data)
-  var now = new Date();
-  var isToday = curSlotDate.toDateString() === now.toDateString();
-  var isTomorrow = curSlotDate.toDateString() === new Date(now.getTime()+86400000).toDateString();
-  var slotData = isToday ? slots : isTomorrow ? tomorrowSlots : [];
+  var targetDate = fmtDate(curSlotDate);
+  var slotData = allSlots.filter(function(s){ return s.date === targetDate; });
   var el=document.getElementById('slots-box');
   document.getElementById('slots-cnt').textContent=slotData.length;
 
