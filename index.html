@@ -1069,9 +1069,14 @@ function renderSchedule() {
   if(totalSlots===0){
     var hmWrap=document.getElementById('hm-summary');
     if(hmWrap){
-      hmWrap.innerHTML='<div class="sched-empty"><div class="sched-empty-ic">📅</div><div class="sched-empty-title">Расписание ещё не заполнено</div><div class="sched-empty-sub">Менеджеры пока не выставили слоты на эту неделю.<br>Нажми «Заполнить слоты» чтобы добавить расписание.</div><button class="sched-empty-btn" onclick="schedTab('edit',document.getElementById('sched-edit-btn'))">💼 Заполнить слоты →</button></div>';
+      hmWrap.innerHTML='<div class="sched-empty"><div class="sched-empty-ic">📅</div><div class="sched-empty-title">Расписание ещё не заполнено</div><div class="sched-empty-sub">Менеджеры пока не выставили слоты на эту неделю.<br>Нажми «Заполнить слоты» чтобы добавить расписание.</div><button class="sched-empty-btn" onclick="goToEditSched()">💼 Заполнить слоты →</button></div>';
     }
   }
+}
+
+function goToEditSched() {
+  var btn = document.getElementById('sched-edit-btn');
+  if (btn) btn.click();
 }
 
 function selectHmDay(ds) {
