@@ -479,7 +479,34 @@ let charts={}, curPer='week', curSlotDate=new Date(), curSlotDay=0, dfFrom=null,
 // HELPERS
 // ═══════════════════════════════════════
 const fmt = n => Math.round(n).toLocaleString('ru');
-function fmtDate(d){var dd=String(d.getDate()).padStart(2,'0'),mo=String(d.getMonth()+1).padStart(2,'0'),y=d.getFullYear();return dd+'.'+mo+'.'+y;}
+function fmtDate(d){
+  var dd=String(d.getDate()).padStart(2,'0');
+  var mo=String(d.getMonth()+1).padStart(2,'0');
+  var y=d.getFullYear();
+  return dd+'.'+mo+'.'+y;
+}
+
+// Normalize any date string to dd.MM.yyyy for consistent comparison
+function normDate(s) {
+  if (!s) return '';
+  s = s.trim().replace(/^"|"$/g,'');
+  // Already dd.MM.yyyy
+  if (/^\d{2}\.\d{2}\.\d{4}$/.test(s)) return s;
+  // ISO: yyyy-MM-dd
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+    var p = s.split('T')[0].split('-');
+    return p[2]+'.'+p[1]+'.'+p[0];
+  }
+  // US: M/D/YYYY or MM/DD/YYYY
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)) {
+    var p = s.split('/');
+    return p[1].padStart(2,'0')+'.'+p[0].padStart(2,'0')+'.'+p[2];
+  }
+  // Try parsing as date object
+  var d = new Date(s);
+  if (!isNaN(d)) return fmtDate(d);
+  return s;
+}
 const pct = (a,b) => b ? Math.round(a/b*100) : 0;
 const cc = s => (s||'').replace(/^"|"$/g,'').trim();
 const gc = () => ({grid:'rgba(255,255,255,0.05)',tick:'#606060'});
@@ -504,12 +531,27 @@ async function fetchCSV(key) {
   var url=URLS[key];
   if(!url)return[];
   try{
-    var r=await fetch(url,{cache:'no-store'});
-    if(!r.ok)return[];
+    var r=await fetch(url,{cache:'no-store',mode:'cors'});
+    if(!r.ok){console.log('HTTP error',key,r.status);return[];}
     var txt=await r.text();
-    if(!txt||txt.includes('<!DOCTYPE'))return[];
-    return parseCSV(txt);
-  }catch(e){console.log('Fetch error:',key,e);return[];}
+    // Remove BOM if present
+    txt=txt.replace(/^\uFEFF/,'');
+    if(!txt||txt.includes('<!DOCTYPE')||txt.includes('google.visualization')){
+      console.log('Bad response for',key,txt.slice(0,100));
+      return[];
+    }
+    var rows=parseCSV(txt);
+    console.log('Loaded',key,':',rows.length,'rows');
+    return rows;
+  }catch(e){
+    // In Claude preview this always fails - normal. On GitHub Pages should work.
+    if(window.location.protocol==='file:'||window.location.hostname==='claude.ai'){
+      console.log('Preview mode - fetch blocked (expected):', key);
+    } else {
+      console.error('Fetch error:',key,e.message);
+    }
+    return[];
+  }
 }
 
 function calDaysLeft() {
@@ -601,12 +643,15 @@ async function loadAll() {
     // Old: Time, Manager, Status (3 cols)
     // New: Date, Time, Manager, Status (4 cols)
     var col0=cc(r[0]),col1=cc(r[1]),col2=cc(r[2]),col3=cc(r[3]||'');
-    var hasDate = col0.match(/\d{2}\.\d{2}\.\d{4}/);
-    var slotDate = hasDate ? col0 : fmtDate(nowT); // no date = assume today
-    var time = hasDate ? col1 : col0;
-    var who  = hasDate ? col2 : col1;
-    var rawStatus = hasDate ? col3 : col2;
+    // Detect if first col is a date (any format) or a time
+    var isDate = col0 && !col0.match(/^\d{1,2}:\d{2}$/) && col0.length > 5;
+    var slotDate = isDate ? normDate(col0) : fmtDate(nowT);
+    var time = isDate ? col1 : col0;
+    var who  = isDate ? col2 : col1;
+    var rawStatus = isDate ? col3 : col2;
     if(!time||!who)continue;
+    // Debug
+    console.log('Slot raw:', col0, col1, col2, '-> date:', slotDate, 'time:', time, 'who:', who);
 
     // Auto-update status based on time if today
     var p=time.split(':');
@@ -634,9 +679,8 @@ async function loadAll() {
   for(var i=1;i<rawSched.length;i++){
     var r=rawSched[i];
     if(!r||r.length<3)continue;
-    var mgr=cc(r[0]),ds=cc(r[1]),tm=cc(r[2]);
+    var mgr=cc(r[0]),ds=normDate(cc(r[1])),tm=cc(r[2]);
     if(!mgr||!ds||!tm)continue;
-    // Parse hour from time string like "17:00"
     var hr=parseInt(tm.split(':')[0]);
     if(isNaN(hr))continue;
     if(!scheduleData[mgr])scheduleData[mgr]={};
@@ -658,7 +702,10 @@ async function loadAll() {
 
   } catch(err) {
     console.error('loadAll error:', err);
-    document.getElementById('alert-text').innerHTML = '<strong>Ошибка загрузки:</strong> ' + err.message + ' — попробуй обновить страницу';
+    var isPreview = window.location.hostname === 'claude.ai' || window.location.protocol === 'file:';
+    document.getElementById('alert-text').innerHTML = isPreview
+      ? '<strong>Превью Claude:</strong> данные недоступны в превью — открой дашборд на GitHub Pages'
+      : '<strong>Ошибка загрузки:</strong> ' + err.message + ' — проверь доступ к таблице';
   } finally {
     var loader = document.getElementById('loader');
     if (loader) loader.classList.remove('visible');
@@ -764,7 +811,10 @@ function filterTeam(v){renderTeamTable(visible(),v);}
 
 function renderSlots() {
   var targetDate = fmtDate(curSlotDate);
+  console.log('renderSlots: looking for date =', targetDate);
+  console.log('allSlots total:', allSlots.length, '| dates:', allSlots.map(function(s){return s.date;}).join(', '));
   var slotData = allSlots.filter(function(s){ return s.date === targetDate; });
+  console.log('slotData for', targetDate, ':', slotData.length);
   var el=document.getElementById('slots-box');
   document.getElementById('slots-cnt').textContent=slotData.length;
 
