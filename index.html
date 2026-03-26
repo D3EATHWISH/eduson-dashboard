@@ -459,8 +459,8 @@ const URLS = {
   form:     GVZ + '1621541455',
   targets:  GVZ + '325926893',
   managers: GVZ + '1534781490',
-  slots:    GVZ + '1947250313',
-  schedule: GVZ + '462545215',
+  slots:    GVZ + '462545215',   // ← актуальные слоты из Apps Script
+  schedule: GVZ + '462545215',   // ← то же расписание менеджеров
 };
 
 // COLUMNS (0-indexed):
@@ -512,14 +512,20 @@ const cc = s => (s||'').replace(/^"|"$/g,'').trim();
 const gc = () => ({grid:'rgba(255,255,255,0.05)',tick:'#606060'});
 
 function parseCSV(txt) {
-  var rows=[], lines=txt.trim().split('\n');
+  // Handle both \r\n (Windows/gviz) and \n line endings
+  var rows=[], lines=txt.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim().split('\n');
   for(var i=0;i<lines.length;i++){
-    var cols=[],cur='',inQ=false,ln=lines[i];
-    for(var j=0;j<ln.length;j++){
-      var c=ln[j];
-      if(c==='"'){inQ=!inQ;}
-      else if(c===','&&!inQ){cols.push(cur.trim());cur='';}
-      else{cur+=c;}
+    var line=lines[i];
+    if(!line.trim())continue;
+    var cols=[],cur='',inQ=false;
+    for(var j=0;j<line.length;j++){
+      var c=line[j];
+      if(c==='"'){
+        if(inQ && line[j+1]==='"'){cur+='"';j++;} // escaped quote
+        else{inQ=!inQ;}
+      } else if(c===','&&!inQ){
+        cols.push(cur.trim());cur='';
+      } else{cur+=c;}
     }
     cols.push(cur.trim());
     rows.push(cols);
@@ -531,25 +537,24 @@ async function fetchCSV(key) {
   var url=URLS[key];
   if(!url)return[];
   try{
-    var r=await fetch(url,{cache:'no-store',mode:'cors'});
-    if(!r.ok){console.log('HTTP error',key,r.status);return[];}
+    var bustUrl = url + '&_t=' + Date.now();
+    var r=await fetch(bustUrl,{cache:'no-store',mode:'cors'});
+    if(!r.ok){console.warn('HTTP',r.status,'for',key);return[];}
     var txt=await r.text();
-    // Remove BOM if present
-    txt=txt.replace(/^\uFEFF/,'');
-    if(!txt||txt.includes('<!DOCTYPE')||txt.includes('google.visualization')){
-      console.log('Bad response for',key,txt.slice(0,100));
+    txt=txt.replace(/^\uFEFF/,''); // Remove BOM
+    if(!txt){console.warn('Empty response for',key);return[];}
+    if(txt.includes('<!DOCTYPE')){console.warn('HTML response for',key);return[];}
+    // gviz wraps in callback for JSON but for csv should be clean
+    // Sometimes returns error wrapper
+    if(txt.includes('google.visualization.Query.setResponse')){
+      console.warn('gviz error wrapper for',key,txt.slice(0,200));
       return[];
     }
     var rows=parseCSV(txt);
-    console.log('Loaded',key,':',rows.length,'rows');
+    console.log('✅',key,':',rows.length,'rows, cols:', rows[0] ? rows[0].length : 0);
     return rows;
   }catch(e){
-    // In Claude preview this always fails - normal. On GitHub Pages should work.
-    if(window.location.protocol==='file:'||window.location.hostname==='claude.ai'){
-      console.log('Preview mode - fetch blocked (expected):', key);
-    } else {
-      console.error('Fetch error:',key,e.message);
-    }
+    console.warn('Fetch error:',key,e.message);
     return[];
   }
 }
