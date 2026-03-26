@@ -452,12 +452,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13
 // ═══════════════════════════════════════
 // CONFIG
 // ═══════════════════════════════════════
-const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTWvSJXhLj4Vfbwvrm7QprGNfAqUxwNH0D4DHD-rpjNQRD1H5rLh_jA3hae_iFAq8FYwOm6tGIctTeV/pub';
+// gviz/tq endpoint supports CORS from GitHub Pages (published CSV does not)
+const SHEET_ID = '1U5L4zrFcqPAy4_6VXA5xHxqM2xAKPkWW-At2neINj18';
+const GVZ = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&gid=';
 const URLS = {
-  form:    BASE + '?gid=1621541455&single=true&output=csv',
-  targets: BASE + '?gid=325926893&single=true&output=csv',
-  managers:BASE + '?gid=1534781490&single=true&output=csv',
-  slots:   BASE + '?gid=1947250313&single=true&output=csv',
+  form:     GVZ + '1621541455',
+  targets:  GVZ + '325926893',
+  managers: GVZ + '1534781490',
+  slots:    GVZ + '1947250313',
+  schedule: GVZ + '462545215',
 };
 
 // COLUMNS (0-indexed):
@@ -542,8 +545,8 @@ async function loadAll() {
   var loader = document.getElementById('loader');
   if (loader) loader.classList.add('visible');
   try {
-  var [rawForm,rawMgrs,rawTar,rawSlots] = await Promise.all([
-    fetchCSV('form'),fetchCSV('managers'),fetchCSV('targets'),fetchCSV('slots')
+  var [rawForm,rawMgrs,rawTar,rawSlots,rawSched] = await Promise.all([
+    fetchCSV('form'),fetchCSV('managers'),fetchCSV('targets'),fetchCSV('slots'),fetchCSV('schedule')
   ]);
 
   // Parse lessons
@@ -594,12 +597,15 @@ async function loadAll() {
 
   for(var i=1;i<rawSlots.length;i++){
     var r=rawSlots[i];
-    // Support both old format (Time,Manager,Status) and new (Date,Time,Manager,Status)
-    var hasDate = r.length >= 4 && cc(r[0]).match(/\d{2}\.\d{2}\.\d{4}/);
-    var slotDate = hasDate ? cc(r[0]) : null;
-    var time = hasDate ? cc(r[1]) : cc(r[0]);
-    var who  = hasDate ? cc(r[2]) : cc(r[1]);
-    var rawStatus = hasDate ? cc(r[3]) : cc(r[2]);
+    // Support both formats:
+    // Old: Time, Manager, Status (3 cols)
+    // New: Date, Time, Manager, Status (4 cols)
+    var col0=cc(r[0]),col1=cc(r[1]),col2=cc(r[2]),col3=cc(r[3]||'');
+    var hasDate = col0.match(/\d{2}\.\d{2}\.\d{4}/);
+    var slotDate = hasDate ? col0 : fmtDate(nowT); // no date = assume today
+    var time = hasDate ? col1 : col0;
+    var who  = hasDate ? col2 : col1;
+    var rawStatus = hasDate ? col3 : col2;
     if(!time||!who)continue;
 
     // Auto-update status based on time if today
@@ -621,6 +627,24 @@ async function loadAll() {
   var tomorrowStr=fmtDate(new Date(nowT.getTime()+86400000));
   slots=allSlots.filter(s=>s.date===todayStr);
   tomorrowSlots=allSlots.filter(s=>s.date===tomorrowStr);
+
+  // Parse schedule data from sheet: Менеджер, Дата, Время
+  scheduleData={};
+  console.log('Raw schedule rows:', rawSched.length);
+  for(var i=1;i<rawSched.length;i++){
+    var r=rawSched[i];
+    if(!r||r.length<3)continue;
+    var mgr=cc(r[0]),ds=cc(r[1]),tm=cc(r[2]);
+    if(!mgr||!ds||!tm)continue;
+    // Parse hour from time string like "17:00"
+    var hr=parseInt(tm.split(':')[0]);
+    if(isNaN(hr))continue;
+    if(!scheduleData[mgr])scheduleData[mgr]={};
+    if(!scheduleData[mgr][ds])scheduleData[mgr][ds]={};
+    scheduleData[mgr][ds][hr]=true;
+    console.log('Schedule:', mgr, ds, hr);
+  }
+  console.log('scheduleData keys:', Object.keys(scheduleData));
 
   renderMain();
   renderAnalytics();
